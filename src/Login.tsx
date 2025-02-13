@@ -1,153 +1,129 @@
-import { useState } from 'react';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import logoHP from './assets/logo_hp.jpg'; 
-import logoGoogle from './assets/logo_google.jpg'; 
-
-import aiHealth from './assets/ai_health.jpg'; 
+import { useState } from "react";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import logoGoogle from "./assets/logo_google.jpg";
+import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
+import ImageSlider from "./ImageSlider";
 
 const Login = () => {
-    // Initialize Firebase authentication and navigation
     const auth = getAuth();
     const navigate = useNavigate();
-    
-    // State variables for managing authentication state, email, password, and error messages
-    const [authing, setAuthing] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
-    // Function to handle sign-in with Google
+    const [authing, setAuthing] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
+    // Iniciar sesión con Google
     const signInWithGoogle = async () => {
         setAuthing(true);
-        
-        // Use Firebase to sign in with Google
         signInWithPopup(auth, new GoogleAuthProvider())
-            .then(response => {
-                console.log(response.user.uid);
-                navigate('/');
-            })
-            .catch(error => {
+            .then(() => navigate("/"))
+            .catch((error) => {
                 console.log(error);
                 setAuthing(false);
             });
-    }
+    };
 
-    // Function to handle sign-in with email and password
+    // Iniciar sesión con email y contraseña
     const signInWithEmail = async () => {
         setAuthing(true);
-        setError('');
-
-        // Use Firebase to sign in with email and password
+        setError("");
         signInWithEmailAndPassword(auth, email, password)
-            .then(response => {
-                console.log(response.user.uid);
-                navigate('/');
-            })
-            .catch(error => {
+            .then(() => navigate("/"))
+            .catch((error) => {
                 console.log(error);
                 setError(error.message);
                 setAuthing(false);
             });
-    }
+    };
 
     return (
-        <div className='w-full h-screen flex'>
-            {/* Left half of the screen - background styling */}
-            <div className="w-1/2 h-full flex flex-col bg-[#282c34] items-center justify-center">
-                <div className="relative w-full h-full flex flex-col items-center justify-center">
-                  
-                  {/* Imagen superior */}
-                  <img 
-                    src={logoHP} 
-                    alt="Imagen 1"
-                    className="w-full h-1/2 object-cover transition-opacity duration-700 ease-in-out"
-                  />
-
-                  {/* Imagen inferior */}
-                  <img 
-                    src={aiHealth} 
-                    alt="Imagen 2"
-                    className="w-full h-1/2 object-cover transition-opacity duration-700 ease-in-out"
-                  />
-                </div>
+        <div className="w-full h-screen flex">
+            {/* Parte izquierda */}
+            <div className="w-1/2 h-full flex flex-col bg-[#282c34]">
+                <ImageSlider />
             </div>
 
-
-
-
-            {/* Right half of the screen - login form */}
-            <div className='w-1/2 h-full bg-[#1a1a1a] flex flex-col p-20 justify-center'>
-
-                <div className='w-full flex flex-col max-w-[450px] mx-auto'>
-                    {/* Header section with title and welcome message */}
-                    <div className='w-full flex flex-col mb-10 text-white'>
+            {/* Parte derecha */}
+            <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
+                <div className="w-full flex flex-col max-w-[450px] mx-auto">
+                    {/* Header */}
+                    <div className="w-full flex flex-col mb-10 text-white">
                         <img 
-                          src={logoHP} 
-                          alt="Imagen 1"
-                          className="w-28 rounded-full center mx-auto"
+                            src={logoHCC_AI} 
+                            alt="Logo HCC-AI"
+                            className="w-80 rounded-md center mx-auto mb-10"
                         />
-                        <h3 className='text-4xl font-bold mb-2'>Iniciar Sesión</h3>
-                        <p className='text-lg mb-4'>¡Hola de nuevo! Introduce tus datos para entrar.</p>
+                        <h3 className="text-4xl font-bold mb-2 text-center">Iniciar Sesión</h3>
+                        <p className="text-lg mb-4 text-center">¡Hola de nuevo! Introduce tus datos para entrar.</p>
                     </div>
 
-                    {/* Input fields for email and password */}
-                    <div className='w-full flex flex-col mb-6'>
+                    {/* Campos de entrada */}
+                    <div className="w-full flex flex-col mb-6">
                         <input
-                            type='email'
-                            placeholder='Email'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
+                            type="email"
+                            placeholder="Email"
+                            className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)} />
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                         <input
-                            type='password'
-                            placeholder='Password'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
+                            type="password"
+                            placeholder="Contraseña"
+                            className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)} />
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    {/* Button to log in with email and password */}
-                    <div className='w-full flex flex-col mb-4'>
+                    {/* Botón para iniciar sesión */}
+                    <div className="w-full flex flex-col mb-4">
                         <button
-                            className='w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer'
+                            className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
                             onClick={signInWithEmail}
-                            disabled={authing}>
+                            disabled={authing}
+                        >
                             Iniciar Sesión
                         </button>
                     </div>
 
-                    {/* Display error message if there is one */}
-                    {error && <div className='text-red-500 mb-4'>{error}</div>}
+                    {/* Mensaje de error */}
+                    {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
 
-                    {/* Divider with 'OR' text */}
-                    <div className='w-full flex items-center justify-center relative py-4'>
-                        <div className='w-full h-[1px] bg-gray-500'></div>
-                        <p className='text-lg absolute text-gray-500 bg-[#1a1a1a] px-2'>OR</p>
+                    {/* Línea divisoria */}
+                    <div className="w-full flex items-center justify-center relative py-4">
+                        <div className="w-full h-[1px] bg-gray-500"></div>
+                        <p className="text-lg absolute text-gray-500 bg-black px-2">O</p>
                     </div>
 
-                    {/* Button to log in with Google */}
+                    {/* Botón para iniciar sesión con Google */}
                     <button
-                        className='w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7'
+                        className="w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7"
                         onClick={signInWithGoogle}
-                        disabled={authing}>
+                        disabled={authing}
+                    >
                         <img 
-                                src={logoGoogle} // Google logo URL
-                                alt="Google Logo"
-                                className="w-10 h-10 mr-20" // Adjust the size of the logo
+                            src={logoGoogle}
+                            alt="Google Logo"
+                            className="w-10 h-10 mr-20"
                         />
                         Iniciar Sesión con Google
                     </button>
 
-                </div>
-
-                {/* Link to sign up page */}
-                <div className='w-full flex items-center justify-center mt-10'>
-                    <p className='text-sm font-normal text-gray-400'>¿No tienes cuenta? <span className='font-semibold text-white cursor-pointer underline'><a href='/signup'>Regístrate</a></span></p>
+                    {/* Enlace para registrarse */}
+                    <div className="w-full flex items-center justify-center mt-10">
+                        <p className="text-sm font-normal text-gray-400">
+                            ¿No tienes cuenta? 
+                            <span className="font-semibold text-white cursor-pointer underline">
+                                <a href="/signup"> Regístrate</a>
+                            </span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default Login;
