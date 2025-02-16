@@ -68,67 +68,27 @@ function Signup() {
             {/* Right half of the screen - signup form */}
             <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
                 <div className="w-full flex flex-col max-w-[450px] mx-auto">
-                    <div className='w-full flex flex-col mb-10 text-white'>
-                        <img 
-                            src={logoHCC_AI} 
-                            alt="Logo HCC-AI"
-                            className="w-80 rounded-md center mx-auto mb-10"
-                        />
+                    <div className='w-full flex flex-col mb-10 text-white' >
+                        <img src={logoHCC_AI} alt="Logo HCC-AI" className="w-80 rounded-md center mx-auto mb-10 cursor-pointer" onClick={() => navigate('/') } />
                         <h3 className="text-4xl font-bold mb-2 text-center">Registrarse</h3>
                         <p className="text-lg mb-4 text-center">¡Bienvenido! Introduce tus datos para registrarte.</p>
                     </div>
 
-                    {/* Input fields for first name, last name, email, password, confirm password */}
-                    <div className='w-full flex flex-col mb-6'>
-                        <input
-                            type='text'
-                            placeholder='Nombre'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                        />
-                        <input
-                            type='text'
-                            placeholder='Apellido'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                        />
-                        <input
-                            type='email'
-                            placeholder='Email'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <input
-                            type='password'
-                            placeholder='Password'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <input
-                            type='password'
-                            placeholder='Re-Enter Password'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                        <input
-                            type='text'
-                            placeholder='Puesto'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={jobTitle}
-                            onChange={(e) => setJobTitle(e.target.value)}
-                        />
-                        <input
-                            type='text'
-                            placeholder='Número de Teléfono'
-                            className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white'
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                        />
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='text' placeholder='Nombre' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        <input type='text' placeholder='Apellido' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    </div>
+
+                    <input type='email' placeholder='Email' className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='password' placeholder='Password' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type='password' placeholder='Re-Enter Password' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    </div>
+
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='text' placeholder='Puesto' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
+                        <input type='text' placeholder='Número de Teléfono' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={phone} onChange={(e) => setPhone(e.target.value)} />
                     </div>
 
                     {/* Display error message if there is one */}

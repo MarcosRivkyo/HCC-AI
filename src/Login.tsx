@@ -18,7 +18,7 @@ const Login = () => {
     const signInWithGoogle = async () => {
         setAuthing(true);
         signInWithPopup(auth, new GoogleAuthProvider())
-            .then(() => navigate("/"))
+            .then(() => navigate("/dashboard"))  // Redirigir tras éxito
             .catch((error) => {
                 console.log(error);
                 setAuthing(false);
@@ -30,7 +30,7 @@ const Login = () => {
         setAuthing(true);
         setError("");
         signInWithEmailAndPassword(auth, email, password)
-            .then(() => navigate("/"))
+            .then(() => navigate("/dashboard"))  // Redirigir tras éxito
             .catch((error) => {
                 console.log(error);
                 setError(error.message);
@@ -50,11 +50,7 @@ const Login = () => {
                 <div className="w-full flex flex-col max-w-[450px] mx-auto">
                     {/* Header */}
                     <div className="w-full flex flex-col mb-10 text-white">
-                        <img 
-                            src={logoHCC_AI} 
-                            alt="Logo HCC-AI"
-                            className="w-80 rounded-md center mx-auto mb-10"
-                        />
+                        <img src={logoHCC_AI} alt="Logo HCC-AI" className="w-80 rounded-md center mx-auto mb-10 cursor-pointer" onClick={() => navigate('/') } />
                         <h3 className="text-4xl font-bold mb-2 text-center">Iniciar Sesión</h3>
                         <p className="text-lg mb-4 text-center">¡Hola de nuevo! Introduce tus datos para entrar.</p>
                     </div>
