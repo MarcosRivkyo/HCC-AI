@@ -43,7 +43,7 @@ const Dashboard = () => {
           ))}
         </ul>
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <img src={logoHCC_AI} className="w-32 rounded-md cursor-pointer" alt="HCC-AI Logo" onClick={() => navigate("/")} />
+          <img src={logoHCC_AI} className="w-40 rounded-md cursor-pointer" alt="HCC-AI Logo" onClick={() => navigate("/")} />
         </div>
 
         <div className="relative">

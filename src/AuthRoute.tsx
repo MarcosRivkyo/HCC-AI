@@ -34,6 +34,8 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
     }
 
     return <>{children}</>;
+
+    
 };
 
 export default AuthRoute;
