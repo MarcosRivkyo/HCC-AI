@@ -8,13 +8,20 @@ import AuthRoute from './AuthRoute.tsx';
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
 import ia_cancer from "./assets/ia_cancer.png";
 import hepato_eco from "./assets/hepatic_eco.png";
+import ImageSlider from "./ImageSlider2";
 
 import analisis_medico  from "./assets/analisis_medico.png";
 
-import hcc_img from "./assets/hcc_img.png";
+
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { initializeApp } from "firebase/app";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaPython, FaReact, FaAngular, FaCogs, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { SiPytorch, SiOpencv, SiSharp } from "react-icons/si";
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaMicroscope, FaBrain, FaHospital, FaChartLine, FaLaptopMedical, FaSearch } from "react-icons/fa";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -32,41 +39,133 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
+
+
+const Footer: React.FC = () => {
+  return (
+    <footer className="bg-black text-white py-8 mt-20">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+        {/* Logo y descripción */}
+        <div className="mb-6 md:mb-0 text-center md:text-left">
+          <img src={logoHCC_AI} alt="Logo HCC-AI" className="w-32 mx-auto md:mx-0" />
+          <p className="mt-2 text-sm text-gray-400">
+            Innovación y tecnología para el futuro.
+          </p>
+
+        </div>
+
+        {/* Enlaces rápidos */}
+        <div className="flex space-x-6 text-sm">
+          <a href="#home" className="hover:text-gray-300">Inicio</a>
+          <a href="#objectives" className="hover:text-gray-300">Objetivos</a>
+          <a href="#services" className="hover:text-gray-300">Servicios</a>
+          <a href="#technology" className="hover:text-gray-300">Tecnología</a>
+          <a href="#contact" className="hover:text-gray-300">Contacto</a>
+        </div>
+
+        {/* Redes sociales */}
+        <div className="flex space-x-4 mt-6 md:mt-0">
+          <a href="https://facebook.com" target="_blank" className="text-gray-400 hover:text-white">
+            <FaFacebook size={20} />
+          </a>
+          <a href="https://twitter.com" target="_blank" className="text-gray-400 hover:text-white">
+            <FaTwitter size={20} />
+          </a>
+          <a href="https://instagram.com" target="_blank" className="text-gray-400 hover:text-white">
+            <FaInstagram size={20} />
+          </a>
+          <a href="https://linkedin.com" target="_blank" className="text-gray-400 hover:text-white">
+            <FaLinkedin size={20} />
+          </a>
+        </div>
+      </div>
+
+      {/* Derechos de autor */}
+      <div className="text-center text-gray-500 text-sm mt-6 border-t border-gray-700 pt-4">
+        © {new Date().getFullYear()} HCC-AI. Todos los derechos reservados.
+      </div>
+    </footer>
+  );
+};
+
+
 const Navbar: React.FC = () => {
+  const [selectedSection, setSelectedSection] = useState<string>("home");
+
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setSelectedSection(id);
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <nav className=" bg-black p-6 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg cursor-pointer" onClick={() => scrollToSection('home')}>
+    <nav className="bg-black p-6 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg cursor-pointer">
       <ul className="flex space-x-4 text-sm">
-        <li><button onClick={() => scrollToSection('home')} className="ml-20 hover:text-gray-300 transition-all duration-200">INICIO</button></li>
-        <li><button onClick={() => scrollToSection('objectives')} className="hover:text-gray-300 transition-all duration-200">OBJETIVOS</button></li>
-        <li><button onClick={() => scrollToSection('services')} className="hover:text-gray-300 transition-all duration-200">SERVICIOS</button></li>
-        <li><button onClick={() => scrollToSection('technology')} className="hover:text-gray-300 transition-all duration-200">TECNOLOGÍA</button></li>
-        <li><button onClick={() => scrollToSection('contact')} className="hover:text-gray-300 transition-all duration-200">CONTACTO</button></li>
+        {[
+          { id: "home", label: "INICIO" },
+          { id: "objectives", label: "OBJETIVOS" },
+          { id: "services", label: "SERVICIOS" },
+          { id: "technology", label: "TECNOLOGÍA" },
+          { id: "contact", label: "CONTACTO" },
+        ].map((item) => (
+          <li key={item.id}>
+            <button
+              onClick={() => scrollToSection(item.id)}
+              className={`ml-20 transition-all duration-200 ${
+                selectedSection === item.id ? "text-red-400 font-bold" : "hover:text-gray-300"
+              }`}
+            >
+              {item.label}
+            </button>
+          </li>
+        ))}
       </ul>
 
       <div className="absolute left-1/2 transform -translate-x-1/2">
-        <img src={logoHCC_AI} className="w-32 rounded-md" alt="HCC-AI Logo" />
+        <img src={logoHCC_AI} className="w-32 rounded-md" alt="HCC-AI Logo" onClick={() => scrollToSection("home")}/>
       </div>
 
-      <div className="mr-40 space-x-2">
-        <Link to="/login" className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">Login</Link>
-        <Link to="/signup" className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">Signup</Link>
-      </div>
+      <div className="mr-40 space-x-4 flex">
+      {/* Botón de Login */}
+      <Link
+        to="/login"
+        className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md hover:shadow-lg"
+      >
+        <FaSignInAlt className="mr-2" /> Login
+      </Link>
+
+      {/* Botón de Signup */}
+      <Link
+        to="/signup"
+        className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300 shadow-md hover:shadow-lg"
+      >
+        <FaUserPlus className="mr-2" /> Signup
+      </Link>
+    </div>
     </nav>
   );
 };
+
+
 const Home: React.FC = () => (
   <section id="home" className="text-center text-2xl pt-16 p-10 relative h-screen">
-    <img src={hcc_img} className="absolute top-0 left-0 w-full h-full object-cover" alt="HCC Image" />
-    <div className="relative z-10 flex flex-col items-center justify-center h-full">
-      <h1 className="text-4xl font-bold mb-4 text-white">¡Bienvenido a HCC-AI!</h1>
-      <p className="text-lg text-gray-200">Inteligencia Artificial para el diagnóstico del carcinoma hepatocelular</p>
+    {/* Contenedor del texto - Absoluto sobre el slider */}
+    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black bg-opacity-50">
+        <h1 className="text-5xl font-extrabold mb-4 text-red-500 drop-shadow-lg tracking-wide">
+        ¡Bienvenido a HCC-AI!
+        </h1>
+        <p className="text-xl text-red-300 font-medium italic">
+        Inteligencia Artificial para el diagnóstico del carcinoma hepatocelular
+        </p>
+
+    </div>
+
+    {/* Slider en el fondo */}
+    <div className="absolute inset-0 z-10">
+      <ImageSlider />
     </div>
   </section>
 );
+
 
 const About: React.FC = () => (
   <motion.section id="objectives" className="text-center text-white bg-gradient-to-b from-black to-gray-900 py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
@@ -136,7 +235,7 @@ const About: React.FC = () => (
   </motion.section>
 );
 
-import { FaMicroscope, FaBrain, FaHospital, FaChartLine, FaLaptopMedical, FaSearch } from "react-icons/fa";
+
 
 const Services: React.FC = () => (
   <motion.section id="services" className="text-center text-white bg-gray-900 py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
@@ -211,8 +310,7 @@ const Services: React.FC = () => (
 
 
 
-import { FaPython, FaReact, FaAngular, FaCogs, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { SiPytorch, SiOpencv, SiSharp } from "react-icons/si";
+
 
 const Technology: React.FC = () => (
   <motion.section id="technology" className="text-center text-white bg-gradient-to-b from-gray-900 to-black py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
@@ -342,25 +440,27 @@ const Contact: React.FC = () => (
 
 
 
-const App: React.FC = () => {
+const Main: React.FC = () => {
   return (
-    <div>
+    <div className="bg-black text-white min-h-screen">
       <Navbar />
       <Home />
       <About />
       <Services />
       <Technology />
       <Contact />
+      <Footer />
     </div>
   );
 };
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Main />} />
+        <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
         <Route path="*" element={<Navigate to="/" />} />
