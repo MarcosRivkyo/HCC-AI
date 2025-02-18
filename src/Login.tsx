@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logoGoogle from "./assets/logo_google.jpg";
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
 import ImageSlider from "./ImageSlider";
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const auth = getAuth();
@@ -108,14 +109,17 @@ const Login = () => {
                     </button>
 
                     {/* Enlace para registrarse */}
+
                     <div className="w-full flex items-center justify-center mt-10">
                         <p className="text-sm font-normal text-gray-400">
                             ¿No tienes cuenta? 
                             <span className="font-semibold text-white cursor-pointer underline">
-                                <a href="/signup"> Regístrate</a>
+                                {/* Usar Link en lugar de un <a> */}
+                                <Link to="/signup"> Regístrate</Link>
                             </span>
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>

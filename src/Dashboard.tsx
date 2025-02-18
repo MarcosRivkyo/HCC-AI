@@ -4,6 +4,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import Logout from "./Logout";
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
+import ImageUpload from "./ImageUpload";
+
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +74,7 @@ const Dashboard = () => {
                   <button onClick={() => navigate(item.path)} className="block w-full p-3 rounded bg-gray-800 hover:bg-gray-700 text-center transition duration-300 ease-in-out transform hover:scale-105">
                     {item.label}
                   </button>
+                  
                 </li>
               ))}
             </ul>
@@ -81,6 +84,8 @@ const Dashboard = () => {
         {/* Contenido Principal */}
         <main className="flex-1 bg-gray-600 p-6 overflow-auto">
           <Outlet />
+          <ImageUpload />
+
         </main>
       </div>
 

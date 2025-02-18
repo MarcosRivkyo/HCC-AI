@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ImageSlider from "./ImageSlider";
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
 import logoGoogle from "./assets/logo_google.jpg";
+import { Link } from 'react-router-dom';
 
 
 function Signup() {
@@ -123,8 +124,14 @@ function Signup() {
                     </button>
                 </div>
 
-                <div className='w-full flex items-center justify-center mt-10'>
-                    <p className='text-sm font-normal text-gray-400'>¿Ya tienes cuenta? <span className='font-semibold text-white cursor-pointer underline'><a href='/login'>Inicia Sesión</a></span></p>
+                <div className="w-full flex items-center justify-center mt-10">
+                        <p className="text-sm font-normal text-gray-400">
+                            ¿Ya tienes cuenta?
+                            <span className="font-semibold text-white cursor-pointer underline">
+                                {/* Usar Link en lugar de un <a> */}
+                                <Link to="/login">Inicia Sesión</Link>
+                            </span>
+                        </p>
                 </div>
             </div>
         </div>
