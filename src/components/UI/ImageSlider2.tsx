@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import aiHealth from "./assets/hcc_img_liver.png";
-import aiHealth2 from "./assets/hcc_us_img.png";
-import aiHealth3 from "./assets/hcc_img_2.png";
+import aiHealth from "../../assets/hcc_img_liver.png";
+import aiHealth2 from "../../assets/hcc_us_img.png";
+import aiHealth3 from "../../assets/hcc_img_2.png";
 
 const images: string[] = [aiHealth, aiHealth2, aiHealth3];
 

@@ -2,16 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Dashboard from './Dashboard';
-import Login from './Login.tsx';
-import Signup from './Signup.tsx';
+import Login from './components/Auth/Login.tsx';
+import Signup from './components/Auth/Signup.tsx';
 import AuthRoute from './AuthRoute.tsx';
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
 import ia_cancer from "./assets/ia_cancer.png";
 import hepato_eco from "./assets/hepatic_eco.png";
-import ImageSlider from "./ImageSlider2";
+import ImageSlider from "./components/UI/ImageSlider2.tsx";
+import ButtonComponent from './components/UI/ButtonComponent.tsx';
+
+import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
 
 import analisis_medico  from "./assets/analisis_medico.png";
 
+import { useNavigate } from 'react-router-dom';
 
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { initializeApp } from "firebase/app";
@@ -90,6 +94,18 @@ const Footer: React.FC = () => {
 
 
 const Navbar: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const handleClick = (action: string) => {
+    if (action === 'Login') {
+      navigate('/login'); // Redirige a la página /login
+    }
+    if (action === 'Signup') {
+      navigate('/signup'); // Redirige a la página /login
+    }
+  };
+
   const [selectedSection, setSelectedSection] = useState<string>("home");
 
   const scrollToSection = (id: string) => {
@@ -124,23 +140,41 @@ const Navbar: React.FC = () => {
         <img src={logoHCC_AI} className="w-32 rounded-md" alt="HCC-AI Logo" onClick={() => scrollToSection("home")}/>
       </div>
 
-      <div className="mr-40 space-x-4 flex">
-      {/* Botón de Login */}
-      <Link
-        to="/login"
-        className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md hover:shadow-lg"
-      >
-        <FaSignInAlt className="mr-2" /> Login
-      </Link>
+      <div className="ml-auto flex space-x-8"> {/* Aumento de espacio entre los botones */}
+          {/* Botón Login */}
+          <div className="relative inline-flex group">
+            <div
+              className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:-duration-200 animate-tilt"
+            ></div>
+            <a
+              href="#"
+              title="Login"
+              onClick={() => handleClick('Login')}
+              className="relative inline-flex items-center justify-center px-6 py-2 text-md font-bold text-white transition-all duration-200 bg-gray-900 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              role="button"
+            >.
+              <FaSignInAlt className="mr-2" /> {/* Icono para el botón Login */}
+              Iniciar Sesión
+            </a>
+          </div>
 
-      {/* Botón de Signup */}
-      <Link
-        to="/signup"
-        className="flex items-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300 shadow-md hover:shadow-lg"
-      >
-        <FaUserPlus className="mr-2" /> Signup
-      </Link>
-    </div>
+          {/* Botón Signup */}
+          <div className="relative inline-flex group">
+            <div
+              className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:-duration-200 animate-tilt"
+            ></div>
+            <a
+              href="#"
+              title="Signup"
+              onClick={() => handleClick('Signup')}
+              className="relative inline-flex items-center justify-center px-6 py-2 text-md font-bold text-white transition-all duration-200 bg-gray-900 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              role="button"
+            >
+              <FaUserPlus className="mr-2" /> {/* Icono para el botón Signup */}
+              Registrarse
+            </a>
+          </div>
+        </div>
     </nav>
   );
 };
@@ -150,13 +184,15 @@ const Home: React.FC = () => (
   <section id="home" className="text-center text-2xl pt-16 p-10 relative h-screen">
     {/* Contenedor del texto - Absoluto sobre el slider */}
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black bg-opacity-50">
-        <h1 className="text-5xl font-extrabold mb-4 text-red-500 drop-shadow-lg tracking-wide">
-        ¡Bienvenido a HCC-AI!
-        </h1>
-        <p className="text-xl text-red-300 font-medium italic">
-        Inteligencia Artificial para el diagnóstico del carcinoma hepatocelular
-        </p>
+      <div className="flex flex-col items-center justify-center bg-black bg-opacity-50 p-6 rounded-lg">
 
+        <h1 className="text-[100px] font-bold mb-6">
+          <span className="text-white">HCC-</span> 
+          <span className="text-red-500">AI</span>
+        </h1>
+        <TextEffectDemo/>
+
+      </div>
     </div>
 
     {/* Slider en el fondo */}
@@ -369,74 +405,100 @@ const Technology: React.FC = () => (
   </motion.section>
 );
 
-const Contact: React.FC = () => (
-  <motion.section id="contact" className="text-center text-white bg-black py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
-    <h2 className="text-4xl font-bold text-green-400 mb-6">Contáctanos</h2>
-    <p className="text-lg max-w-3xl mx-auto mb-10">
-      Si deseas más información o colaborar con nosotros, no dudes en ponerte en contacto.
-    </p>
+import axios from "axios";
 
-    {/* Información de contacto */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-      
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <FaPhone className="text-green-400 text-5xl mx-auto mb-4" />
-        <h3 className="text-xl font-semibold">Teléfono</h3>
-        <p className="text-gray-300 mt-2">+34 123 456 789</p>
-      </div>
+const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [responseMessage, setResponseMessage] = useState("");
 
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <FaEnvelope className="text-green-400 text-5xl mx-auto mb-4" />
-        <h3 className="text-xl font-semibold">Correo Electrónico</h3>
-        <p className="text-gray-300 mt-2">contacto@hcc-ai.com</p>
-      </div>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-      <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <FaMapMarkerAlt className="text-green-400 text-5xl mx-auto mb-4" />
-        <h3 className="text-xl font-semibold">Ubicación</h3>
-        <p className="text-gray-300 mt-2">Madrid, España</p>
-      </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    </div>
+    try {
+      const response = await axios.post("https://fastapi-project-1084523848624.europe-southwest1.run.app/send-email/", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setResponseMessage(response.data.message);
+    } catch (error) {
+      setResponseMessage("Hubo un error al enviar el mensaje.");
+    }
+  };
 
-    {/* Formulario de contacto */}
-    <form className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-      <div className="mb-4">
-        <label className="block text-gray-300 text-left text-lg">Nombre</label>
-        <input 
-          type="text" 
-          className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
-          placeholder="Tu Nombre"
-        />
-      </div>
+  return (
+    <section id="contact" className="text-center text-white bg-black py-20">
+      <h2 className="text-4xl font-bold text-green-400 mb-6">Contáctanos</h2>
+      <p className="text-lg max-w-3xl mx-auto mb-10">
+        Si deseas más información o colaborar con nosotros, no dudes en ponerte en contacto.
+      </p>
 
-      <div className="mb-4">
-        <label className="block text-gray-300 text-left text-lg">Correo Electrónico</label>
-        <input 
-          type="email" 
-          className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
-          placeholder="tuemail@ejemplo.com"
-        />
-      </div>
+      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+        <div className="mb-4">
+          <label className="block text-gray-300 text-left text-lg">Nombre</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
+            placeholder="Tu Nombre"
+            required
+          />
+        </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-300 text-left text-lg">Mensaje</label>
-        <textarea 
-          className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
-          rows={4}
-          placeholder="Escribe tu mensaje aquí..."
-        />
-      </div>
+        <div className="mb-4">
+          <label className="block text-gray-300 text-left text-lg">Correo Electrónico</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
+            placeholder="tuemail@ejemplo.com"
+            required
+          />
+        </div>
 
-      <button 
-        type="submit"
-        className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-300"
-      >
-        Enviar Mensaje
-      </button>
-    </form>
-  </motion.section>
-);
+        <div className="mb-4">
+          <label className="block text-gray-300 text-left text-lg">Mensaje</label>
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            className="w-full p-3 mt-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400"
+            rows={4}
+            placeholder="Escribe tu mensaje aquí..."
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-300"
+        >
+          Enviar Mensaje
+        </button>
+      </form>
+
+      {responseMessage && (
+        <p className="mt-6 text-green-400">{responseMessage}</p>
+      )}
+    </section>
+  );
+};
+
 
 
 

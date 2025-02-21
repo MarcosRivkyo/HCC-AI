@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import aiHealth from "./assets/ai_health.jpg";
-import aiHealth2 from "./assets/ai_health2.jpg";
+import aiHealth from "../../assets/ai_health.jpg";
+import aiHealth2 from "../../assets/ai_health2.jpg";
 
 const images: string[] = [aiHealth, aiHealth2];
 

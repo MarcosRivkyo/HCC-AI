@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import ImageSlider from "./ImageSlider";
-import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
-import logoGoogle from "./assets/logo_google.jpg";
+import ImageSlider from "../UI/ImageSlider";
+import logoHCC_AI from "../../assets/logo_hcc_ai.jpg";
+import logoGoogle from "../../assets/logo_google.jpg";
 import { Link } from 'react-router-dom';
 
-
 function Signup() {
-
     const auth = getAuth();
     const db = getFirestore();
     const navigate = useNavigate();
@@ -24,39 +22,44 @@ function Signup() {
     const [jobTitle, setJobTitle] = useState('');
     const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
+    const [verificationMessage, setVerificationMessage] = useState('');
 
     const signUpWithEmail = async () => {
-
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError('Las contraseñas no coinciden');
             return;
         }
 
         setAuthing(true);
         setError('');
+        setVerificationMessage('');
 
         try {
             // Crear usuario con email y contraseña
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Guardar los datos del usuario en Firestore
+            // Enviar email de verificación
+            await sendEmailVerification(user);
+
+            // Guardar datos en Firestore
             await setDoc(doc(db, 'hcc_ai_users', user.uid), {
                 firstName: firstName,
                 lastName: lastName,
                 email: user.email,
                 jobTitle: jobTitle,
                 phone: phone,
-                createdAt: serverTimestamp(), // Esto agrega la fecha de creación automáticamente
+                createdAt: serverTimestamp(),
+                emailVerified: false // Puedes actualizar esto después de la verificación
             });
 
-            console.log('Usuario registrado y datos guardados en Firestore');
-            navigate('/');
+            setVerificationMessage('Registro exitoso. Por favor, verifica tu correo electrónico antes de iniciar sesión.');
         } catch (error) {
             console.log(error);
             setError((error as any).message);
-            setAuthing(false);
         }
+
+        setAuthing(false);
     };
 
     return (
@@ -66,10 +69,10 @@ function Signup() {
                 <ImageSlider />
             </div>
 
-            {/* Right half of the screen - signup form */}
+            {/* Parte derecha - formulario */}
             <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
                 <div className="w-full flex flex-col max-w-[450px] mx-auto">
-                    <div className='w-full flex flex-col mb-10 text-white' >
+                    <div className='w-full flex flex-col mb-10 text-white'>
                         <img src={logoHCC_AI} alt="Logo HCC-AI" className="w-80 rounded-md center mx-auto mb-10 cursor-pointer" onClick={() => navigate('/') } />
                         <h3 className="text-4xl font-bold mb-2 text-center">Registrarse</h3>
                         <p className="text-lg mb-4 text-center">¡Bienvenido! Introduce tus datos para registrarte.</p>
@@ -83,8 +86,8 @@ function Signup() {
                     <input type='email' placeholder='Email' className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={email} onChange={(e) => setEmail(e.target.value)} />
                     
                     <div className='w-full flex flex-wrap gap-4 mb-6'>
-                        <input type='password' placeholder='Password' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <input type='password' placeholder='Re-Enter Password' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <input type='password' placeholder='Contraseña' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type='password' placeholder='Repetir Contraseña' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                     </div>
 
                     <div className='w-full flex flex-wrap gap-4 mb-6'>
@@ -92,10 +95,13 @@ function Signup() {
                         <input type='text' placeholder='Número de Teléfono' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={phone} onChange={(e) => setPhone(e.target.value)} />
                     </div>
 
-                    {/* Display error message if there is one */}
+                    {/* Mostrar errores */}
                     {error && <div className='text-red-500 mb-4'>{error}</div>}
+                    
+                    {/* Mostrar mensaje de verificación */}
+                    {verificationMessage && <div className='text-green-500 mb-4'>{verificationMessage}</div>}
 
-                    {/* Button to sign up with email and password */}
+                    {/* Botón de registro */}
                     <div className='w-full flex flex-col mb-4'>
                         <button
                             onClick={signUpWithEmail}
@@ -114,24 +120,18 @@ function Signup() {
                         disabled={authing}
                         className='w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7'
                     >
-                        <img 
-                            src={logoGoogle}
-                            alt="Google Logo"
-                            className="w-10 h-10 mr-20"
-                        />
-
+                        <img src={logoGoogle} alt="Google Logo" className="w-10 h-10 mr-20" />
                         Registrarse con Google
                     </button>
                 </div>
 
                 <div className="w-full flex items-center justify-center mt-10">
-                        <p className="text-sm font-normal text-gray-400">
-                            ¿Ya tienes cuenta?
-                            <span className="font-semibold text-white cursor-pointer underline">
-                                {/* Usar Link en lugar de un <a> */}
-                                <Link to="/login">Inicia Sesión</Link>
-                            </span>
-                        </p>
+                    <p className="text-sm font-normal text-gray-400">
+                        ¿Ya tienes cuenta?  
+                        <span className="font-semibold text-white cursor-pointer underline">
+                            <Link to="/login">Inicia Sesión</Link>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>

@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    signInWithEmailAndPassword, 
+    sendEmailVerification, 
+    sendPasswordResetEmail 
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import logoGoogle from "./assets/logo_google.jpg";
-import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
-import ImageSlider from "./ImageSlider";
+import logoGoogle from "../../assets/logo_google.jpg";
+import logoHCC_AI from "../../assets/logo_hcc_ai.jpg";
+import ImageSlider from "../UI/ImageSlider";
 import { Link } from 'react-router-dom';
 
 const Login = () => {
@@ -14,14 +21,23 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     // Iniciar sesión con Google
     const signInWithGoogle = async () => {
         setAuthing(true);
         signInWithPopup(auth, new GoogleAuthProvider())
-            .then(() => navigate("/dashboard"))  // Redirigir tras éxito
+            .then((result) => {
+                if (result.user.emailVerified) {
+                    navigate("/dashboard"); // Redirigir si está verificado
+                } else {
+                    setError("Debes verificar tu correo antes de acceder.");
+                }
+                setAuthing(false);
+            })
             .catch((error) => {
                 console.log(error);
+                setError(error.message);
                 setAuthing(false);
             });
     };
@@ -30,13 +46,49 @@ const Login = () => {
     const signInWithEmail = async () => {
         setAuthing(true);
         setError("");
+
         signInWithEmailAndPassword(auth, email, password)
-            .then(() => navigate("/dashboard"))  // Redirigir tras éxito
+            .then((userCredential) => {
+                const user = userCredential.user;
+                if (user.emailVerified) {
+                    navigate("/dashboard"); // Redirigir si está verificado
+                } else {
+                    setError("Debes verificar tu correo antes de acceder.");
+                }
+                setAuthing(false);
+            })
             .catch((error) => {
                 console.log(error);
                 setError(error.message);
                 setAuthing(false);
             });
+    };
+
+    // Enviar correo de verificación
+    const sendVerificationEmail = async () => {
+        const user = auth.currentUser;
+        if (user) {
+            sendEmailVerification(user)
+                .then(() => {
+                    setSuccessMessage("Correo de verificación enviado. Revisa tu bandeja de entrada.");
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setError(error.message);
+                });
+        } else {
+            setError("Inicia sesión primero para enviar la verificación.");
+        }
+    };
+
+    const handlePasswordReset = async () => {
+        if (!email) {
+            setError("Por favor, introduce tu email para restablecer la contraseña.");
+            return;
+        }
+        sendPasswordResetEmail(auth, email)
+            .then(() => setSuccessMessage("Se ha enviado un correo para restablecer tu contraseña."))
+            .catch((error) => setError(error.message));
     };
 
     return (
@@ -85,10 +137,21 @@ const Login = () => {
                         </button>
                     </div>
 
-                    {/* Mensaje de error */}
                     {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
 
-                    {/* Línea divisoria */}
+                    {successMessage && <div className="text-green-500 mb-4 text-center">{successMessage}</div>}
+
+                    <div className="text-center">
+                        <button onClick={handlePasswordReset} className="text-gray-400 text-sm underline">¿Olvidaste tu contraseña?</button>
+                    </div>
+                    
+                    {/* Si el usuario no está verificado, permitir reenviar email de verificación */}
+                    {error === "Debes verificar tu correo antes de acceder." && (
+                        <div className="text-center mt-4">
+                            <button onClick={sendVerificationEmail} className="text-blue-400 text-sm underline">Reenviar correo de verificación</button>
+                        </div>
+                    )}
+
                     <div className="w-full flex items-center justify-center relative py-4">
                         <div className="w-full h-[1px] bg-gray-500"></div>
                         <p className="text-lg absolute text-gray-500 bg-black px-2">O</p>
@@ -109,12 +172,10 @@ const Login = () => {
                     </button>
 
                     {/* Enlace para registrarse */}
-
                     <div className="w-full flex items-center justify-center mt-10">
                         <p className="text-sm font-normal text-gray-400">
                             ¿No tienes cuenta? 
                             <span className="font-semibold text-white cursor-pointer underline">
-                                {/* Usar Link en lugar de un <a> */}
                                 <Link to="/signup"> Regístrate</Link>
                             </span>
                         </p>

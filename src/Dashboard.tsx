@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import Logout from "./Logout";
+import Logout from "./components/Auth/Logout";
 import logoHCC_AI from "./assets/logo_hcc_ai.jpg";
 import ImageUpload from "./ImageUpload";
 

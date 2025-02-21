@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore"; // Importa los métodos para obtener datos de Firestore
-import Logout from "./Logout";
+import Logout from "./components/Auth/Logout";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
