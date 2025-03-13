@@ -383,7 +383,7 @@ const Contact: React.FC = () => {
     setResponseMessage(""); // Borra mensajes anteriores
 
     try {
-      const response = await axios.post("http://localhost:8000/send-email/", formData, {
+      const response = await axios.post("https://fastapi-project-1084523848624.europe-southwest1.run.app/send-email/", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -453,13 +453,12 @@ const Contact: React.FC = () => {
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isLoading} // Deshabilita el botón mientras carga
         >
-          {isLoading ? t("input.sending") : t("input.submit")}
+          {isLoading ? t("input.submiting") : t("input.submit")}
 
         </button>
       </form>
 
-      {/* Mensaje de carga */}
-      {isLoading && <p className="mt-6 text-yellow-400">Enviando mensaje...</p>}
+
 
       {/* Mensaje de respuesta */}
       {responseMessage && <p className="mt-6 text-green-400">{responseMessage}</p>}
