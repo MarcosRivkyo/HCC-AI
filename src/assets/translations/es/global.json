@@ -1,0 +1,74 @@
+{
+    "footer": {
+        "description": "Innovación y tecnología para el futuro.",
+        "copyright": "HCC-AI. Crado por Marcos Rivas Kyoguro."
+    },
+    "navbar": {
+        "home": "INICIO",
+        "objective": "OBJETIVOS",
+        "services": "SERVICIOS",
+        "technologies": "TECNOLOGÍAS",
+        "contact": "CONTACTO",
+        "login": "Iniciar sesión",
+        "register": "Registrarse",
+        "access": "Acceder",
+        "logout": "Cerrar sesión"
+    },
+    "main": {
+        "slogan": "Inteligencia Artificial para el diagnóstico del carcinoma hepatocelular",
+        "description": "Somos una empresa dedicada al desarrollo de tecnología e innovación para el futuro. Nos comprometemos a proporcionar el mejor servicio a nuestros clientes."
+    },
+    "sections": {
+        "objectives": "Objetivos",
+        "ai_detection": "Detección con IA",
+        "ultrasound": "Ecografía Hepática",
+        "medical_analysis": "Análisis Médico",
+        "key_benefits": "Beneficios Clave",
+        "benefit_1": "✅ Mayor precisión en la detección del hepatocarcinoma.",
+        "benefit_2": "✅ Diagnóstico más rápido y eficaz mediante IA.",
+        "benefit_3": "✅ Reducción de costos en pruebas médicas innecesarias.",
+        "benefit_4": "✅ Asistencia a profesionales de la salud en la toma de decisiones.",
+
+        "our_services": "Nuestros Servicios",
+        "services_description": "Proporcionamos herramientas avanzadas de diagnóstico basadas en redes neuronales convolucionales (CNNs) para mejorar la precisión y detección temprana del carcinoma hepatocelular (HCC). Nuestro modelo de inteligencia artificial analiza imágenes de ecografía hepática y datos clínicos para ayudar en la toma de decisiones médicas.",
+        "ai_diagnosis": "Diagnóstico con IA",
+        "ai_diagnosis_description": "Nuestro modelo basado en inteligencia artificial analiza ecografías hepáticas para detectar y delimitar hepatocarcinomas con alta precisión.",
+        "advanced_nn": "Redes Neuronales Avanzadas",
+        "advanced_nn_description": "Utilizamos CNNs entrenadas con miles de imágenes médicas para mejorar la sensibilidad y especificidad del diagnóstico.",
+        "medical_collaboration": "Colaboración Médica",
+        "medical_collaboration_description": "Trabajamos con profesionales de la salud para validar nuestro modelo y asegurar su eficacia en entornos clínicos reales.",
+        "interactive_platform": "Plataforma Interactiva",
+        "interactive_platform_description": "Desarrollo de una aplicación web donde los médicos pueden cargar imágenes y recibir predicciones en tiempo real.",
+        "tumor_evaluation": "Evaluación del Tumor",
+        "tumor_evaluation_description": "No solo detectamos el tumor, sino que analizamos su grado y evolución para ayudar en la toma de decisiones clínicas.",
+        "r_and_d": "Investigación y Desarrollo",
+        "r_and_d_description": "Buscamos mejorar continuamente nuestro modelo mediante nuevas técnicas de aprendizaje profundo y mayor cantidad de datos médicos.",
+
+        "technologies": "Tecnologías usadas",
+        "ai_description": "Desarrollo basado en inteligencia artificial con aprendizaje profundo para mejorar la detección médica.",
+
+        "ai_python_description": "Utilizamos Python con PyTorch para entrenar modelos avanzados de detección de imágenes.",
+        "opencv_title": "Visión por Computador",
+        "opencv_description": "Implementamos OpenCV para el procesamiento y análisis de imágenes médicas.",
+        "frontend_title": "Desarrollo Frontend",
+        "frontend_description": "Nuestra plataforma interactiva está construida con tecnologías modernas de frontend.",
+        "backend_title": "Desarrollo Backend",
+        "backend_description": "Desarrollamos APIs robustas y escalables para la gestión de datos médicos.",
+        "integration_title": "Integración de Sistemas",
+        "integration_description": "Nuestra solución se integra con flujos de trabajo médicos para una mejor experiencia del usuario.",
+        "contact_title": "Contáctanos",
+        "contact_description": "Si deseas más información o colaborar con nosotros, no dudes en ponerte en contacto."
+    },
+
+    "input": {
+        "name": "Nombre",
+        "name_placeholder": "Introduzca su nombre ",
+        "mail": "Correo Electrónico",
+        "mail_placeholder": "tucorreo@gmail.com",
+        "message": "Mensaje",
+        "message_placeholer": "Escribe tu mensaje aquí ...",
+        "submit": "Enviar Mensaje",
+        "submiting": "Enviando Mensaje ..."
+
+    }
+}

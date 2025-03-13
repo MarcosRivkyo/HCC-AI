@@ -1,0 +1,75 @@
+{
+    "footer": {
+        "description": "Innovation and technology for the future.",
+        "copyright": "HCC-AI. Created by Marcos Rivas Kyoguro."
+    },
+    "navbar": {
+        "home": "HOME",
+        "objective": "OBJECTIVES",
+        "services": "SERVICES",
+        "technologies": "TECHNOLOGIES",
+        "contact": "CONTACT",
+        "login": "Log in",
+        "register": "Sign up",
+        "access": "Access",
+        "logout": "Log out"
+    },
+    "main": {
+        "slogan": "Artificial Intelligence for the diagnosis of hepatocellular carcinoma",
+        "description": "We are a company dedicated to developing technology and innovation for the future. We are committed to providing the best service to our customers."
+    },
+    "sections": {
+        "objectives": "Objectives",
+        "ai_detection": "AI Detection",
+        "ultrasound": "Liver Ultrasound",
+        "medical_analysis": "Medical Analysis",
+        "key_benefits": "Key Benefits",
+        "benefit_1": "✅ Higher accuracy in hepatocellular carcinoma detection.",
+        "benefit_2": "✅ Faster and more efficient diagnosis through AI.",
+        "benefit_3": "✅ Cost reduction in unnecessary medical tests.",
+        "benefit_4": "✅ Assistance to healthcare professionals in decision-making.",
+        
+
+
+        "our_services": "Our Services",
+        "services_description": "We provide advanced diagnostic tools based on convolutional neural networks (CNNs) to improve the accuracy and early detection of hepatocellular carcinoma (HCC). Our artificial intelligence model analyzes liver ultrasound images and clinical data to assist in medical decision-making.",
+        "ai_diagnosis": "AI Diagnosis",
+        "ai_diagnosis_description": "Our artificial intelligence model analyzes liver ultrasounds to detect and delimit hepatocellular carcinoma with high precision.",
+        "advanced_nn": "Advanced Neural Networks",
+        "advanced_nn_description": "We use CNNs trained with thousands of medical images to improve diagnosis sensitivity and specificity.",
+        "medical_collaboration": "Medical Collaboration",
+        "medical_collaboration_description": "We work with healthcare professionals to validate our model and ensure its effectiveness in real clinical settings.",
+        "interactive_platform": "Interactive Platform",
+        "interactive_platform_description": "Development of a web application where doctors can upload images and receive real-time predictions.",
+        "tumor_evaluation": "Tumor Evaluation",
+        "tumor_evaluation_description": "We not only detect the tumor but also analyze its stage and evolution to assist in clinical decision-making.",
+        "r_and_d": "Research and Development",
+        "r_and_d_description": "We continuously seek to improve our model through new deep learning techniques and larger datasets.",
+
+        "technologies": "Used technologies",
+        "ai_description": "AI-based development with deep learning to enhance medical detection.",
+
+        "ai_python_description": "We use Python with PyTorch to train advanced image detection models.",
+        "opencv_title": "Computer Vision",
+        "opencv_description": "We implement OpenCV for medical image processing and analysis.",
+        "frontend_title": "Frontend Development",
+        "frontend_description": "Our interactive platform is built with modern frontend technologies.",
+        "backend_title": "Backend Development",
+        "backend_description": "We develop robust and scalable APIs for managing medical data.",
+        "integration_title": "System Integration",
+        "integration_description": "Our solution integrates with medical workflows for a better user experience.",
+
+        "contact_title": "Contact Us",
+        "contact_description": "If you want more information or wish to collaborate with us, feel free to get in touch."
+    },
+    "input": {
+        "name": "Name",
+        "name_placeholder": "Introduce your name ",
+        "mail": "Email",
+        "mail_placeholder": "yourmail@gmail.com",
+        "message": "Message",
+        "message_placeholer": "Write your message here ...",
+        "submit": "Send Message",
+        "submiting": "Sending Mesage ..."
+    }
+}

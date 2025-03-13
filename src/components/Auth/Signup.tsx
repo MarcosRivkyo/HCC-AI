@@ -1,0 +1,196 @@
+import { useState } from 'react';
+
+import { 
+    getAuth, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+    fetchSignInMethodsForEmail 
+} from "firebase/auth";
+
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+
+import { Link } from 'react-router-dom';
+import { auth, db } from "../../config/firebase"; // Asegúrate de importar Firebase
+
+import ImageSlider from "../UI/ImageSlider";
+import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import logoGoogle from "../../assets/images/logo_google.jpg";
+
+
+function Signup() {
+    const auth = getAuth();
+    const db = getFirestore();
+    const navigate = useNavigate();
+    
+    const [authing, setAuthing] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [jobTitle, setJobTitle] = useState('');
+    const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
+    const [verificationMessage, setVerificationMessage] = useState('');
+
+
+
+
+    const signUpWithEmail = async () => {
+        if (password !== confirmPassword) {
+            setError('Las contraseñas no coinciden');
+            return;
+        }
+
+        setAuthing(true);
+        setError('');
+        setVerificationMessage('');
+
+        try {
+            // Crear usuario con email y contraseña
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Enviar email de verificación
+            await sendEmailVerification(user);
+
+            // Guardar datos en Firestore
+            await setDoc(doc(db, 'hcc_ai_users', user.uid), {
+                firstName: firstName,
+                lastName: lastName,
+                email: user.email,
+                jobTitle: jobTitle,
+                phone: phone,
+                createdAt: serverTimestamp(),
+                emailVerified: false // Puedes actualizar esto después de la verificación
+            });
+
+            setVerificationMessage('Registro exitoso. Por favor, verifica tu correo electrónico antes de iniciar sesión.');
+        } catch (error) {
+            console.log(error);
+            setError((error as any).message);
+        }
+
+        setAuthing(false);
+    };
+
+
+
+
+    const signInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+          const result = await signInWithPopup(auth, provider);
+          const user = result.user;
+      
+          // Verificar si el usuario ya tiene datos adicionales en Firestore
+          const userRef = doc(db, "hcc_ai_users", user.uid);
+          const docSnap = await getDoc(userRef);
+      
+          if (!docSnap.exists()) {
+            // Si no existe, guardar datos mínimos y redirigir al formulario
+            await setDoc(userRef, {
+              firstName: "",
+              lastName: "",
+              email: user.email,
+              jobTitle: "",
+              phone: "",
+              createdAt: new Date(),
+              emailVerified: true
+            });
+      
+            // Redirigir al formulario de registro para completar la información
+            window.location.href = "/completar-perfil";
+          } else {
+            console.log("Usuario ya registrado, redirigiendo al dashboard...");
+            window.location.href = "/dashboard";
+          }
+        } catch (error) {
+          console.error("Error al iniciar sesión con Google", error);
+        }
+      };
+
+
+
+    return (
+        <div className='w-full h-screen flex'>
+            {/* Parte izquierda */}
+            <div className="w-1/2 h-full flex flex-col bg-[#282c34]">
+                <ImageSlider />
+            </div>
+
+            {/* Parte derecha - formulario */}
+            <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
+                <div className="w-full flex flex-col max-w-[450px] mx-auto">
+                    <div className='w-full flex flex-col mb-10 text-white'>
+                        <img src={logoHCC_AI} alt="Logo HCC-AI" className="w-80 rounded-md center mx-auto mb-10 cursor-pointer" onClick={() => navigate('/') } />
+                        <h3 className="text-4xl font-bold mb-2 text-center">Registrarse</h3>
+                        <p className="text-lg mb-4 text-center">¡Bienvenido! Introduce tus datos para registrarte.</p>
+                    </div>
+
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='text' placeholder='Nombre' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        <input type='text' placeholder='Apellido' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    </div>
+
+                    <input type='email' placeholder='Email' className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='password' placeholder='Contraseña' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type='password' placeholder='Repetir Contraseña' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                    </div>
+
+                    <div className='w-full flex flex-wrap gap-4 mb-6'>
+                        <input type='text' placeholder='Puesto' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
+                        <input type='text' placeholder='Número de Teléfono' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    </div>
+
+                    {/* Mostrar errores */}
+                    {error && <div className='text-red-500 mb-4'>{error}</div>}
+                    
+                    {/* Mostrar mensaje de verificación */}
+                    {verificationMessage && <div className='text-green-500 mb-4'>{verificationMessage}</div>}
+
+                    {/* Botón de registro */}
+                    <div className='w-full flex flex-col mb-4'>
+                        <button
+                            onClick={signUpWithEmail}
+                            disabled={authing}
+                            className='w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer'>
+                            Registrarse
+                        </button>
+                    </div>
+
+                    <div className='w-full flex items-center justify-center relative py-4'>
+                        <div className='w-full h-[1px] bg-gray-500'></div>
+                        <p className='text-lg absolute text-gray-500 bg-black px-2'>OR</p>
+                    </div>
+
+                    <button
+                        disabled={authing}
+                        className='w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7'
+                        onClick={signInWithGoogle}
+                    >
+                        <img src={logoGoogle} alt="Google Logo" className="w-10 h-10 mr-20" />
+                        Registrarse con Google
+                    </button>
+                </div>
+
+                <div className="w-full flex items-center justify-center mt-10">
+                    <p className="text-sm font-normal text-gray-400">
+                        ¿Ya tienes cuenta?  
+                        <span className="font-semibold text-white cursor-pointer underline">
+                            <Link to="/login">Inicia Sesión</Link>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Signup;
