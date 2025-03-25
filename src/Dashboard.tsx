@@ -81,7 +81,7 @@ const Dashboard = () => {
   const db = getFirestore();
   const navigate = useNavigate();
 
-
+  usePreventZoom(true, true);
   
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -272,7 +272,6 @@ const Dashboard = () => {
   return (
     
     <div className={`flex flex-col min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
-
       <ToastContainer 
         position="top-right"
         autoClose={3000}
