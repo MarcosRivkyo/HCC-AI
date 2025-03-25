@@ -1,25 +1,17 @@
 import { useState } from "react";
 import { 
     getAuth, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
     signInWithEmailAndPassword, 
-    sendEmailVerification, 
     sendPasswordResetEmail 
 } from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
-
 import { Link } from 'react-router-dom';
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "../../config/firebase"; // Asegúrate de importar Firebase
-import { updateDoc } from 'firebase/firestore';
-
+import { auth } from "../../config/firebase"; // Asegúrate de importar Firebase
 import ImageSlider from "../UI/ImageSlider";
-
-
-import logoGoogle from "../../assets/images/logo_google.jpg";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import { FirebaseError } from "firebase/app"; // Importar el tipo de error de Firebase
+import { signOut } from "firebase/auth"; // Asegúrate de importar signOut
 
 const Login = () => {
     const auth = getAuth();
@@ -27,133 +19,71 @@ const Login = () => {
 
     const [authing, setAuthing] = useState(false);
     const [email, setEmail] = useState("");
+    const [resetEmail, setResetEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-
-
-
-
-
-
-
-
-    const signInWithGoogle = async () => {
-      const provider = new GoogleAuthProvider();
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-    
-        // Verificar si el usuario ya tiene datos adicionales en Firestore
-        const userRef = doc(db, "hcc_ai_users", user.uid);
-        const docSnap = await getDoc(userRef);
-    
-        if (!docSnap.exists()) {
-          // Si no existe, guardar datos mínimos y redirigir al formulario
-          await setDoc(userRef, {
-            firstName: "",
-            lastName: "",
-            email: user.email,
-            phone: "",
-            createdAt: new Date(),
-          });
-    
-          // Redirigir al formulario de registro para completar la información
-          window.location.href = "/completar-perfil";
-        } else {
-          console.log("Usuario ya registrado, redirigiendo al dashboard...");
-          window.location.href = "/dashboard";
-        }
-      } catch (error) {
-        console.error("Error al iniciar sesión con Google", error);
-      }
-    };
-
+    const [showResetInput, setShowResetInput] = useState(false);
 
     // Iniciar sesión con email y contraseña
-    const signInWithEmail = async () => {
-        setAuthing(true);
-        setError("");
 
+    const signInWithEmail = async () => { 
+        setAuthing(true);
+        setError("");  // Limpiar cualquier error anterior
+    
         signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 const user = userCredential.user;
-                if (user.emailVerified) {
+                
+                // Mostrar los datos del usuario en la consola
+                console.log("Usuario validado?:", user);
+    
+                if (user.emailVerified === true) {
                     navigate("/dashboard"); // Redirigir si está verificado
                 } else {
+                    
+                    
+                    // Cerrar sesión si el correo no está verificado
+                    await signOut(auth);
                     setError("Debes verificar tu correo antes de acceder.");
-                    // Aquí llamas a checkEmailVerification
-                    await checkEmailVerification(); 
                 }
                 setAuthing(false);
             })
             .catch((error) => {
-                console.log(error);
-                setError(error.message);
+                console.log("Error en la autenticación:", error);
+                
+                if (error.code === "auth/invalid-credential") {
+                    setError("Los datos introducidos no fueron correctos.");
+                } else {
+                    setError(error.message); 
+                }
                 setAuthing(false);
             });
     };
-
-
-
-
-
-
-    // Enviar correo de verificación
-    const sendVerificationEmail = async () => {
-        const user = auth.currentUser;
-        if (user) {
-            sendEmailVerification(user)
-                .then(() => {
-                    setSuccessMessage("Correo de verificación enviado. Revisa tu bandeja de entrada.");
-                })
-                .catch((error) => {
-                    console.log(error);
-                    setError(error.message);
-                });
-        } else {
-            setError("Inicia sesión primero para enviar la verificación.");
-        }
-    };
-
-
-    const checkEmailVerification = async () => {
-        const user = auth.currentUser;
-        if (user) {
-            // Recarga el estado del usuario para obtener la información actualizada
-            await user.reload();
     
-            // Verifica si el correo está confirmado
-            if (user.emailVerified) {
-                // Actualiza el campo emailVerified en Firestore
-                const userRef = doc(db, 'hcc_ai_users', user.uid);
-                try {
-                    await updateDoc(userRef, {
-                        emailVerified: true,
-                    });
-                    console.log("El correo ha sido verificado y actualizado en Firestore.");
-                } catch (error) {
-                    console.error("Error al actualizar el estado de verificación en Firestore", error);
-                }
-            } else {
-                console.log("El correo aún no está verificado.");
-            }
-        } else {
-            console.log("No hay un usuario autenticado.");
-        }
-    };
     
 
-
+    
     const handlePasswordReset = async () => {
-        if (!email) {
+        if (!resetEmail) {
             setError("Por favor, introduce tu email para restablecer la contraseña.");
             return;
         }
-        sendPasswordResetEmail(auth, email)
-            .then(() => setSuccessMessage("Se ha enviado un correo para restablecer tu contraseña."))
-            .catch((error) => setError(error.message));
+    
+        try {
+            // Intentar enviar el correo de restablecimiento
+            await sendPasswordResetEmail(auth, resetEmail);
+            setSuccessMessage("Se ha enviado un correo para restablecer tu contraseña.");
+        } catch (error) {
+            // Hacer un type assertion para decir que error es un FirebaseError
+            if ((error as FirebaseError).code === "auth/user-not-found") {
+                setError("No hay una cuenta registrada con ese correo.");
+            } else {
+                setError((error as FirebaseError).message);
+            }
+        }
     };
+    
 
     return (
         <div className="w-full h-screen flex">
@@ -202,39 +132,43 @@ const Login = () => {
                     </div>
 
                     {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-
                     {successMessage && <div className="text-green-500 mb-4 text-center">{successMessage}</div>}
 
-                    <div className="text-center">
-                        <button onClick={handlePasswordReset} className="text-gray-400 text-sm underline">¿Olvidaste tu contraseña?</button>
-                    </div>
-                    
-                    {/* Si el usuario no está verificado, permitir reenviar email de verificación */}
-                    {error === "Debes verificar tu correo antes de acceder." && (
-                        <div className="text-center mt-4">
-                            <button onClick={sendVerificationEmail} className="text-blue-400 text-sm underline">Reenviar correo de verificación</button>
+                    {/* Botón para mostrar el input de recuperación de contraseña o el campo de correo para recuperación */}
+                    {!showResetInput ? (
+                        <div className="text-center">
+                            <button onClick={() => setShowResetInput(true)} className="text-gray-400 text-sm underline">
+                                ¿Olvidaste tu contraseña?
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="w-full flex flex-col mb-6">
+                            <input
+                                type="email"
+                                placeholder="Introduce tu correo para restablecer la contraseña"
+                                className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
+                                value={resetEmail}
+                                onChange={(e) => setResetEmail(e.target.value)}
+                            />
+                            <div className="w-full flex flex-col mb-4">
+                                <button
+                                    onClick={handlePasswordReset}
+                                    className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
+                                >
+                                    Enviar correo de recuperación
+                                </button>
+                            </div>
+                            <div className="text-center mt-2">
+                                <button onClick={() => setShowResetInput(false)} className="text-gray-400 text-sm underline">
+                                    Cancelar recuperación
+                                </button>
+                            </div>
                         </div>
                     )}
-
-                    <div className="w-full flex items-center justify-center relative py-4">
-                        <div className="w-full h-[1px] bg-gray-500"></div>
-                        <p className="text-lg absolute text-gray-500 bg-black px-2">O</p>
+                    <div className='w-full flex items-center justify-center relative py-4'>
+                        <div className='w-full h-[1px] bg-gray-500'></div>
+                        <p className='text-lg absolute text-gray-500 bg-black px-2'>OR</p>
                     </div>
-
-                    {/* Botón para iniciar sesión con Google */}
-                    <button
-                        className="w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7"
-                        onClick={signInWithGoogle}
-                        disabled={authing}
-                    >
-                        <img 
-                            src={logoGoogle}
-                            alt="Google Logo"
-                            className="w-10 h-10 mr-20"
-                        />
-                        Iniciar Sesión con Google
-                    </button>
-
                     {/* Enlace para registrarse */}
                     <div className="w-full flex items-center justify-center mt-10">
                         <p className="text-sm font-normal text-gray-400">
@@ -244,7 +178,6 @@ const Login = () => {
                             </span>
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>

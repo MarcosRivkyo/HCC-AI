@@ -5,6 +5,10 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 
+import { db } from '../../config/firebase'; // Asegúrate de tener configurado tu firebase correctamente
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { updateProfile } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 
@@ -72,12 +76,17 @@ const Navbar: React.FC = () => {
   
         <div className="ml-auto flex space-x-8">
           {user ? (
-            <div className="relative">
+            <div className="relative w-64">
   
             <div className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-gray-800 rounded-lg" onClick={() => setIsOpen(!isOpen)}>
-              <img src={logo_user || user?.photoURL} alt="Perfil" className="w-10 h-10 rounded-full" />
-              <span className="font-semibold">{userData ? `${userData.firstName} ${userData.lastName}` : user?.displayName || user?.email || "Usuario"}</span>
-            </div>
+              <img src={ user?.photoURL || userData?.profilePicture || logo_user} alt="Perfil" className="w-10 h-10 rounded-full" />
+              <span className="font-semibold">
+                {user?.displayName || (userData && (userData.firstName || userData.lastName) 
+                ? `${userData.firstName} ${userData.lastName}` 
+                : user?.email || "Usuario")}              
+                
+              </span>            
+              </div>
   
             {isOpen && (
               <div className="absolute top-full left-0 w-full bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-2">
