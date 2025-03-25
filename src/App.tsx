@@ -1,42 +1,31 @@
 import React from 'react';
 import './index.css';
 
-import { useNavigate } from 'react-router-dom';
-import { initializeApp } from "firebase/app";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
+
 import axios from "axios";
 import i18next from 'i18next';
 
 
 import ImageSlider from "./components/UI/ImageSlider2.tsx";
 import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
-import Logout from "./components/Auth/Logout.tsx";
+
 import Footer from "./components/UI/Footer.tsx";
 import Navbar from './components/UI/Navbar.tsx';
+import usePreventZoom from './components/UI/usePreventZoom.tsx';
 
-import logoHCC_AI from "./assets/images/logo_hcc_ai.jpg";
 import ia_cancer from "./assets/images/ia_cancer.png";
 import hepato_eco from "./assets/images/hepatic_eco.png";
-import logo_user from "./assets/images/logo_user.png";
 import spanishFlag from "./assets/images/spanish_language.png";
 import englishFlag from "./assets/images/english_language.png";
 import analisis_medico  from "./assets/images/analisis_medico.png";
 
 
-import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { FaPython, FaReact, FaAngular, FaCogs, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { SiPytorch, SiOpencv, SiSharp } from "react-icons/si";
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaMicroscope, FaBrain, FaHospital, FaChartLine, FaLaptopMedical, FaSearch } from "react-icons/fa";
-
-
-
-
-
 
 
 
@@ -44,22 +33,6 @@ const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 };
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDOJoSj4BPVEORJDgIN5H-TJN9JvXQdEnA",
-  authDomain: "hcc-ai.firebaseapp.com",
-  projectId: "hcc-ai",
-  storageBucket: "hcc-ai.firebasestorage.app",
-  messagingSenderId: "822292218390",
-  appId: "1:822292218390:web:5dffe0efc7b45a382a6b37"
-};
-
-
-initializeApp(firebaseConfig);
-
-
-
 
 
 
@@ -89,7 +62,6 @@ const LanguageToggleButton: React.FC = () => {
 };
 
 
-
 const ContactButton: React.FC = () => {
 
   const [selectedSection, setSelectedSection] = useState<string>("home");
@@ -98,8 +70,6 @@ const ContactButton: React.FC = () => {
     setSelectedSection(id);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
-
-
 
   return (
     <div className="fixed bottom-5 right-5 z-50">
@@ -118,7 +88,6 @@ const Home: React.FC = () => {
   const [showSecondTextEffect, setShowSecondTextEffect] = useState(false);
 
   useEffect(() => {
-    // Mostrar el primer efecto al cargar el componente
     const timer1 = setTimeout(() => {
       setShowFirstTextEffect(true); // Mostrar el primer efecto
     }, 500); // Espera 500 ms para que el primer efecto aparezca
@@ -383,7 +352,7 @@ const Contact: React.FC = () => {
     setResponseMessage(""); // Borra mensajes anteriores
 
     try {
-      const response = await axios.post("https://fastapi-project-1084523848624.europe-southwest1.run.app/send-email/", formData, {
+      const response = await axios.post("http://localhost:8000/send-email/", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -474,6 +443,8 @@ const Contact: React.FC = () => {
 
 function App(){
 
+  usePreventZoom();
+  
   return (
     <div className="bg-black text-white min-h-screen">
 

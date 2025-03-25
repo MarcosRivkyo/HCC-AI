@@ -19,9 +19,10 @@ import Signup from './components/Auth/Signup.tsx';
 import AuthRoute from './AuthRoute.tsx';
 import CompleteProfile from './components/Auth/CompleteProfile.tsx';
 import Assistant from './components/Pages/Assistant.tsx';
-
-
-
+import ImageEditor from "./ImageEditor.tsx";
+import FabricEditor from "./FabricEditor.tsx";
+import EstudioDetalle from "./EstudioDetalle.tsx";
+import ImageCarrousel from "./ImageCarrousel.tsx";
 
 i18next.init({
   interpolation: { escapeValue: false },
@@ -47,11 +48,12 @@ root.render(
             <Router>  
                 <Routes>  
                     <Route path="/" element={<App />} />
-                    <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+                    <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} /> #quite Authroute
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
                     <Route path="/assistant" element={<Assistant />} />
-                    <Route path="/completar-perfil" element={<CompleteProfile />} />
+                    <Route path="/editar-imagen" element={<FabricEditor />} />
+                    <Route path="/estudio/:id" element={<EstudioDetalle />} /> 
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </Router>

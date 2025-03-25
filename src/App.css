@@ -1,0 +1,190 @@
+.editor {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #1f1f1f;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  max-width: 1400px;
+  margin: auto;
+  gap: 2rem;
+  min-height: 700px;
+}
+
+/* LADO IZQUIERDO: Editor de imagen */
+.editor-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Canvas con estilo atractivo */
+.canvasbox {
+  background-color: #444;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 600px;
+}
+
+.canvasbox canvas {
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  width: 100%;
+  max-height: 500px;
+}
+
+/* Botón Predecir */
+.predict-button {
+  margin-top: 1rem;
+  padding: 12px 24px;
+  background-color: #edbd50;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.predict-button:hover {
+  background-color: #f2cb69;
+}
+
+/* Herramientas */
+.toolbox {
+  display: flex;
+  flex-direction: row; /* HORIZONTAL */
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 20px;
+  background-color: #3a3a3a;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.toolbox button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toolbox button:hover {
+  background-color: #555;
+}
+
+.toolbox button.active {
+  background-color: #edbd50;
+  color: black;
+}
+
+/* LADO DERECHO: Resultado */
+.editor-right {
+  flex: 1;
+  background-color: #292929;
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: auto;
+}
+
+/* Estilo para mostrar resultado */
+.result-display {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #edbd50;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  font-size: 18px;
+  color: #edbd50;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .editor {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .editor-right,
+  .editor-left {
+    width: 100%;
+  }
+}
+
+
+
+
+
+.brush-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.brush-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brush-label {
+  font-size: 14px;
+}
+
+.brush-type-picker,
+.brush-color-picker,
+.brush-width-picker {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.brush-type-picker {
+  width: 120px;
+  z-index: 10
+}
+
+.brush-color-picker {
+  width: 50px;
+}
+
+.brush-width-picker {
+  width: 60px;
+}
+
+
+
+.slick-slider {
+  background-color: #000000; 
+  padding: 20px; 
+}
+
+
+.slick-prev {
+  left: 10px; 
+}
+
+.slick-next {
+  right: 10px; 
+}
+

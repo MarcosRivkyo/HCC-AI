@@ -6,6 +6,7 @@ import {
     GoogleAuthProvider, 
     createUserWithEmailAndPassword,
     sendEmailVerification,
+    updateProfile,
     fetchSignInMethodsForEmail 
 } from "firebase/auth";
 
@@ -29,7 +30,9 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    
+    const [accessCode, setAccessCode] = useState('');
+
+    const [userName, setUserName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [jobTitle, setJobTitle] = useState('');
@@ -37,10 +40,20 @@ function Signup() {
     const [error, setError] = useState('');
     const [verificationMessage, setVerificationMessage] = useState('');
 
-
+    const defaultProfilePictureUrl = "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/UI%2FprofileImg%2FdefaultProfileImg.png?alt=media&token=ef91d8f1-771c-4c47-9c3a-aabfbb10bf77";
 
 
     const signUpWithEmail = async () => {
+
+        const validCodes = ['HCC2025_CODE_1'];
+
+        if (!validCodes.includes(accessCode.trim())) {
+            setError('El código de acceso es inválido.');
+            setAuthing(false);
+            return;
+        }
+
+
         if (password !== confirmPassword) {
             setError('Las contraseñas no coinciden');
             return;
@@ -55,64 +68,43 @@ function Signup() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Enviar email de verificación
+            await updateProfile(user, {
+                displayName: userName,
+                photoURL: defaultProfilePictureUrl,
+            });            
+
             await sendEmailVerification(user);
 
             // Guardar datos en Firestore
             await setDoc(doc(db, 'hcc_ai_users', user.uid), {
+                userName: userName,
                 firstName: firstName,
                 lastName: lastName,
                 email: user.email,
                 jobTitle: jobTitle,
                 phone: phone,
-                createdAt: serverTimestamp(),
-                emailVerified: false // Puedes actualizar esto después de la verificación
+                profilePicture: defaultProfilePictureUrl, 
+                createdAt: serverTimestamp()
             });
 
             setVerificationMessage('Registro exitoso. Por favor, verifica tu correo electrónico antes de iniciar sesión.');
+            
         } catch (error) {
             console.log(error);
-            setError((error as any).message);
+
+            if ((error as any).code === 'auth/email-already-in-use') {
+                setError('Esta dirección de correo ya está registrada.');
+            } else if ((error as any).code === 'auth/weak-password') {
+                setError('La contraseña debe tener al menos 6 caracteres.');
+            } else {
+                setError('Hubo un error en el registro. Inténtalo de nuevo.');
+            }
         }
 
         setAuthing(false);
     };
 
 
-
-
-    const signInWithGoogle = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-          const result = await signInWithPopup(auth, provider);
-          const user = result.user;
-      
-          // Verificar si el usuario ya tiene datos adicionales en Firestore
-          const userRef = doc(db, "hcc_ai_users", user.uid);
-          const docSnap = await getDoc(userRef);
-      
-          if (!docSnap.exists()) {
-            // Si no existe, guardar datos mínimos y redirigir al formulario
-            await setDoc(userRef, {
-              firstName: "",
-              lastName: "",
-              email: user.email,
-              jobTitle: "",
-              phone: "",
-              createdAt: new Date(),
-              emailVerified: true
-            });
-      
-            // Redirigir al formulario de registro para completar la información
-            window.location.href = "/completar-perfil";
-          } else {
-            console.log("Usuario ya registrado, redirigiendo al dashboard...");
-            window.location.href = "/dashboard";
-          }
-        } catch (error) {
-          console.error("Error al iniciar sesión con Google", error);
-        }
-      };
 
 
 
@@ -132,9 +124,11 @@ function Signup() {
                         <p className="text-lg mb-4 text-center">¡Bienvenido! Introduce tus datos para registrarte.</p>
                     </div>
 
+                    <input type='text' placeholder='Nombre de Usuario' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white mb-4' value={userName} onChange={(e) => setUserName(e.target.value)} />
+
                     <div className='w-full flex flex-wrap gap-4 mb-6'>
                         <input type='text' placeholder='Nombre' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                        <input type='text' placeholder='Apellido' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        <input type='text' placeholder='Apellidos' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     </div>
 
                     <input type='email' placeholder='Email' className='w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -148,6 +142,8 @@ function Signup() {
                         <input type='text' placeholder='Puesto' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
                         <input type='text' placeholder='Número de Teléfono' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white' value={phone} onChange={(e) => setPhone(e.target.value)} />
                     </div>
+                    
+                    <input type='text' placeholder='Código' className='flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white mb-6' value={accessCode} onChange={(e) => setAccessCode(e.target.value)} />
 
                     {/* Mostrar errores */}
                     {error && <div className='text-red-500 mb-4'>{error}</div>}
@@ -170,14 +166,6 @@ function Signup() {
                         <p className='text-lg absolute text-gray-500 bg-black px-2'>OR</p>
                     </div>
 
-                    <button
-                        disabled={authing}
-                        className='w-full bg-white text-black font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer mt-7'
-                        onClick={signInWithGoogle}
-                    >
-                        <img src={logoGoogle} alt="Google Logo" className="w-10 h-10 mr-20" />
-                        Registrarse con Google
-                    </button>
                 </div>
 
                 <div className="w-full flex items-center justify-center mt-10">

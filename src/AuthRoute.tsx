@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import logoHCC_AI from "./assets/images/logo_hcc_ai.jpg"; 
 
-
 export interface IAuthRouteProps {
     children: React.ReactNode;
 }
@@ -22,13 +21,20 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             const elapsedTime = Date.now() - startTime;
-            const delay = Math.max(1000 - elapsedTime, 0); // Asegura mínimo 0.5s de carga
+            const delay = Math.max(1000 - elapsedTime, 0);
             
             setTimeout(() => {
                 setLoading(false);
-                if (currentUser && (location.pathname === "/login" || location.pathname === "/signup")) {
-                    navigate("/dashboard");
+
+                if (currentUser) {
+                    if (!currentUser.emailVerified) {
+                        return;
+                    }
+                    if (location.pathname === "/login" || location.pathname === "/signup") {
+                        navigate("/dashboard");
+                    }
                 }
+
                 if (!currentUser && location.pathname === "/dashboard") {
                     navigate("/login");
                 }
