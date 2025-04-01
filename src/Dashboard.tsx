@@ -61,7 +61,8 @@ const Dashboard = () => {
 
   const [isSaving, setIsSaving] = useState(false); // Added state for saving
   const [previewImage, setPreviewImage] = useState<string | null>(null); // State for preview image
-  
+  const [newUploadImage, setNewUploadImage] = useState<File | null>(null);
+
 
   const [pacientes, setPacientes] = useState<{ id: string; nombre: string }[]>([]);
   const [formData, setFormData] = useState({
@@ -151,7 +152,42 @@ const Dashboard = () => {
     setExpandedItem(expandedItem === item ? null : item); 
   };
 
+  const uploadImage = async () => {
 
+    if (!user) return;
+
+    try {
+      setIsSaving(true);
+  
+  
+      const imageFolder = `HCC-AI/users/${user.uid}/ecografias/`;
+
+      if (newUploadImage) {
+        const imageRef = ref(storage, `${imageFolder}${Date.now()}_${newUploadImage.name}`);
+        await uploadBytes(imageRef, newUploadImage);
+        const imageUrl = await getDownloadURL(imageRef);
+
+      }
+  
+      await updateDoc(doc(db, 'hcc_ai_users', user.uid), {
+        imageFolder: imageFolder
+      });
+  
+
+
+
+  
+      toast.success("Datos actualizados correctamente");
+    } catch (error) {
+      console.error("Error al actualizar perfil:", error);
+      toast.error("Hubo un error al guardar los cambios");
+    } finally {
+      setIsSaving(false);
+      setNewProfileImage(null); 
+    }
+
+
+  };
 
   const updateUserData = async () => {
 
@@ -271,7 +307,7 @@ const Dashboard = () => {
 
   return (
     
-    <div className={`flex flex-col min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+  <div className={`flex flex-col min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
       <ToastContainer 
         position="top-right"
         autoClose={3000}
@@ -340,7 +376,7 @@ const Dashboard = () => {
       {/* Contenido Principal */}
 
 
-<div className={`flex flex-col h-screen pt-24 px-6 bg-gray-50 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'} `}>
+<div className={`flex-1 flex-col h-screen pt-24 px-6 bg-gray-50 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'} `}>
   
   <div className={`flex pt-10 pb-10  px-6 h-full bg-gray-50 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
 
@@ -369,133 +405,160 @@ const Dashboard = () => {
     </div>
   <div className="w-1/2 h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6 flex flex-col">
 
-  <h2 className="text-xl font-semibold text-gray-800 mb-4">Estudios Recientes</h2>
-  
-  <main className="flex-1 overflow-auto">
-    {/* Contenido de Estudios Recientes */}
-    <EstudiosRecientes />
-  </main>
+    <h2 className="text-xl font-semibold text-gray-800 mb-4">Estudios Recientes</h2>
+    
+    <main className="flex-1 overflow-auto">
+      {/* Contenido de Estudios Recientes */}
+      <EstudiosRecientes />
+    </main>
 
-  <div className="mt-5">
-    <button 
-      onClick={abrirFormulario} 
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4 mx-auto"
-    >
-      Crear Estudio
-    </button>
+    <div className="mt-5">
+      <button 
+        onClick={abrirFormulario} 
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4 mx-auto"
+      >
+        Crear Estudio
+      </button>
 
-    {mostrarFormulario && (
-      <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{ zIndex: 1000 }}>
-        <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-          <h2 className="text-lg font-semibold mb-4">Crear Nuevo Estudio</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block mb-2" htmlFor="studieName">
-                Nombre del Estudio
-              </label>
-              <input
-                id="studieName"
-                name="studieName"
-                type="text"
-                value={formData.studieName}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              />
-            </div>
+      {mostrarFormulario && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{ zIndex: 1000 }}>
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-lg font-semibold mb-4">Crear Nuevo Estudio</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block mb-2" htmlFor="studieName">
+                  Nombre del Estudio
+                </label>
+                <input
+                  id="studieName"
+                  name="studieName"
+                  type="text"
+                  value={formData.studieName}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
 
-            <div className="mb-4">
-              <label className="block mb-2" htmlFor="status">
-                Estado
-              </label>
-              <select
-                id="status"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              >
-                <option value="In Progress">En Progreso</option>
-                <option value="Finished">Finalizado</option>
-              </select>
-            </div>
+              <div className="mb-4">
+                <label className="block mb-2" htmlFor="status">
+                  Estado
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                >
+                  <option value="In Progress">En Progreso</option>
+                  <option value="Finished">Finalizado</option>
+                </select>
+              </div>
 
-            <div className="mb-4">
-              <label className="block mb-2" htmlFor="studieDate">
-                Fecha de Estudio
-              </label>
-              <input
-                id="studieDate"
-                name="studieDate"
-                type="date"
-                value={formData.studieDate}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              />
-            </div>
+              <div className="mb-4">
+                <label className="block mb-2" htmlFor="studieDate">
+                  Fecha de Estudio
+                </label>
+                <input
+                  id="studieDate"
+                  name="studieDate"
+                  type="date"
+                  value={formData.studieDate}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+              </div>
 
-            {/* Selección de paciente */}
-            <div className="mb-4">
-              <label className="block mb-2" htmlFor="pacienteId">
-                Nombre del Paciente
-              </label>
-              <select
-                id="pacienteId"
-                name="pacienteId"
-                value={formData.pacienteId}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              >
-                <option value="">Seleccione un paciente</option>
-                {pacientes.map((paciente) => (
-                  <option key={paciente.id} value={paciente.id}>
-                    {paciente.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+              {/* Selección de paciente */}
+              <div className="mb-4">
+                <label className="block mb-2" htmlFor="pacienteId">
+                  Nombre del Paciente
+                </label>
+                <select
+                  id="pacienteId"
+                  name="pacienteId"
+                  value={formData.pacienteId}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                >
+                  <option value="">Seleccione un paciente</option>
+                  {pacientes.map((paciente) => (
+                    <option key={paciente.id} value={paciente.id}>
+                      {paciente.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={cerrarFormulario}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg mr-2"
-              >
-                Cancelar
-              </button>
-              <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
-                Crear Estudio
-              </button>
-            </div>
-          </form>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={cerrarFormulario}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg mr-2"
+                >
+                  Cancelar
+                </button>
+                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+                  Crear Estudio
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    )}
+      )}
+    </div>
   </div>
-</div>
 
 
     {/* Parte Derecha (mitad dividida en dos filas) */}
-    <div className="w-1/2 h-full flex flex-col gap-6">
+  <div className="w-1/2 h-full flex flex-col gap-6">
 
-
-      {/* Fila inferior con el editor de imágenes */}
       <div className="flex-1 bg-white rounded-lg shadow-md p-6 border border-gray-300">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Editor de Imágenes</h2>
-            <main className="flex-1 overflow-auto">
-              <div className="w-full h-full">
-                <ImageCarrousel onImageSelect={handleImageSelect} /> {/* Pasar la función de selección */}
-              </div>
-            </main>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Editor de Imágenes</h2>
+        <div className="w-full h-full">
 
+          {/* Fila de los botones */}
+          <div className="flex justify-between gap-4 mb-4">
+            {/* Botón Elegir Imagen */}
+            <label
+              htmlFor="fileInput"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 rounded-md cursor-pointer transition duration-300 w-auto"
+            >
+              Elegir Imagen
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              accept=".png, .jpg, .jpeg"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setNewUploadImage(e.target.files[0]);
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    if (typeof reader.result === "string") {
+                      setPreviewImage(reader.result);
+                    }
+                  };
+                  reader.readAsDataURL(e.target.files[0]);
+                }
+              }}
+              className="hidden"
+            />
+
+            {/* Botón Guardar Cambios */}
+            <button
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold p-2 rounded-md transition duration-300"
+              onClick={uploadImage}
+            >
+              Guardar Cambios
+            </button>
+          </div>
+
+          {/* Carrusel de imágenes */}
+          <ImageCarrousel onImageSelect={handleImageSelect} /> {/* Pasar la función de selección */}
+
+          </div>
       </div>
-
-
-
-
-
-
-
-
 
 
 
@@ -512,9 +575,10 @@ const Dashboard = () => {
 
 
   {/* Footer */}
-  <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg">
-    © 2025 HCC-AI 
+  <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+    © 2025 HCC-AI
   </footer>
+
 </div>
 
 
