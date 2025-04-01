@@ -74,6 +74,7 @@ function Signup() {
             });            
 
             await sendEmailVerification(user);
+            const imageFolder = `HCC-AI/users/${user.uid}/images/`;
 
             // Guardar datos en Firestore
             await setDoc(doc(db, 'hcc_ai_users', user.uid), {
@@ -84,6 +85,7 @@ function Signup() {
                 jobTitle: jobTitle,
                 phone: phone,
                 profilePicture: defaultProfilePictureUrl, 
+                imageFolder: imageFolder,
                 createdAt: serverTimestamp()
             });
 

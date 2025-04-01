@@ -184,7 +184,7 @@ const EstudiosRecientes = () => {
 
       {/* Confirmación de eliminación */}
       {confirmarEliminacion && (
-        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{ zIndex: 1000 }}>
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">¿Estás seguro de eliminar este estudio?</h3>
             <div className="flex justify-between">

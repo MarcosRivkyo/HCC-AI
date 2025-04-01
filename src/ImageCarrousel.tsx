@@ -22,14 +22,17 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
   useEffect(() => {
     const obtenerImagenes = async () => {
       if (user) {
-        const storageRef = ref(storage, `HCC-AI/images/profile_pictures/`);
+        const imageFolder = `HCC-AI/users/${user.uid}/ecografias/`;
+        const storageRef = ref(storage, imageFolder); // Usar imageFolder en la referencia
         try {
           const result = await listAll(storageRef);
           const urls: string[] = [];
 
           for (const item of result.items) {
             const url = await getDownloadURL(item);
-            urls.push(url);
+            if (!urls.includes(url)) { // Verificar si la URL ya está en el array
+              urls.push(url);
+            }
           }
 
           setImagenes(urls);
@@ -75,12 +78,12 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
             {imagenes.length > 0 ? (
               imagenes.map((url, index) => (
                 <div key={index} onClick={(e) => handleImageClick(url, e)}>
-                    <img
+                  <img
                     src={url}
                     alt={`Imagen ${index + 1}`}
                     className="w-full h-64 object-contain rounded-lg cursor-pointer"
-                    />
-              </div>
+                  />
+                </div>
               ))
             ) : (
               <p>No se encontraron imágenes.</p>
