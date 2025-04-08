@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { app } from './config/firebase';
+import { app } from '../../config/firebase';
 
 const ModelosDisponibles = () => {
   const [modelos, setModelos] = useState<{ id: string; [key: string]: any }[]>([]);

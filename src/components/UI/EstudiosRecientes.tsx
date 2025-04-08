@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-import { app } from './config/firebase';
+import { app } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { FaEllipsisV, FaDownload, FaTrashAlt } from 'react-icons/fa'; // Importa los íconos
 

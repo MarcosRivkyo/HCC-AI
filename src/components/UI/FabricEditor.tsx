@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Toolbox from './Toolbox';
 import EditorCanvas from './EditorCanvas';
-import './App.css';
+import '../../App.css';
 import * as fabric from 'fabric';
 import { Canvas, PencilBrush, CircleBrush, SprayBrush, FabricImage, filters, Image, Object as FabricObject } from 'fabric';
 import logoHCC_AI from "./assets/images/logo_hcc_ai.jpg";

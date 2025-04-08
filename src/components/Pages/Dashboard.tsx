@@ -6,22 +6,22 @@ import { getFirestore, doc, getDoc, updateDoc, setDoc } from "firebase/firestore
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "./config/firebase.ts";
+import { storage } from "../../config/firebase.ts";
 
 
-import Logout from "./components/Auth/Logout";
-import Assistant from "./components/Pages/Assistant";
-import usePreventZoom from "./components/UI/usePreventZoom";
-import Modal from "./components/UI/Modal";
-import DeleteAccountButton from "./components/UI/DeleteAccountButton";
-import EstudiosRecientes from "./EstudiosRecientes";
-import ChangePasswordForm from "./components/UI/ChangePasswordForm";
-import ModelosDisponibles from "./ModelosDisponibles"
-import ImageCarrousel from "./ImageCarrousel.tsx";
+import Logout from "../Auth/Logout.tsx";
+import Assistant from "./Assistant.tsx";
+import usePreventZoom from "../UI/usePreventZoom.tsx";
+import Modal from "../UI/Modal.tsx";
+import DeleteAccountButton from "../UI/DeleteAccountButton.tsx";
+import EstudiosRecientes from "../UI/EstudiosRecientes.tsx";
+import ChangePasswordForm from "../UI/ChangePasswordForm.tsx";
+import ModelosDisponibles from "../UI/ModelosDisponibles.tsx"
+import ImageCarrousel from "../UI/ImageCarrousel.tsx";
 
-import logoHCC_AI from "./assets/images/logo_hcc_ai.jpg";
-import settingsIcon from "./assets/images/settings_icon.png";
-import logo_user from "./assets/images/logo_user.png";
+import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import settingsIcon from "../../assets/images/settings_icon.png";
+import logo_user from "../../assets/images/logo_user.png";
 
 
 import { FiArrowRight, FiArrowLeft } from 'react-icons/fi'; 
@@ -40,7 +40,6 @@ const Dashboard = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
-  const [showAnalysis, setShowAnalysis] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [activeSection, setActiveSection] = useState('Cuenta');
@@ -333,7 +332,7 @@ const Dashboard = () => {
             </li>
           ))}
           <li>
-            <button onClick={() => setShowAnalysis(!showAnalysis)} className="ml-6 hover:text-gray-300">
+            <button onClick={() => navigate("/predict")} className="ml-6 hover:text-gray-300">
               ANALIZAR
             </button>
             <button onClick={toggleAssistant} className="ml-6 hover:text-gray-300">

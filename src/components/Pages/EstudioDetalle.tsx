@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { app } from './config/firebase';
+import { app } from '../../config/firebase';
 
 type Estudio = {
   studieName: string;

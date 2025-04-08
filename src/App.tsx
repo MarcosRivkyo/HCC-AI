@@ -352,7 +352,10 @@ const Contact: React.FC = () => {
     setResponseMessage(""); // Borra mensajes anteriores
 
     try {
-      const response = await axios.post("http://localhost:8000/send-email/", formData, {
+
+//     const response = await axios.post("http://localhost:8000/send-email/", formData, {
+
+      const response = await axios.post("https://hcc-ai-backend-1084523848624.europe-southwest1.run.app/send-email/", formData, {
         headers: {
           "Content-Type": "application/json",
         },

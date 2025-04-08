@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import logoHCC_AI from "./assets/images/logo_hcc_ai.jpg"; 
+import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg"; 
 
 export interface IAuthRouteProps {
     children: React.ReactNode;
