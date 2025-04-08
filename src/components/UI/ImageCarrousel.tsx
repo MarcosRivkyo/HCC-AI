@@ -3,7 +3,7 @@ import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
 import Slider from 'react-slick';
 import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-import './App.css';
+import '../../App.css';
 
 interface ImageCarrouselProps {
   onImageSelect: (url: string) => void;
