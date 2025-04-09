@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import { useNavigate } from "react-router-dom";
 import Logout from "../Auth/Logout";
 import logo_user from "../../assets/images/logo_user.png";
+import axios from "axios";
 
 interface PredictionResponse {
   predicted_class: number;

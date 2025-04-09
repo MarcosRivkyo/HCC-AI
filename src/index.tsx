@@ -18,10 +18,8 @@ import Login from './components/Auth/Login.tsx';
 import Signup from './components/Auth/Signup.tsx';
 import AuthRoute from './components/Auth/AuthRoute.tsx';
 import Assistant from './components/Pages/Assistant.tsx';
-import ImageEditor from "./ImageEditor.tsx";
 import FabricEditor from "./components/UI/FabricEditor.tsx";
 import EstudioDetalle from "./components/Pages/EstudioDetalle.tsx";
-import ImageCarrousel from "./components/UI/ImageCarrousel.tsx";
 import PredictImage from "./components/Pages/PredictImage.tsx";
 
 
@@ -55,7 +53,7 @@ root.render(
                     <Route path="/assistant" element={<Assistant />} />
                     <Route path="/editar-imagen" element={<FabricEditor />} />
                     <Route path="/estudio/:id" element={<EstudioDetalle />} /> 
-                    <Route path="/predict" element={<PredictImage />} /> 
+                    <Route path="/predict" element={<FabricEditor />} /> 
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </Router>
