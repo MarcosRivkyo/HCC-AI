@@ -22,8 +22,12 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
   useEffect(() => {
     const obtenerImagenes = async () => {
       if (user) {
-        const imageFolder = `HCC-AI/users/${user.uid}/ecografias/`;
-        const storageRef = ref(storage, imageFolder); // Usar imageFolder en la referencia
+
+        const userId = user.uid; 
+
+        const folderPath = `HCC-AI/users/${userId}/images/ecografias`;
+
+        const storageRef = ref(storage, folderPath); // Usar imageFolder en la referencia
         try {
           const result = await listAll(storageRef);
           const urls: string[] = [];

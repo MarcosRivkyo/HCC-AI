@@ -60,7 +60,7 @@ const PredictImage: React.FC = () => {
     try {
       // Step 1: Clasificación
       const predictionResponse = await axios.post<PredictionResponse>(
-        "http://localhost:8080/predict-classification/",
+        "https://hcc-ai-backend-1084523848624.europe-west2.run.app/predict-classification/",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -74,7 +74,7 @@ const PredictImage: React.FC = () => {
 
       // Step 2: Segmentación real con FastAPI
       const segmentationResponse = await axios.post(
-        "http://localhost:8080/segment/",
+        "https://hcc-ai-backend-1084523848624.europe-west2.run.app/segment/",
         formData,
         { headers: { "Content-Type": "multipart/form-data" }, responseType: "blob" } 
       );

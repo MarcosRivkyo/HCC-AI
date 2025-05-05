@@ -188,3 +188,14 @@
   right: 10px; 
 }
 
+
+
+.react-calendar__tile--weekend {
+  background-color: #e53e3e; /* Rojo */
+  color: black;
+}
+
+.react-calendar {
+  background-color: #1a202c; /* Fondo oscuro */
+  color: black;
+}

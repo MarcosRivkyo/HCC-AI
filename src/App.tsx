@@ -361,6 +361,7 @@ const Contact: React.FC = () => {
         },
       });
 
+      
       setResponseMessage(response.data.message); // Mensaje de éxito
     } catch (error) {
       setResponseMessage("Hubo un error al enviar el mensaje.");

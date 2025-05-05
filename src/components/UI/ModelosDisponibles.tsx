@@ -6,6 +6,9 @@ import { app } from '../../config/firebase';
 const ModelosDisponibles = () => {
   const [modelos, setModelos] = useState<{ id: string; [key: string]: any }[]>([]);
   const [paginaActual, setPaginaActual] = useState(1);
+  const [busqueda, setBusqueda] = useState('');
+  const [filtroTipo, setFiltroTipo] = useState('Todos');
+
   const modelosPorPagina = 5;
 
   const db = getFirestore(app);
@@ -26,6 +29,7 @@ const ModelosDisponibles = () => {
         }));
 
         setModelos(modelosDisponibles);
+
       } catch (error) {
         console.error('Error al obtener los modelos:', error);
       }
@@ -34,11 +38,21 @@ const ModelosDisponibles = () => {
     fetchModelos();
   }, []);
 
+  // Tipos únicos para el filtro
+  const tiposDeModelo = ['Todos', ...new Set(modelos.map((m) => m.modelType || 'Desconocido'))];
+
+  // Filtrado por búsqueda y tipo
+  const modelosFiltrados = modelos.filter((modelo) => {
+    const coincideNombre = modelo.modelName?.toLowerCase().includes(busqueda.toLowerCase());
+    const coincideTipo = filtroTipo === 'Todos' || modelo.modelType === filtroTipo;
+    return coincideNombre && coincideTipo;
+  });
+
   const indiceInicio = (paginaActual - 1) * modelosPorPagina;
-  const modelosPaginados = modelos.slice(indiceInicio, indiceInicio + modelosPorPagina);
+  const modelosPaginados = modelosFiltrados.slice(indiceInicio, indiceInicio + modelosPorPagina);
 
   const siguientePagina = () => {
-    if (paginaActual * modelosPorPagina < modelos.length) {
+    if (paginaActual * modelosPorPagina < modelosFiltrados.length) {
       setPaginaActual(paginaActual + 1);
     }
   };
@@ -49,78 +63,105 @@ const ModelosDisponibles = () => {
     }
   };
 
-  return (<div className="w-full h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6">
-    {/* Cabecera de las columnas */}
-    <div className="flex justify-between items-center text-gray-700 font-semibold p-4 bg-gray-200 rounded-t-lg shadow-sm">
-      <span className="w-1/3 text-center">Nombre del Modelo</span>
-      <span className="w-1/3 text-center">Descripción</span>
-      <span className="w-1/3 text-center">Tipo de Modelo</span>
-      <span className="w-1/3 text-center">Fecha de Entrenamiento</span>
+  return (
+    <div className="w-full h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6">
+      
+      {/* Filtros */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none"
+          value={busqueda}
+          onChange={(e) => {
+            setBusqueda(e.target.value);
+            setPaginaActual(1);
+          }}
+        />
+
+        <select
+          className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-lg shadow-sm"
+          value={filtroTipo}
+          onChange={(e) => {
+            setFiltroTipo(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          {tiposDeModelo.map((tipo, idx) => (
+            <option key={idx} value={tipo}>
+              {tipo}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Encabezados */}
+      <div className="flex justify-between items-center text-gray-700 font-semibold p-4 bg-gray-200 rounded-t-lg shadow-sm">
+        <span className="w-1/3 text-center">Modelo</span>
+        <span className="w-1/3 text-center">Descripción</span>
+        <span className="w-1/3 text-center">Tipo de Modelo</span>
+        <span className="w-1/3 text-center">Fecha de Entrenamiento</span>
+      </div>
+
+      {/* Lista de modelos */}
+      <ul className="space-y-4 mb-4">
+        {modelosPaginados.length > 0 ? (
+          modelosPaginados.map((modelo, index) => (
+            <li
+              key={modelo.id}
+              className="p-4 bg-white rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-xl transition-shadow"
+            >
+              <h3 className="text-lg font-semibold text-gray-800 w-full md:w-1/3 truncate">
+                {modelo.modelName || `Modelo ${index + 1}`}
+              </h3>
+
+              <p className="text-sm text-gray-600 italic w-full md:w-1/3 md:text-center">
+                {modelo.description || 'Descripción no disponible'}
+              </p>
+
+              <span className="text-sm font-medium text-gray-700 w-full md:w-1/3 text-center">
+                {modelo.modelType || 'Tipo no disponible'}
+              </span>
+
+              <p className="text-sm text-gray-600 w-full md:w-1/3 text-center mt-2 md:mt-0">
+                {modelo.trainDate?.toDate
+                  ? modelo.trainDate.toDate().toLocaleString('es-ES', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : 'Fecha no disponible'}
+              </p>
+            </li>
+          ))
+        ) : (
+          <p className="text-gray-500 mt-4 text-center">No hay modelos disponibles.</p>
+        )}
+      </ul>
+
+      {/* Paginación */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={paginaAnterior}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
+          disabled={paginaActual === 1}
+        >
+          Anterior
+        </button>
+        <span className="text-gray-600">
+          Página {paginaActual} de {Math.ceil(modelosFiltrados.length / modelosPorPagina) || 1}
+        </span>
+        <button
+          onClick={siguientePagina}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
+          disabled={paginaActual * modelosPorPagina >= modelosFiltrados.length}
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
-  
-    <ul className="space-y-4 mb-4">
-      {modelosPaginados.length > 0 ? (
-        modelosPaginados.map((modelo, index) => (
-          <li
-            key={modelo.id}
-            className="p-4 bg-white rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-xl transition-shadow"
-          >
-            {/* Nombre del modelo */}
-            <h3 className="text-lg font-semibold text-gray-800 w-full md:w-1/3 truncate">
-              {modelo.modelName || `Modelo ${index + 1}`}
-            </h3>
-  
-            {/* Descripción */}
-            <p className="text-sm text-gray-600 italic w-full md:w-1/3 md:text-center">
-              {modelo.description || 'Descripción no disponible'}
-            </p>
-  
-            {/* Tipo de modelo */}
-            <span className="text-sm font-medium text-gray-700 w-full md:w-1/3 text-center">
-              {modelo.modelType || 'Tipo no disponible'}
-            </span>
-  
-            {/* Fecha de entrenamiento */}
-            <p className="text-sm text-gray-600 w-full md:w-1/3 text-center mt-2 md:mt-0">
-              {modelo.trainDate?.toDate
-                ? modelo.trainDate.toDate().toLocaleString('es-ES', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })
-                : 'Fecha no disponible'}
-            </p>
-          </li>
-        ))
-      ) : (
-        <p className="text-gray-500">No hay modelos disponibles.</p>
-      )}
-    </ul>
-  
-    {/* Paginación */}
-    <div className="flex justify-between items-center mt-4">
-      <button
-        onClick={paginaAnterior}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
-        disabled={paginaActual === 1}
-      >
-        Anterior
-      </button>
-      <span className="text-gray-600">
-        Página {paginaActual} de {Math.ceil(modelos.length / modelosPorPagina) || 1}
-      </span>
-      <button
-        onClick={siguientePagina}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
-        disabled={paginaActual * modelosPorPagina >= modelos.length}
-      >
-        Siguiente
-      </button>
-    </div>
-  </div>
-  
   );
 };
 
