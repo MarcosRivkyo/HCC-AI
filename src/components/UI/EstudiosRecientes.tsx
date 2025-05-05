@@ -3,14 +3,18 @@ import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 
 import { getAuth } from 'firebase/auth';
 import { app } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
-import { FaEllipsisV, FaDownload, FaTrashAlt } from 'react-icons/fa'; // Importa los íconos
+import { FaEllipsisV, FaDownload, FaTrashAlt } from 'react-icons/fa';
 
 const EstudiosRecientes = () => {
   const [estudios, setEstudios] = useState<{ id: string; [key: string]: any }[]>([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const estudiosPorPagina = 5;
-  const [menuActivo, setMenuActivo] = useState<string | null>(null); // Estado para controlar el menú activo
-  const [confirmarEliminacion, setConfirmarEliminacion] = useState<string | null>(null); // Para confirmar la eliminación
+  const [menuActivo, setMenuActivo] = useState<string | null>(null);
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState<string | null>(null);
+
+  const [busquedaNombre, setBusquedaNombre] = useState('');
+  const [filtroEstado, setFiltroEstado] = useState('Todos');
+  const [filtroFecha, setFiltroFecha] = useState('');
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -42,11 +46,22 @@ const EstudiosRecientes = () => {
     fetchEstudios();
   }, []);
 
-  const indicesDeEstudios = (paginaActual - 1) * estudiosPorPagina;
-  const estudiosPaginados = estudios.slice(indicesDeEstudios, indicesDeEstudios + estudiosPorPagina);
+  const estudiosFiltrados = estudios.filter((estudio) => {
+    const coincideNombre = estudio.studieName?.toLowerCase().includes(busquedaNombre.toLowerCase());
+    const coincideEstado = filtroEstado === 'Todos' || estudio.status === filtroEstado;
+    const coincideFecha =
+      filtroFecha === '' ||
+      (estudio.studieDate?.toDate &&
+        estudio.studieDate.toDate().toISOString().slice(0, 10) === filtroFecha);
+    
+    return coincideNombre && coincideEstado && coincideFecha;
+  });
+
+  const indiceInicio = (paginaActual - 1) * estudiosPorPagina;
+  const estudiosPaginados = estudiosFiltrados.slice(indiceInicio, indiceInicio + estudiosPorPagina);
 
   const siguientePagina = () => {
-    if (paginaActual * estudiosPorPagina < estudios.length) {
+    if (paginaActual * estudiosPorPagina < estudiosFiltrados.length) {
       setPaginaActual(paginaActual + 1);
     }
   };
@@ -64,36 +79,80 @@ const EstudiosRecientes = () => {
   const eliminarEstudio = async (id: string) => {
     try {
       await deleteDoc(doc(db, 'hcc_ai_studies', id));
-      setEstudios(estudios.filter(estudio => estudio.id !== id)); // Actualiza el estado para eliminar el estudio
-      setConfirmarEliminacion(null); // Cierra la confirmación de eliminación
+      setEstudios(estudios.filter(estudio => estudio.id !== id));
+      setConfirmarEliminacion(null);
     } catch (error) {
       console.error('Error al eliminar el estudio:', error);
     }
   };
 
   const descargarEstudio = (id: string) => {
-    // Aquí va la lógica para descargar el estudio
     console.log('Descargando estudio:', id);
   };
 
   return (
+
+
+
+
+
     <div className="w-full h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6">
+
+      {/* Filtros */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg"
+          value={busquedaNombre}
+          onChange={(e) => {
+            setBusquedaNombre(e.target.value);
+            setPaginaActual(1);
+          }}
+        />
+
+        <select
+          className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-lg"
+          value={filtroEstado}
+          onChange={(e) => {
+            setFiltroEstado(e.target.value);
+            setPaginaActual(1);
+          }}
+        >
+          <option value="Todos">Todos los estados</option>
+          <option value="Finalizado">Finalizado</option>
+          <option value="En Progreso">Pendiente</option>
+        </select>
+
+        <input
+          type="date"
+          className="w-full md:w-1/4 px-4 py-2 border border-gray-300 rounded-lg"
+          value={filtroFecha}
+          onChange={(e) => {
+            setFiltroFecha(e.target.value);
+            setPaginaActual(1);
+          }}
+        />
+      </div>
+
+      {/* Encabezado */}
       <div className="flex justify-between items-center text-gray-700 font-semibold p-4 bg-gray-200 rounded-t-lg shadow-sm">
         <span className="w-1/3 text-center">Nombre del Estudio</span>
         <span className="w-1/3 text-center">Estado</span>
         <span className="w-1/3 text-center">Fecha de Estudio</span>
       </div>
 
+      {/* Lista */}
       <ul className="space-y-4 mb-4">
         {estudiosPaginados.length > 0 ? (
           estudiosPaginados.map((estudio, index) => (
             <li
-              key={index}
+              key={estudio.id}
               className="p-4 bg-gray-100 rounded-lg shadow-sm flex justify-between items-center gap-4 hover:shadow-md transition-shadow"
             >
               <h3
                 className="text-lg font-semibold text-gray-800 w-1/3 truncate cursor-pointer"
-                onClick={() => verEstudioDetalle(estudio.id)} // Navega al detalle al hacer click en el nombre
+                onClick={() => verEstudioDetalle(estudio.id)}
               >
                 {estudio.studieName || `Estudio ${index + 1}`}
               </h3>
@@ -101,7 +160,7 @@ const EstudiosRecientes = () => {
               <div className="flex items-center w-1/3">
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    estudio.status === 'Finished'
+                    estudio.status === 'Finalizado'
                       ? 'bg-green-100 text-green-800'
                       : 'bg-red-100 text-red-800'
                   }`}
@@ -122,19 +181,17 @@ const EstudiosRecientes = () => {
                   : 'Fecha no disponible'}
               </p>
 
-              {/* Botón de tres puntos */}
               <div className="relative">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Detener la propagación del evento
+                    e.stopPropagation();
                     setMenuActivo(menuActivo === estudio.id ? null : estudio.id);
                   }}
-                  className="text-gray-600 hover:text-gray-800 focus:outline-none menu-btn"
+                  className="text-gray-600 hover:text-gray-800 focus:outline-none"
                 >
                   <FaEllipsisV />
                 </button>
 
-                {/* Menú de opciones */}
                 {menuActivo === estudio.id && (
                   <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg p-2 z-10">
                     <button
@@ -157,7 +214,7 @@ const EstudiosRecientes = () => {
             </li>
           ))
         ) : (
-          <p className="text-gray-500">No hay estudios recientes.</p>
+          <p className="text-gray-500 text-center">No hay estudios recientes.</p>
         )}
       </ul>
 
@@ -171,12 +228,12 @@ const EstudiosRecientes = () => {
           Anterior
         </button>
         <span className="text-gray-600">
-          Página {paginaActual} de {Math.ceil(estudios.length / estudiosPorPagina) || 1}
+          Página {paginaActual} de {Math.ceil(estudiosFiltrados.length / estudiosPorPagina) || 1}
         </span>
         <button
           onClick={siguientePagina}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
-          disabled={paginaActual * estudiosPorPagina >= estudios.length}
+          disabled={paginaActual * estudiosPorPagina >= estudiosFiltrados.length}
         >
           Siguiente
         </button>
@@ -184,9 +241,11 @@ const EstudiosRecientes = () => {
 
       {/* Confirmación de eliminación */}
       {confirmarEliminacion && (
-        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{ zIndex: 1000 }}>
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">¿Estás seguro de eliminar este estudio?</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              ¿Estás seguro de eliminar este estudio?
+            </h3>
             <div className="flex justify-between">
               <button
                 onClick={() => eliminarEstudio(confirmarEliminacion)}
@@ -195,7 +254,7 @@ const EstudiosRecientes = () => {
                 Eliminar
               </button>
               <button
-                onClick={() => setConfirmarEliminacion(null)} // Cierra la confirmación
+                onClick={() => setConfirmarEliminacion(null)}
                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg"
               >
                 Cancelar

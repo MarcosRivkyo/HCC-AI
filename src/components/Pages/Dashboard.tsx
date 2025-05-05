@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
@@ -8,6 +8,7 @@ import { updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase.ts";
 
+import { v4 as uuidv4 } from 'uuid';
 
 import Logout from "../Auth/Logout.tsx";
 import Assistant from "./Assistant.tsx";
@@ -30,7 +31,8 @@ import { Timestamp } from "firebase/firestore";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Dashboard = () => {
 
@@ -66,9 +68,10 @@ const Dashboard = () => {
   const [pacientes, setPacientes] = useState<{ id: string; nombre: string }[]>([]);
   const [formData, setFormData] = useState({
     studieName: '',
-    status: 'In Progress',
+    status: 'En Progreso',
     studieDate: '',
     pacienteId: '',  
+    clinicalDescription: '',
   });
 
 
@@ -158,18 +161,20 @@ const Dashboard = () => {
     try {
       setIsSaving(true);
   
-  
-      const imageFolder = `HCC-AI/users/${user.uid}/ecografias/`;
+      const userId = user.uid;
+      const folderPath = userData.imageFolder || `HCC-AI/users/${userId}`;
 
       if (newUploadImage) {
-        const imageRef = ref(storage, `${imageFolder}${Date.now()}_${newUploadImage.name}`);
-        await uploadBytes(imageRef, newUploadImage);
-        const imageUrl = await getDownloadURL(imageRef);
+        const uniqueName = `${uuidv4()}_${newUploadImage.name}`;
+        const storageRef = ref(storage, `${folderPath}/ecografias/${uniqueName}`);
+
+        await uploadBytes(storageRef, newUploadImage);
+        const imageUrl = await getDownloadURL(storageRef);
 
       }
   
       await updateDoc(doc(db, 'hcc_ai_users', user.uid), {
-        imageFolder: imageFolder
+        imageFolder: folderPath
       });
   
 
@@ -197,8 +202,13 @@ const Dashboard = () => {
   
       let photoURL = userData?.profilePicture;
   
+      const userId = user.uid;
+      const folderPath = userData.imageFolder || `HCC-AI/users/${userId}`;
+
       if (newProfileImage) {
-        const storageRef = ref(storage, `HCC-AI/images/profile_pictures/${user.uid}`);
+
+        const storageRef = ref(storage, `${folderPath}/profile_pictures/${user.uid}`);
+
         await uploadBytes(storageRef, newProfileImage);
         photoURL = await getDownloadURL(storageRef);
       }
@@ -265,16 +275,18 @@ const Dashboard = () => {
           status: formData.status,
           studieDate: studieDateTimestamp,
           pacienteId: formData.pacienteId,
-          medicoId: uid, // Guardar el uid del usuario autenticado
+          medicoId: uid,
+          clinicalDescription: formData.clinicalDescription,
         });
   
 
         // Limpiar el formulario (opcional)
         setFormData({
           studieName: "",
-          status: "In Progress",
+          status: "En Progreso",
           studieDate: "",
           pacienteId: "",
+          clinicalDescription: "",
         });
         
         // Cerrar el formulario
@@ -302,7 +314,83 @@ const Dashboard = () => {
     console.log('Imagen seleccionada:', url);
   };
 
-
+  const Clock = () => {
+    const [time, setTime] = useState<string>(() =>
+      new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+    );
+    
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    
+    // Referencia para el calendario
+    const calendarRef = useRef<HTMLDivElement>(null);
+  
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setTime(
+          new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })
+        );
+      }, 1000);
+      return () => clearInterval(interval);
+    }, []);
+  
+    // Función para cerrar el calendario si se hace clic fuera
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+          setIsCalendarOpen(false);
+        }
+      };
+  
+      // Escuchar clics fuera del calendario
+      document.addEventListener('mousedown', handleClickOutside);
+  
+      // Limpiar el event listener cuando se desmonta el componente
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+  
+    // Función para resaltar fines de semana (sábado y domingo)
+    const tileClassName = ({ date }: any) => {
+      const day = date.getDay(); // 0 es Domingo, 6 es Sábado
+      if (day === 0 || day === 6) {
+        return 'bg-red-500 text-white'; // Fin de semana en rojo
+      }
+      return ''; // Los días normales no tienen clase especial
+    };
+  
+    return (
+      <div className="relative">
+        {/* Reloj interactivo */}
+        <div 
+          className="text-2xl text-gray-200 font-mono mr-4 tracking-wider cursor-pointer" 
+          onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+        >
+         {time}
+        </div>
+  
+        {/* Calendario modal */}
+        {isCalendarOpen && (
+          <div 
+            ref={calendarRef}
+            className="absolute top-full right-0 mt-2 p-4 bg-gray-800 rounded-lg shadow-lg w-72 z-50"
+          >
+            <Calendar 
+              tileClassName={tileClassName} // Aplica el estilo de fines de semana
+              className="bg-gray-900 text-white border-none" // Fondo oscuro y texto blanco
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+  
 
   return (
     
@@ -323,33 +411,52 @@ const Dashboard = () => {
       {/* Navbar */}
       <nav className="bg-black p-4 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">
         {/* Menú de navegación */}
-        <ul className="flex space-x-4 text-sm">
-          {[{ path: "/", label: "INICIO" }, { path: "/reports", label: "REPORTES" }].map((item) => (
-            <li key={item.path}>
-              <button onClick={() => navigate(item.path)} className="ml-6 hover:text-gray-300">
+
+        <ul className="flex items-center space-x-14 text-sm">
+          {[{ path: "/dashboard", label: "INICIO" }, { path: "/studies", label: "MIS ESTUDIOS" }, { path: "/models", label: "MODELOS" }].map((item, index) => (
+            <li key={item.path} className={index === 0 ? "ml-8" : ""}>
+              <button
+                onClick={() => navigate(item.path)}
+                className="hover:text-gray-300 py-2"
+              >
                 {item.label}
               </button>
             </li>
           ))}
+
+          {/* Botón ASISTENTE con toggle */}
           <li>
-            <button onClick={() => navigate("/predict")} className="ml-6 hover:text-gray-300">
-              ANALIZAR
-            </button>
-            <button onClick={toggleAssistant} className="ml-6 hover:text-gray-300">
+            <button
+              onClick={toggleAssistant}
+              className="hover:text-gray-300 py-2"
+            >
               ASISTENTE
+            </button>
+          </li>
+
+          {/* Botón ANALIZAR destacado */}
+          <li>
+            <button
+              onClick={() => navigate("/predict")}
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition duration-300"
+            >
+              ANALIZAR
             </button>
           </li>
         </ul>
 
 
 
+
         {/* Logo Central */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <img src={logoHCC_AI} className="w-32 max-w-full rounded-md cursor-pointer" alt="HCC-AI Logo" onClick={() => navigate("/")} />
+          <img src={logoHCC_AI} className="w-32 max-w-full rounded-md cursor-pointer" alt="HCC-AI Logo" onClick={() => navigate("/dashboard")} />
         </div>
 
         {/* Perfil de Usuario */}
-        <div className="relative w-64">
+        <div className="flex items-center gap-4 relative w-72 justify-end">
+          <Clock />
+
           <div className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-800 rounded-lg" onClick={() => setIsOpen(!isOpen)}>
             <img src={ user?.photoURL || userData?.profilePicture || logo_user} alt="Perfil" className="w-10 h-10 max-w-full rounded-full" />
             <span className="font-semibold truncate">
@@ -402,6 +509,8 @@ const Dashboard = () => {
         {showAssistant ? <FiArrowLeft size={24} /> : <FiArrowRight size={24} />}
       </button>
     </div>
+
+
   <div className="w-1/2 h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6 flex flex-col">
 
     <h2 className="text-xl font-semibold text-gray-800 mb-4">Estudios Recientes</h2>
@@ -438,21 +547,7 @@ const Dashboard = () => {
                 />
               </div>
 
-              <div className="mb-4">
-                <label className="block mb-2" htmlFor="status">
-                  Estado
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="In Progress">En Progreso</option>
-                  <option value="Finished">Finalizado</option>
-                </select>
-              </div>
+
 
               <div className="mb-4">
                 <label className="block mb-2" htmlFor="studieDate">
@@ -473,20 +568,33 @@ const Dashboard = () => {
                 <label className="block mb-2" htmlFor="pacienteId">
                   Nombre del Paciente
                 </label>
-                <select
+
+                <input
                   id="pacienteId"
                   name="pacienteId"
+                  type="text"
                   value={formData.pacienteId}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="">Seleccione un paciente</option>
-                  {pacientes.map((paciente) => (
-                    <option key={paciente.id} value={paciente.id}>
-                      {paciente.nombre}
-                    </option>
-                  ))}
-                </select>
+                />
+              </div>
+
+
+              <div className="mb-4">
+                <label className="block mb-2" htmlFor="clinicalDescription">
+                  Descripción Clínica
+                </label>
+
+                <input
+                  id="clinicalDescription"
+                  name="clinicalDescription"
+                  type="text"
+                  value={formData.clinicalDescription}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                />
+
+
               </div>
 
               <div className="flex justify-end">
@@ -561,10 +669,10 @@ const Dashboard = () => {
 
 
 
-      {/* Fila superior */}
       <div className="flex-1 bg-white rounded-lg shadow-md p-6 border border-gray-300">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Modelos disponibles</h2>
         <main className="flex-1 overflow-auto">
+
           <ModelosDisponibles/>
 
         </main>
@@ -695,25 +803,38 @@ const Dashboard = () => {
 
                   {expandedItem === 'modificarDatos' && (
                     <div className="p-6 bg-gray-900 rounded-xl shadow-lg mt-8 border border-gray-700">
-
                       <div className="space-y-6">
                         {/* Campos de entrada */}
-                        {['Nombre de usuario', 'Nombre', 'Apellido', 'Teléfono'].map((label, idx) => (
-                          <div key={idx}>
-                            <label className="block text-gray-300 mb-2">{label}:</label>
-                            <input
-                              type="text"
-                              className="w-full p-4 rounded-md bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              value={label === 'Nombre de usuario' ? userName : label === 'Nombre' ? firstName : label === 'Apellido' ? lastName : phone}
-                              onChange={(e) => {
-                                if (label === 'Nombre de usuario') setUserName(e.target.value);
-                                if (label === 'Nombre') setFirstName(e.target.value);
-                                if (label === 'Apellido') setLastName(e.target.value);
-                                if (label === 'Teléfono') setPhone(e.target.value);
-                              }}
-                            />
-                          </div>
-                        ))}
+                        {['Nombre de usuario', 'Nombre', 'Apellido', 'Teléfono'].map((label, idx) => {
+                          const value =
+                            label === 'Nombre de usuario'
+                              ? userName || userData?.userName || ''
+                              : label === 'Nombre'
+                              ? firstName || userData?.firstName || ''
+                              : label === 'Apellido'
+                              ? lastName || userData?.lastName || ''
+                              : phone || userData?.phone || '';
+
+                          const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                            const val = e.target.value;
+                            if (label === 'Nombre de usuario') setUserName(val);
+                            if (label === 'Nombre') setFirstName(val);
+                            if (label === 'Apellido') setLastName(val);
+                            if (label === 'Teléfono') setPhone(val);
+                          };
+
+                          return (
+                            <div key={idx}>
+                              <label className="block text-gray-300 mb-2">{label}:</label>
+                              <input
+                                type="text"
+                                className="w-full p-4 rounded-md bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                value={value}
+                                onChange={onChange}
+                              />
+                            </div>
+                          );
+                        })}
 
                         {/* Nueva imagen de perfil */}
                         <div>
@@ -757,6 +878,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   )}
+
                 </li>
 
                 {/* Sección Modificar Contraseña */}
