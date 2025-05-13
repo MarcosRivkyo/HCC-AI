@@ -1,46 +1,58 @@
-import React from 'react';
-import './index.css';
+import React from "react";
+import "./index.css";
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import axios from "axios";
-import i18next from 'i18next';
-
+import i18next from "i18next";
+import { FaCheckCircle } from "react-icons/fa";
 
 import ImageSlider from "./components/UI/ImageSlider2.tsx";
 import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
 
 import Footer from "./components/UI/Footer.tsx";
-import Navbar from './components/UI/Navbar.tsx';
-import usePreventZoom from './components/UI/usePreventZoom.tsx';
+import Navbar from "./components/UI/Navbar.tsx";
+import usePreventZoom from "./components/UI/usePreventZoom.tsx";
 
 import ia_cancer from "./assets/images/ia_cancer.png";
 import hepato_eco from "./assets/images/hepatic_eco.png";
 import spanishFlag from "./assets/images/spanish_language.png";
 import englishFlag from "./assets/images/english_language.png";
-import analisis_medico  from "./assets/images/analisis_medico.png";
+import analisis_medico from "./assets/images/analisis_medico.png";
 
-
-import { FaPython, FaReact, FaAngular, FaCogs, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import { SiPytorch, SiOpencv, SiSharp } from "react-icons/si";
-import { FaMicroscope, FaBrain, FaHospital, FaChartLine, FaLaptopMedical, FaSearch } from "react-icons/fa";
-
-
+import {
+  FaPython,
+  FaReact,
+  FaAngular,
+  FaCogs,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { SiPytorch, SiTensorflow, SiOpencv, SiSharp } from "react-icons/si";
+import {
+  FaMicroscope,
+  FaBrain,
+  FaHospital,
+  FaChartLine,
+  FaLaptopMedical,
+  FaSearch,
+} from "react-icons/fa";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 };
 
-
-
 const LanguageToggleButton: React.FC = () => {
-  const [isSpanish, setIsSpanish] = useState<boolean>(i18next.language === 'es');
+  const [isSpanish, setIsSpanish] = useState<boolean>(
+    i18next.language === "es",
+  );
 
   const toggleLanguage = () => {
-    const newLanguage = isSpanish ? 'en' : 'es';
+    const newLanguage = isSpanish ? "en" : "es";
     i18next.changeLanguage(newLanguage);
     setIsSpanish(!isSpanish);
   };
@@ -51,9 +63,9 @@ const LanguageToggleButton: React.FC = () => {
         onClick={toggleLanguage}
         className="w-16 h-16 rounded-full shadow-lg overflow-hidden border-2 border-white"
       >
-        <img 
-          src={isSpanish ? spanishFlag : englishFlag} 
-          alt={isSpanish ? 'Español' : 'English'}
+        <img
+          src={isSpanish ? spanishFlag : englishFlag}
+          alt={isSpanish ? "Español" : "English"}
           className="w-full h-full object-cover"
         />
       </button>
@@ -61,9 +73,7 @@ const LanguageToggleButton: React.FC = () => {
   );
 };
 
-
 const ContactButton: React.FC = () => {
-
   const [selectedSection, setSelectedSection] = useState<string>("home");
 
   const scrollToSection = (id: string) => {
@@ -73,15 +83,15 @@ const ContactButton: React.FC = () => {
 
   return (
     <div className="fixed bottom-5 right-5 z-50">
-      <a onClick={() => scrollToSection('contact')} className="bg-red-500 text-white p-4 rounded-full shadow-lg flex justify-center items-center animate-bounce hover:bg-red-700">
+      <a
+        onClick={() => scrollToSection("contact")}
+        className="bg-red-500 text-white p-4 rounded-full shadow-lg flex justify-center items-center animate-bounce hover:bg-red-700"
+      >
         <FaPhone size={40} />
       </a>
     </div>
   );
 };
-
-
-
 
 const Home: React.FC = () => {
   const [showFirstTextEffect, setShowFirstTextEffect] = useState(false);
@@ -104,7 +114,10 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <section id="home" className="text-center text-2xl pt-16 p-10 relative h-screen">
+    <section
+      id="home"
+      className="text-center text-2xl pt-16 p-10 relative h-screen"
+    >
       {/* Contenedor del texto - Absoluto sobre el slider */}
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black bg-opacity-50">
         <div className="flex flex-col items-center justify-center bg-black bg-opacity-50 p-6 rounded-lg">
@@ -129,10 +142,6 @@ const Home: React.FC = () => {
   );
 };
 
-
-
-
-
 const About: React.FC = () => {
   const { t } = useTranslation("global");
 
@@ -145,7 +154,9 @@ const About: React.FC = () => {
       viewport={{ once: true }}
       variants={sectionVariants}
     >
-      <h2 className="text-4xl font-extrabold text-green-400 mb-6">{t("sections.objectives")}</h2>
+      <h2 className="text-4xl font-extrabold text-green-400 mb-6">
+        {t("sections.objectives")}
+      </h2>
       <p className="text-lg max-w-3xl mx-auto mb-10">{t("main.description")}</p>
 
       {/* Sección de imágenes */}
@@ -185,151 +196,205 @@ const About: React.FC = () => {
       </div>
 
       {/* Beneficios del proyecto */}
-      <div className="mt-16 max-w-4xl mx-auto">
-        <h3 className="text-2xl font-semibold text-green-300 mb-4">{t("sections.key_benefits")}</h3>
-        <ul className="text-lg space-y-3">
-          <li className="flex items-center justify-center">{t("sections.benefit_1")}</li>
-          <li className="flex items-center justify-center">{t("sections.benefit_2")}</li>
-          <li className="flex items-center justify-center">{t("sections.benefit_3")}</li>
-          <li className="flex items-center justify-center">{t("sections.benefit_4")}</li>
+      <div className="mt-16 max-w-4xl mx-auto text-center">
+        <h3 className="text-2xl font-semibold text-green-300 mb-4">
+          {t("sections.key_benefits")}
+        </h3>
+        <ul className="flex flex-col items-center space-y-3">
+          <li className="flex items-center gap-3">
+            <FaCheckCircle className="text-green-500" />
+            <span>Mayor precisión en la detección del hepatocarcinoma.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FaCheckCircle className="text-green-500" />
+            <span>Diagnóstico más rápido y eficaz mediante IA.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FaCheckCircle className="text-green-500" />
+            <span>Reducción de costos en pruebas médicas innecesarias.</span>
+          </li>
+          <li className="flex items-center gap-3">
+            <FaCheckCircle className="text-green-500" />
+            <span>
+              Asistencia a profesionales de la salud en la toma de decisiones.
+            </span>
+          </li>
         </ul>
       </div>
     </motion.section>
   );
 };
 
-
 const Services: React.FC = () => {
-
   const { t } = useTranslation("global");
 
   return (
-
-    <motion.section id="services" className="text-center text-white bg-gray-900 py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
-      <h2 className="text-4xl font-bold mb-6 text-blue-400">{t("sections.our_services")}</h2>
+    <motion.section
+      id="services"
+      className="text-center text-white bg-gray-900 py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={sectionVariants}
+    >
+      <h2 className="text-4xl font-bold mb-6 text-blue-400">
+        {t("sections.our_services")}
+      </h2>
       <p className="text-lg max-w-3xl mx-auto text-gray-300">
         {t("sections.services_description")}
       </p>
 
       {/* Contenedor de Servicios */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-12 max-w-6xl mx-auto">
-        
         {/* Servicio 1 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaMicroscope className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.ai_diagnosis")}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.ai_diagnosis")}
+          </h3>
           <p className="text-gray-300">
-              {t("sections.ai_diagnosis_description")}
+            {t("sections.ai_diagnosis_description")}
           </p>
         </div>
 
         {/* Servicio 2 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaBrain className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.advanced_nn")}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.advanced_nn")}
+          </h3>
           <p className="text-gray-300">
-              {t("sections.advanced_nn_description")}
+            {t("sections.advanced_nn_description")}
           </p>
         </div>
 
         {/* Servicio 3 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaHospital className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.medical_collaboration")}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.medical_collaboration")}
+          </h3>
           <p className="text-gray-300">
-              {t("sections.medical_collaboration_description")}
+            {t("sections.medical_collaboration_description")}
           </p>
         </div>
 
         {/* Servicio 4 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaLaptopMedical className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.interactive_platform")}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.interactive_platform")}
+          </h3>
           <p className="text-gray-300">
-              {t("sections.interactive_platform_description")}
+            {t("sections.interactive_platform_description")}
           </p>
         </div>
 
         {/* Servicio 5 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaChartLine className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.tumor_evaluation")}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.tumor_evaluation")}
+          </h3>
           <p className="text-gray-300">
-              {t("sections.tumor_evaluation_description")}
+            {t("sections.tumor_evaluation_description")}
           </p>
         </div>
 
         {/* Servicio 6 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaSearch className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">{t("sections.r_and_d")}</h3>
-          <p className="text-gray-300">
-              {t("sections.r_and_d_description")}
-          </p>
+          <h3 className="text-xl font-semibold mb-2">
+            {t("sections.r_and_d")}
+          </h3>
+          <p className="text-gray-300">{t("sections.r_and_d_description")}</p>
         </div>
-
       </div>
     </motion.section>
   );
 };
-
-
-
 
 const Technology: React.FC = () => {
   const { t } = useTranslation("global");
 
   return (
-    <motion.section id="technology" className="text-center text-white bg-gradient-to-b from-gray-900 to-black py-20" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={sectionVariants}>
-      <h2 className="text-4xl font-bold mb-6 text-green-400">{t('sections.technologies')}</h2>
+    <motion.section
+      id="technology"
+      className="text-center text-white bg-gradient-to-b from-gray-900 to-black py-20"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={sectionVariants}
+    >
+      <h2 className="text-4xl font-bold mb-6 text-green-400">
+        {t("sections.technologies")}
+      </h2>
       <p className="text-lg mb-10 mx-auto max-w-3xl">
-        {t('sections.ai_description')}
+        {t("sections.ai_description")}
       </p>
 
       {/* Sección de tecnologías en tarjetas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
-          <FaPython className="text-yellow-400 text-5xl mx-auto mb-4" />
-          <SiPytorch className="text-red-500 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold">Python & PyTorch</h3>
-          <p className="text-sm mt-2 text-gray-300">{t('sections.ai_python_description')}</p>
+          <div className="flex justify-center items-center space-x-6 mb-4">
+            <FaPython className="text-yellow-400 text-5xl" />
+            <SiPytorch className="text-red-500 text-5xl" />
+            <SiTensorflow className="text-orange-500 text-5xl" />
+          </div>
+          <h3 className="text-xl font-semibold">
+            Python, PyTorch & TensorFlow
+          </h3>
+          <p className="text-sm mt-2 text-gray-300">
+            {t("sections.ai_python_description")}
+          </p>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
           <SiOpencv className="text-blue-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold">{t('sections.opencv_title')}</h3>
-          <p className="text-sm mt-2 text-gray-300">{t('sections.opencv_description')}</p>
+          <h3 className="text-xl font-semibold">
+            {t("sections.opencv_title")}
+          </h3>
+          <p className="text-sm mt-2 text-gray-300">
+            {t("sections.opencv_description")}
+          </p>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
           <FaReact className="text-blue-500 text-5xl mx-auto mb-4" />
-          <FaAngular className="text-red-600 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold">{t('sections.frontend_title')}</h3>
-          <p className="text-sm mt-2 text-gray-300">{t('sections.frontend_description')}</p>
+          <h3 className="text-xl font-semibold">
+            {t("sections.frontend_title")}
+          </h3>
+          <p className="text-sm mt-2 text-gray-300">
+            {t("sections.frontend_description")}
+          </p>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
           <SiSharp className="text-purple-500 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold">{t('sections.backend_title')}</h3>
-          <p className="text-sm mt-2 text-gray-300">{t('sections.backend_description')}</p>
+          <h3 className="text-xl font-semibold">
+            {t("sections.backend_title")}
+          </h3>
+          <p className="text-sm mt-2 text-gray-300">
+            {t("sections.backend_description")}
+          </p>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300 col-span-1 sm:col-span-2">
           <FaCogs className="text-gray-400 text-5xl mx-auto mb-4" />
-          <h3 className="text-xl font-semibold">{t('sections.integration_title')}</h3>
-          <p className="text-sm mt-2 text-gray-300">{t('sections.integration_description')}</p>
+          <h3 className="text-xl font-semibold">
+            {t("sections.integration_title")}
+          </h3>
+          <p className="text-sm mt-2 text-gray-300">
+            {t("sections.integration_description")}
+          </p>
         </div>
       </div>
     </motion.section>
   );
 };
 
-
-
 const Contact: React.FC = () => {
-
   const { t } = useTranslation("global");
-
 
   const [formData, setFormData] = useState({
     name: "",
@@ -339,7 +404,9 @@ const Contact: React.FC = () => {
   const [responseMessage, setResponseMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Estado de carga
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -353,7 +420,6 @@ const Contact: React.FC = () => {
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      //const response = await axios.post("http://localhost:8080/send-email/", formData, {
 
       const response = await axios.post(`${backendUrl}/send-email/`, formData, {
         headers: {
@@ -361,8 +427,10 @@ const Contact: React.FC = () => {
         },
       });
 
-      
-      setResponseMessage(response.data.message); // Mensaje de éxito
+      if (response.status === 200) {
+        setResponseMessage(response.data.message);
+        setFormData({ name: "", email: "", message: "" });
+      }
     } catch (error) {
       setResponseMessage("Hubo un error al enviar el mensaje.");
     } finally {
@@ -372,17 +440,21 @@ const Contact: React.FC = () => {
 
   return (
     <section id="contact" className="text-center text-white bg-black py-20">
-      <h2 className="text-4xl font-bold text-green-400 mb-6">{t("sections.contact_title")}</h2>
+      <h2 className="text-4xl font-bold text-green-400 mb-6">
+        {t("sections.contact_title")}
+      </h2>
       <p className="text-lg max-w-3xl mx-auto mb-10">
-          {t("sections.contact_description")}
+        {t("sections.contact_description")}
       </p>
 
-
-
-      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg"
+      >
         <div className="mb-4">
-          <label className="block text-gray-300 text-left text-lg">{t("input.name")}</label>
+          <label className="block text-gray-300 text-left text-lg">
+            {t("input.name")}
+          </label>
           <input
             type="text"
             name="name"
@@ -394,9 +466,10 @@ const Contact: React.FC = () => {
           />
         </div>
 
-
         <div className="mb-4">
-          <label className="block text-gray-300 text-left text-lg">{t("input.mail")}</label>
+          <label className="block text-gray-300 text-left text-lg">
+            {t("input.mail")}
+          </label>
           <input
             type="email"
             name="email"
@@ -409,7 +482,9 @@ const Contact: React.FC = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-300 text-left text-lg">{t("input.message")}</label>
+          <label className="block text-gray-300 text-left text-lg">
+            {t("input.message")}
+          </label>
           <textarea
             name="message"
             value={formData.message}
@@ -427,45 +502,33 @@ const Contact: React.FC = () => {
           disabled={isLoading} // Deshabilita el botón mientras carga
         >
           {isLoading ? t("input.submiting") : t("input.submit")}
-
         </button>
       </form>
 
-
-
       {/* Mensaje de respuesta */}
-      {responseMessage && <p className="mt-6 text-green-400">{responseMessage}</p>}
+      {responseMessage && (
+        <p className="mt-6 text-green-400">{responseMessage}</p>
+      )}
     </section>
   );
 };
 
-
-
-
-
-
-
-function App(){
-
+function App() {
   usePreventZoom();
-  
+
   return (
     <div className="bg-black text-white min-h-screen">
-
-        <Navbar />
-        <Home />
-        <About />
-        <Services />
-        <Technology />
-        <Contact />
-        <ContactButton />
-        <LanguageToggleButton />
-        <Footer />
-
+      <Navbar />
+      <Home />
+      <About />
+      <Services />
+      <Technology />
+      <Contact />
+      <ContactButton />
+      <LanguageToggleButton />
+      <Footer />
     </div>
   );
-};
+}
 
 export default App;
-
-

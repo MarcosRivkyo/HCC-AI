@@ -1,19 +1,19 @@
-import React, { useState } from 'react'; 
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';  // Para redirigir al usuario
+import React, { useState } from "react";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // Para redirigir al usuario
 
 const ChangePasswordForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const navigate = useNavigate();
-  
+
   const handlePasswordReset = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
     if (user) {
-      const userEmail = user.email;  // Obtenemos el correo del usuario
+      const userEmail = user.email; // Obtenemos el correo del usuario
 
       if (userEmail) {
         try {
@@ -21,16 +21,20 @@ const ChangePasswordForm: React.FC = () => {
           // Enviar el correo de recuperación de contraseña
           await sendPasswordResetEmail(auth, userEmail);
           setLoading(false);
-          setSuccessMessage('Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.');
+          setSuccessMessage(
+            "Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.",
+          );
         } catch (err: any) {
           setLoading(false);
-          setError('Ocurrió un error al enviar el correo de recuperación. Inténtalo nuevamente.');
+          setError(
+            "Ocurrió un error al enviar el correo de recuperación. Inténtalo nuevamente.",
+          );
         }
       } else {
-        setError('No hay un correo asociado a este usuario.');
+        setError("No hay un correo asociado a este usuario.");
       }
     } else {
-      setError('No hay un usuario autenticado.');
+      setError("No hay un usuario autenticado.");
     }
   };
 
@@ -46,7 +50,7 @@ const ChangePasswordForm: React.FC = () => {
         disabled={loading}
         className="bg-blue-500 text-white p-2 rounded-lg mt-4"
       >
-        {loading ? 'Enviando...' : 'Enviar recuperación de contraseña'}
+        {loading ? "Enviando..." : "Enviar recuperación de contraseña"}
       </button>
     </div>
   );

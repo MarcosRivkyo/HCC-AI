@@ -27,10 +27,10 @@ export const TextGenerateEffect = ({
       {
         duration: duration ? duration : 1,
         delay: stagger(0.2),
-      }
+      },
     );
   }, [scope.current]);
- 
+
   const renderWords = () => {
     return (
       <motion.div ref={scope}>
@@ -48,7 +48,7 @@ export const TextGenerateEffect = ({
       </motion.div>
     );
   };
- 
+
   return (
     <div className={cn("font-bold", className)}>
       <div className="mt-4">

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'; 
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
-import Slider from 'react-slick';
-import { getAuth } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
-import '../../App.css';
+import React, { useState, useEffect } from "react";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import Slider from "react-slick";
+import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import "../../App.css";
 
 interface ImageCarrouselProps {
   onImageSelect: (url: string) => void;
@@ -12,36 +12,35 @@ interface ImageCarrouselProps {
 const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
   const [imagenes, setImagenes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const storage = getStorage();
   const auth = getAuth();
   const user = auth.currentUser;
 
-  const navigate = useNavigate(); // Hook para navegar a otras rutas
+  const navigate = useNavigate();
 
   useEffect(() => {
     const obtenerImagenes = async () => {
       if (user) {
+        const userId = user.uid;
 
-        const userId = user.uid; 
+        const folderPath = `HCC-AI/users/${userId}/images/masks`;
 
-        const folderPath = `HCC-AI/users/${userId}/images/ecografias`;
-
-        const storageRef = ref(storage, folderPath); // Usar imageFolder en la referencia
+        const storageRef = ref(storage, folderPath);
         try {
           const result = await listAll(storageRef);
           const urls: string[] = [];
 
           for (const item of result.items) {
             const url = await getDownloadURL(item);
-            if (!urls.includes(url)) { // Verificar si la URL ya está en el array
+            if (!urls.includes(url)) {
               urls.push(url);
             }
           }
 
           setImagenes(urls);
         } catch (error) {
-          console.error('Error al obtener las imágenes:', error);
+          console.error("Error al obtener las imágenes:", error);
         }
       }
       setLoading(false);
@@ -65,12 +64,11 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
     arrows: true,
   };
 
-  const handleImageClick = (url: string, event: React.MouseEvent) => { 
-    event.stopPropagation(); 
+  const handleImageClick = (url: string, event: React.MouseEvent) => {
+    event.stopPropagation();
     onImageSelect(url);
-    navigate(`/editar-imagen?imageUrl=${encodeURIComponent(url)}`); 
+    navigate(`/editar-imagen?imageUrl=${encodeURIComponent(url)}`);
   };
-  
 
   return (
     <div className="flex-1 bg-white rounded-lg shadow-md p-6 border border-gray-300">

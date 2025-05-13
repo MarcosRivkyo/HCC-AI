@@ -1,9 +1,26 @@
-import React, { useState } from "react";
-import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-import { useNavigate } from "react-router-dom";
-import Logout from "../Auth/Logout";
-import logo_user from "../../assets/images/logo_user.png";
+import React, { useRef, useEffect, useState } from "react";
+import Toolbox from "../UI/Toolbox.tsx";
+import EditorCanvas from "../UI/EditorCanvas.tsx";
+import "../../App.css";
+import * as fabric from "fabric";
+import { Canvas, PencilBrush } from "fabric";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getFirestore,
+  getDocs,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
+import { app } from "../../config/firebase.ts";
+import NavbarSecond from "../UI/NavbarSecond.tsx";
+import ProfileModal from "../UI/ProfileModal.tsx";
+import Assistant from "./Assistant.tsx";
+import SettingsModal from "../UI/SettingsModal";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -14,208 +31,355 @@ interface SegmentationResponse {
   segmented_image_url: string;
 }
 
-interface AssistantResponse {
-  explanation: string;
-}
-
 const PredictImage: React.FC = () => {
   const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [model, setModel] = useState<string>("resnet");
+  const [canvas, setCanvas] = useState<Canvas | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
-  const [segmentation, setSegmentation] = useState<SegmentationResponse | null>(null);
-  const [assistantExplanation, setAssistantExplanation] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [selectedModel, setSelectedModel] = useState<string>("resnet");
-  const [activeTab, setActiveTab] = useState("Clasificar");
-  const [progress, setProgress] = useState<number>(0); // To show the countdown for tab change
+  const [segmentation, setSegmentation] = useState<SegmentationResponse | null>(
+    null,
+  );
+  const [progress, setProgress] = useState<number>(0);
+  const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
 
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "es",
+  );
+  const [scale, setScale] = useState<number>(
+    parseFloat(localStorage.getItem("uiScale") || "1"),
+  );
+  const [highContrast, setHighContrast] = useState(
+    localStorage.getItem("highContrast") === "true",
+  );
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const imageUrl = new URLSearchParams(location.search).get("imageUrl");
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      setImage(file);
-      setPreview(URL.createObjectURL(file));
-    }
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        getDocs(
+          query(
+            collection(db, "hcc_ai_users"),
+            where("__name__", "==", currentUser.uid),
+          ),
+        ).then((userDoc) => {
+          if (!userDoc.empty) setUserData(userDoc.docs[0].data());
+        });
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const fabricCanvas = new Canvas(canvasRef.current, {
+      backgroundColor: "white",
+    });
+    fabricCanvas.setDimensions({ width: 500, height: 500 });
+
+    const brush = new PencilBrush(fabricCanvas);
+    brush.color = "black";
+    brush.width = 5;
+    fabricCanvas.freeDrawingBrush = brush;
+
+    setCanvas(fabricCanvas);
+
+    return () => {
+      fabricCanvas.dispose();
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        const imgSrc = image ? URL.createObjectURL(image) : imageUrl;
+        if (!imgSrc || !canvas) return;
+
+        const imageObj = await fabric.Image.fromURL(imgSrc, {
+          crossOrigin: "anonymous",
+        });
+
+        const scale = Math.min(500 / imageObj.width!, 500 / imageObj.height!);
+        imageObj.scale(scale);
+        imageObj.set({
+          left: 100,
+          top: 100,
+          selectable: false,
+          lockMovementX: true,
+          lockMovementY: true,
+          hasControls: false,
+          lockRotation: true,
+          lockScalingX: true,
+          lockScalingY: true,
+        });
+
+        canvas.clear();
+        canvas.add(imageObj);
+        canvas.centerObject(imageObj);
+        canvas.setActiveObject(imageObj);
+        toast.success("Imagen cargada correctamente");
+      } catch (error) {
+        console.error("Error loading image:", error);
+      }
+    };
+    loadImage();
+  }, [image, canvas]);
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) setImage(file);
   };
 
-  const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSelectedModel(event.target.value);
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file) setImage(file);
+  };
+
+  const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setModel(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-
-    if (!image) {
-      alert("Por favor, sube una imagen.");
-      return;
-    }
+    if (!image) return alert("Por favor, sube una imagen.");
 
     const formData = new FormData();
     formData.append("file", image);
-    formData.append("model_name", selectedModel);
-
-    setLoading(true);
+    formData.append("model_name", model);
 
     try {
-      // Step 1: Clasificación
+      const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
       const predictionResponse = await axios.post<PredictionResponse>(
-        "https://hcc-ai-backend-1084523848624.europe-west2.run.app/predict-classification/",
+        `${backendUrl}/predict-classification/`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
       );
       setPrediction(predictionResponse.data);
-
       setProgress(100);
-      setTimeout(() => {
-        setActiveTab("Segmentar");
-        setProgress(5); 
-      }, 3000); 
+      setTimeout(() => setProgress(5), 3000);
 
-      // Step 2: Segmentación real con FastAPI
       const segmentationResponse = await axios.post(
-        "https://hcc-ai-backend-1084523848624.europe-west2.run.app/segment/",
+        `${backendUrl}/segment/`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" }, responseType: "blob" } 
+        { responseType: "blob" },
       );
-  
-      const imageUrl = URL.createObjectURL(segmentationResponse.data);
-  
-      setSegmentation({ segmented_image_url: imageUrl });
 
-      const simulatedAssistantExplanation = {
-        explanation: "El modelo ha clasificado la imagen como clase 1 con una probabilidad de 80%.",
-      };
-      setAssistantExplanation(simulatedAssistantExplanation.explanation);
-
-      setTimeout(() => {
-        setActiveTab("Auxiliar");
-        setProgress(0); 
-      }, 8000); 
-
+      const imgUrl = URL.createObjectURL(segmentationResponse.data);
+      setSegmentation({ segmented_image_url: imgUrl });
     } catch (error) {
       console.error("Error al procesar la imagen:", error);
       alert("Ocurrió un error al procesar la imagen.");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      {/* Navbar */}
-      <nav className="bg-black p-4 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">
-        <ul className="flex space-x-4 text-sm">
-          {[{ path: "/", label: "INICIO" }, { path: "/dashboard", label: "VOLVER" }].map((item) => (
-            <li key={item.path}>
-              <button onClick={() => navigate(item.path)} className="ml-6 hover:text-gray-300">
-                {item.label}
+    <div className="flex flex-col min-h-screen bg-black">
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+
+      <NavbarSecond
+        userData={userData}
+        onProfileClick={() => setIsProfileOpen(true)}
+        onSettingsClick={() => setIsSettingsOpen(true)}
+        onAssistantClick={() => setShowAssistant(!showAssistant)}
+      />
+
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        userData={userData}
+        user={user}
+      />
+
+      <SettingsModal
+        open={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        theme={theme}
+        setTheme={setTheme}
+        language={language}
+        setLanguage={setLanguage}
+        scale={scale}
+        setScale={setScale}
+        highContrast={highContrast}
+        setHighContrast={setHighContrast}
+        userData={userData}
+      />
+
+      {/* Asistente flotante */}
+      <div className="relative">
+        <div
+          className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
+            showAssistant ? "translate-x-0" : "translate-x-full"
+          }`}
+          style={{ zIndex: 1000 }}
+        >
+          <Assistant />
+        </div>
+      </div>
+
+      <main className="pt-24 px-6 flex-grow">
+        <div className="flex flex-col lg:flex-row justify-center gap-36 text-white">
+          {/* Contenedor izquierdo: Toolbox + Canvas + Controles */}
+          <div className="flex flex-row items-start gap-6">
+            {/* Toolbox a la izquierda */}
+            <div className="w-[200px] shrink-0">
+              <Toolbox canvas={canvas} />
+            </div>
+
+            {/* Canvas + controles debajo */}
+            <div className="flex flex-col items-center gap-6">
+              <EditorCanvas ref={canvasRef} canvas={canvas} />
+
+              {/* Controles de imagen */}
+              <div className="flex items-center gap-6">
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={(e) => e.preventDefault()}
+                  className="py-4 px-6 bg-gray-800 rounded-md border-2 border-dashed border-gray-600 hover:bg-gray-700 transition duration-300"
+                >
+                  <p>Suelta una imagen aquí</p>
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                </div>
+
+                <button
+                  className="py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
+                  onClick={() => inputRef.current?.click()}
+                >
+                  Seleccionar Imagen
+                </button>
+              </div>
+
+              {/* Modelo */}
+              <select
+                value={model}
+                onChange={handleModelChange}
+                className="py-2 px-4 bg-gray-800 rounded-md mt-2"
+              >
+                <option value="resnet">ResNet</option>
+                <option value="VGG16">VGG</option>
+              </select>
+
+              <button
+                className="mt-2 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
+                onClick={handleSubmit}
+              >
+                Predecir
               </button>
-            </li>
-          ))}
-        </ul>
+            </div>
+          </div>
 
-        {/* Logo Central */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
-          <img src={logoHCC_AI} className="w-32 max-w-full rounded-md cursor-pointer" alt="HCC-AI Logo" onClick={() => navigate("/")} />
-        </div>
+          {/* Resultados */}
+          <div className="flex-1 bg-gray-800 p-4 rounded-lg shadow-xl max-w-[800px]">
+            {segmentation && prediction ? (
+              <div className="p-4 rounded-lg border-2 border-dashed border-yellow-500 bg-black">
+                <h3 className="text-lg font-semibold">Imagen Segmentada:</h3>
+                <img
+                  src={segmentation.segmented_image_url}
+                  alt="Segmentación"
+                  className="max-w-[500px] w-full mt-4 rounded-lg shadow-md"
+                />
 
-        {/* Perfil de Usuario */}
-        <div className="relative w-64">
-          <div className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-800 rounded-lg">
-            <img src={logo_user} alt="Perfil" className="w-10 h-10 max-w-full rounded-full" />
-            <span className="font-semibold truncate">Usuario</span>
+                <h3 className="mt-6 text-lg font-semibold">Clasificación:</h3>
+                <p className="text-xl font-bold text-blue-500">
+                  Clase Predicha: F{prediction.predicted_class}
+                </p>
+                <ul className="list-disc ml-5 mt-2 text-white">
+                  {prediction.probabilities.map((prob, index) => (
+                    <li key={index}>
+                      F{index}: {prob.toFixed(4)}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className="mt-4 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400"
+                  onClick={() => setShowModal(true)}
+                >
+                  Ver Explicación de los Resultados
+                </button>
+
+                {showModal && (
+                  <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75">
+                    <div className="bg-gray-900 rounded-lg p-6 w-11/12 max-w-3xl text-white">
+                      {prediction.predicted_class === 0 && (
+                        <>
+                          <h4 className="font-semibold">F0 - No Fibrosis:</h4>
+                          <p>Tejido hepático sano.</p>
+                        </>
+                      )}
+                      {prediction.predicted_class === 1 && (
+                        <>
+                          <h4 className="font-semibold">
+                            F1 - Fibrosis Portal:
+                          </h4>
+                          <p>Fibrosis en áreas portales.</p>
+                        </>
+                      )}
+                      {prediction.predicted_class === 2 && (
+                        <>
+                          <h4 className="font-semibold">
+                            F2 - Fibrosis Periportal:
+                          </h4>
+                          <p>Fibrosis en bordes de las áreas portales.</p>
+                        </>
+                      )}
+                      {prediction.predicted_class === 3 && (
+                        <>
+                          <h4 className="font-semibold">
+                            F3 - Fibrosis Septal:
+                          </h4>
+                          <p>Bandas de tejido cicatricial.</p>
+                        </>
+                      )}
+                      {prediction.predicted_class === 4 && (
+                        <>
+                          <h4 className="font-semibold">F4 - Cirrosis:</h4>
+                          <p>Fibrosis avanzada con daño hepático.</p>
+                        </>
+                      )}
+                      <button
+                        className="mt-4 py-2 px-6 bg-red-500 text-white font-bold rounded-lg hover:bg-red-400"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Cerrar
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-gray-400">
+                Esperando segmentación y clasificación...
+              </p>
+            )}
           </div>
         </div>
-      </nav>
+      </main>
 
-      {/* Pestañas */}
-      <div className="flex justify-center mt-20 mb-4">
-        <button 
-          onClick={() => setActiveTab("Clasificar")} 
-          className={`px-4 py-2 font-semibold ${activeTab === "Clasificar" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-        >
-          Clasificar
-        </button>
-        <button 
-          onClick={() => setActiveTab("Segmentar")} 
-          className={`px-4 py-2 font-semibold ${activeTab === "Segmentar" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-        >
-          Segmentar
-        </button>
-        <button 
-          onClick={() => setActiveTab("Auxiliar")} 
-          className={`px-4 py-2 font-semibold ${activeTab === "Auxiliar" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-        >
-          Auxiliar
-        </button>
-      </div>
-
-      {/* Contenedor principal */}
-      <div className="flex flex-col md:flex-row h-full p-10 gap-10">
-        {/* Sección Izquierda - Subir Imagen & Selección */}
-        <div className="w-full md:w-1/3 bg-gray-100 p-6 rounded-lg shadow-lg">
-          <h2 className="text-lg font-semibold mb-4">Sube una imagen</h2>
-          <input type="file" accept="image/*" onChange={handleImageChange} className="w-full p-2 border rounded" />
-          {preview && <img src={preview} alt="Vista previa" className="w-full mt-4 rounded-lg shadow" />}
-          <div className="mt-4">
-            <label className="block font-semibold mb-1">Selecciona el modelo:</label>
-            <select value={selectedModel} onChange={handleModelChange} className="w-full p-2 border rounded">
-              <option value="resnet">ResNet</option>
-              <option value="cnn">CNN</option>
-              <option value="VGG16">VGG16</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Botón de Predicción */}
-        <div className="flex items-center justify-center w-full md:w-1/3">
-          <button 
-            type="submit" 
-            disabled={loading} 
-            onClick={handleSubmit} 
-            className="bg-blue-500 text-white font-semibold text-lg py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-            {loading ? "Cargando..." : "Predecir"}
-          </button>
-        </div>
-
-        {/* Sección Derecha - Resultados */}
-        <div className="w-full md:w-1/3 bg-gray-100 p-6 rounded-lg shadow-lg">
-          <h2 className="text-lg font-semibold mb-4">Resultados</h2>
-
-          {/* Clasificar */}
-          {activeTab === "Clasificar" && prediction && (
-            <div>
-              <p className="text-xl font-bold text-blue-600">Clase Predicha: {prediction.predicted_class}</p>
-              <p className="mt-2 text-gray-700">Probabilidades:</p>
-              <ul className="list-disc ml-5 text-gray-600">
-                {prediction.probabilities.map((prob, index) => (
-                  <li key={index}>Clase {index}: {prob.toFixed(4)}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Segmentar */}
-          {activeTab === "Segmentar" && segmentation && (
-            <div>
-              <h3 className="text-lg font-semibold">Imagen Segmentada:</h3>
-              <img src={segmentation.segmented_image_url} alt="Segmentación" className="mt-4 w-full rounded-lg shadow" />
-            </div>
-          )}
-
-          {/* Auxiliar */}
-          {activeTab === "Auxiliar" && assistantExplanation && (
-            <div>
-              <h3 className="text-lg font-semibold">Explicación del Asistente:</h3>
-              <p className="mt-2 text-gray-700">{assistantExplanation}</p>
-            </div>
-          )}
-
-          {/* Indicador visual de progreso */}
-          {progress > 0 && <p className="text-center mt-4">Faltan {progress} segundos...</p>}
-        </div>
-      </div>
+      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-inner">
+        © 2025 HCC-AI
+      </footer>
     </div>
   );
 };

@@ -1,20 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { app } from '../../config/firebase';
-import { useNavigate } from 'react-router-dom';
-import { FaEllipsisV, FaDownload, FaTrashAlt } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  deleteDoc,
+  doc,
+  where,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
+import { FaEllipsisV, FaDownload, FaTrashAlt } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const EstudiosRecientes = () => {
-  const [estudios, setEstudios] = useState<{ id: string; [key: string]: any }[]>([]);
+interface EstudiosRecientesProps {
+  onEstudiosActualizados?: () => void;
+}
+
+const EstudiosRecientes: React.FC<EstudiosRecientesProps> = ({
+  onEstudiosActualizados,
+}) => {
+  const [estudios, setEstudios] = useState<
+    { id: string; [key: string]: any }[]
+  >([]);
   const [paginaActual, setPaginaActual] = useState(1);
   const estudiosPorPagina = 5;
   const [menuActivo, setMenuActivo] = useState<string | null>(null);
-  const [confirmarEliminacion, setConfirmarEliminacion] = useState<string | null>(null);
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState<
+    string | null
+  >(null);
 
-  const [busquedaNombre, setBusquedaNombre] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState('Todos');
-  const [filtroFecha, setFiltroFecha] = useState('');
+  const [busquedaNombre, setBusquedaNombre] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
+  const [filtroFecha, setFiltroFecha] = useState("");
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -24,41 +45,47 @@ const EstudiosRecientes = () => {
     const fetchEstudios = async () => {
       const user = auth.currentUser;
       if (!user) return;
+      console.log("uid", user.uid);
 
       try {
         const q = query(
-          collection(db, 'hcc_ai_studies'),
-          where('medicoId', '==', user.uid)
+          collection(db, "hcc_ai_studies"),
+          where("doctorId", "==", user.uid),
+          orderBy("studieDate", "desc"),
         );
-
         const querySnapshot = await getDocs(q);
-        const estudiosDelUsuario = querySnapshot.docs.map(doc => ({
+        const estudiosDelUsuario = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-
         setEstudios(estudiosDelUsuario);
+        if (onEstudiosActualizados) onEstudiosActualizados();
       } catch (error) {
-        console.error('Error al obtener los estudios:', error);
+        console.error("Error al obtener los estudios:", error);
       }
     };
-
     fetchEstudios();
   }, []);
 
   const estudiosFiltrados = estudios.filter((estudio) => {
-    const coincideNombre = estudio.studieName?.toLowerCase().includes(busquedaNombre.toLowerCase());
-    const coincideEstado = filtroEstado === 'Todos' || estudio.status === filtroEstado;
+    const coincideNombre = estudio.studieName
+      ?.toLowerCase()
+      .includes(busquedaNombre.toLowerCase());
+    const coincideEstado =
+      filtroEstado === "Todos" || estudio.status === filtroEstado;
     const coincideFecha =
-      filtroFecha === '' ||
+      filtroFecha === "" ||
       (estudio.studieDate?.toDate &&
         estudio.studieDate.toDate().toISOString().slice(0, 10) === filtroFecha);
-    
+
     return coincideNombre && coincideEstado && coincideFecha;
   });
 
   const indiceInicio = (paginaActual - 1) * estudiosPorPagina;
-  const estudiosPaginados = estudiosFiltrados.slice(indiceInicio, indiceInicio + estudiosPorPagina);
+  const estudiosPaginados = estudiosFiltrados.slice(
+    indiceInicio,
+    indiceInicio + estudiosPorPagina,
+  );
 
   const siguientePagina = () => {
     if (paginaActual * estudiosPorPagina < estudiosFiltrados.length) {
@@ -78,26 +105,37 @@ const EstudiosRecientes = () => {
 
   const eliminarEstudio = async (id: string) => {
     try {
-      await deleteDoc(doc(db, 'hcc_ai_studies', id));
-      setEstudios(estudios.filter(estudio => estudio.id !== id));
+      await deleteDoc(doc(db, "hcc_ai_studies", id));
+      setEstudios(estudios.filter((estudio) => estudio.id !== id));
       setConfirmarEliminacion(null);
     } catch (error) {
-      console.error('Error al eliminar el estudio:', error);
+      console.error("Error al eliminar el estudio:", error);
     }
   };
 
   const descargarEstudio = (id: string) => {
-    console.log('Descargando estudio:', id);
+    const estudio = estudios.find((e) => e.id === id);
+
+    if (!estudio?.pdfReportUrl) {
+      toast.error("No se encontró el informe PDF para este estudio.");
+      return;
+    }
+    window.open(estudio.pdfReportUrl, "_blank");
   };
 
   return (
-
-
-
-
-
     <div className="w-full h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6">
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {/* Filtros */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
         <input
@@ -160,9 +198,9 @@ const EstudiosRecientes = () => {
               <div className="flex items-center w-1/3">
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    estudio.status === 'Finalizado'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                    estudio.status === "Finalizado"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
                   }`}
                 >
                   {estudio.status}
@@ -171,21 +209,23 @@ const EstudiosRecientes = () => {
 
               <p className="text-sm text-gray-600 w-1/3 text-right">
                 {estudio.studieDate?.toDate
-                  ? estudio.studieDate.toDate().toLocaleString('es-ES', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
+                  ? estudio.studieDate.toDate().toLocaleString("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })
-                  : 'Fecha no disponible'}
+                  : "Fecha no disponible"}
               </p>
 
               <div className="relative">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setMenuActivo(menuActivo === estudio.id ? null : estudio.id);
+                    setMenuActivo(
+                      menuActivo === estudio.id ? null : estudio.id,
+                    );
                   }}
                   className="text-gray-600 hover:text-gray-800 focus:outline-none"
                 >
@@ -214,7 +254,9 @@ const EstudiosRecientes = () => {
             </li>
           ))
         ) : (
-          <p className="text-gray-500 text-center">No hay estudios recientes.</p>
+          <p className="text-gray-500 text-center">
+            No hay estudios recientes.
+          </p>
         )}
       </ul>
 
@@ -228,12 +270,15 @@ const EstudiosRecientes = () => {
           Anterior
         </button>
         <span className="text-gray-600">
-          Página {paginaActual} de {Math.ceil(estudiosFiltrados.length / estudiosPorPagina) || 1}
+          Página {paginaActual} de{" "}
+          {Math.ceil(estudiosFiltrados.length / estudiosPorPagina) || 1}
         </span>
         <button
           onClick={siguientePagina}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-300"
-          disabled={paginaActual * estudiosPorPagina >= estudiosFiltrados.length}
+          disabled={
+            paginaActual * estudiosPorPagina >= estudiosFiltrados.length
+          }
         >
           Siguiente
         </button>

@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, getDocs } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { app } from '../../config/firebase';
+import React, { useState, useEffect } from "react";
+import { getFirestore, collection, query, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { app } from "../../config/firebase";
 
 const ModelosDisponibles = () => {
-  const [modelos, setModelos] = useState<{ id: string; [key: string]: any }[]>([]);
+  const [modelos, setModelos] = useState<{ id: string; [key: string]: any }[]>(
+    [],
+  );
   const [paginaActual, setPaginaActual] = useState(1);
-  const [busqueda, setBusqueda] = useState('');
-  const [filtroTipo, setFiltroTipo] = useState('Todos');
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("Todos");
 
-  const modelosPorPagina = 5;
+  const modelosPorPagina = 2;
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -20,18 +22,17 @@ const ModelosDisponibles = () => {
       if (!user) return;
 
       try {
-        const q = query(collection(db, 'hcc_ai_models'));
+        const q = query(collection(db, "hcc_ai_models"));
         const querySnapshot = await getDocs(q);
 
-        const modelosDisponibles = querySnapshot.docs.map(doc => ({
+        const modelosDisponibles = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
         setModelos(modelosDisponibles);
-
       } catch (error) {
-        console.error('Error al obtener los modelos:', error);
+        console.error("Error al obtener los modelos:", error);
       }
     };
 
@@ -39,17 +40,26 @@ const ModelosDisponibles = () => {
   }, []);
 
   // Tipos únicos para el filtro
-  const tiposDeModelo = ['Todos', ...new Set(modelos.map((m) => m.modelType || 'Desconocido'))];
+  const tiposDeModelo = [
+    "Todos",
+    ...new Set(modelos.map((m) => m.modelType || "Desconocido")),
+  ];
 
   // Filtrado por búsqueda y tipo
   const modelosFiltrados = modelos.filter((modelo) => {
-    const coincideNombre = modelo.modelName?.toLowerCase().includes(busqueda.toLowerCase());
-    const coincideTipo = filtroTipo === 'Todos' || modelo.modelType === filtroTipo;
+    const coincideNombre = modelo.modelName
+      ?.toLowerCase()
+      .includes(busqueda.toLowerCase());
+    const coincideTipo =
+      filtroTipo === "Todos" || modelo.modelType === filtroTipo;
     return coincideNombre && coincideTipo;
   });
 
   const indiceInicio = (paginaActual - 1) * modelosPorPagina;
-  const modelosPaginados = modelosFiltrados.slice(indiceInicio, indiceInicio + modelosPorPagina);
+  const modelosPaginados = modelosFiltrados.slice(
+    indiceInicio,
+    indiceInicio + modelosPorPagina,
+  );
 
   const siguientePagina = () => {
     if (paginaActual * modelosPorPagina < modelosFiltrados.length) {
@@ -65,7 +75,6 @@ const ModelosDisponibles = () => {
 
   return (
     <div className="w-full h-full bg-white rounded-lg shadow-md p-6 border border-gray-300 mr-6">
-      
       {/* Filtros */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <input
@@ -116,28 +125,30 @@ const ModelosDisponibles = () => {
               </h3>
 
               <p className="text-sm text-gray-600 italic w-full md:w-1/3 md:text-center">
-                {modelo.description || 'Descripción no disponible'}
+                {modelo.description || "Descripción no disponible"}
               </p>
 
               <span className="text-sm font-medium text-gray-700 w-full md:w-1/3 text-center">
-                {modelo.modelType || 'Tipo no disponible'}
+                {modelo.modelType || "Tipo no disponible"}
               </span>
 
               <p className="text-sm text-gray-600 w-full md:w-1/3 text-center mt-2 md:mt-0">
                 {modelo.trainDate?.toDate
-                  ? modelo.trainDate.toDate().toLocaleString('es-ES', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
+                  ? modelo.trainDate.toDate().toLocaleString("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })
-                  : 'Fecha no disponible'}
+                  : "Fecha no disponible"}
               </p>
             </li>
           ))
         ) : (
-          <p className="text-gray-500 mt-4 text-center">No hay modelos disponibles.</p>
+          <p className="text-gray-500 mt-4 text-center">
+            No hay modelos disponibles.
+          </p>
         )}
       </ul>
 
@@ -151,7 +162,8 @@ const ModelosDisponibles = () => {
           Anterior
         </button>
         <span className="text-gray-600">
-          Página {paginaActual} de {Math.ceil(modelosFiltrados.length / modelosPorPagina) || 1}
+          Página {paginaActual} de{" "}
+          {Math.ceil(modelosFiltrados.length / modelosPorPagina) || 1}
         </span>
         <button
           onClick={siguientePagina}
