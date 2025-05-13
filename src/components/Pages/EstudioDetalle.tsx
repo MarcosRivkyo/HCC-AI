@@ -684,7 +684,6 @@ const EstudioDetalle = () => {
 
   const handleImagenChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    tipo: "ecografias" | "mask",
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -692,7 +691,7 @@ const EstudioDetalle = () => {
       setImagenSeleccionada(file);
     }
   };
-
+  
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     console.log("Drag over event triggered");
     e.preventDefault();
@@ -1135,7 +1134,7 @@ const EstudioDetalle = () => {
                     onChange={(e) =>
                       estudio?.predictionId
                         ? undefined
-                        : handleImagenChange(e, "ecografias")
+                        : handleImagenChange(e)
                     }
                     disabled={!!estudio?.predictionId}
                     className="hidden"
