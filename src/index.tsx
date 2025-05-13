@@ -3,29 +3,32 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";  
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import i18next from "i18next";
 import { I18nextProvider } from "react-i18next";
 
-
 import global_en from "./assets/translations/en/global.json";
 import global_es from "./assets/translations/es/global.json";
 
-
-import Dashboard from './components/Pages/Dashboard.tsx';
-import Login from './components/Auth/Login.tsx';
-import Signup from './components/Auth/Signup.tsx';
-import AuthRoute from './components/Auth/AuthRoute.tsx';
-import Assistant from './components/Pages/Assistant.tsx';
-import FabricEditor from "./components/UI/FabricEditor.tsx";
-import EstudioDetalle from "./components/Pages/EstudioDetalle.tsx";
+import Dashboard from "./components/Pages/Dashboard.tsx";
+import Login from "./components/Auth/Login.tsx";
+import Signup from "./components/Auth/Signup.tsx";
+import AuthRoute from "./components/Auth/AuthRoute.tsx";
+import Assistant from "./components/Pages/Assistant.tsx";
 import PredictImage from "./components/Pages/PredictImage.tsx";
-
+import EstudioDetalle from "./components/Pages/EstudioDetalle.tsx";
+import MisEstudios from "./components/Pages/MisEstudios.tsx";
+import Models from "./components/Pages/Models.tsx";
 
 i18next.init({
   interpolation: { escapeValue: false },
-  lng: "es", 
+  lng: "es",
   resources: {
     es: {
       global: global_es,
@@ -36,27 +39,43 @@ i18next.init({
   },
 });
 
-
 const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 
 root.render(
-    <React.StrictMode>
-        <I18nextProvider i18n={i18next}>  
-            <Router>  
-                <Routes>  
-                    <Route path="/" element={<App />} />
-                    <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} /> #quite Authroute
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
-                    <Route path="/assistant" element={<Assistant />} />
-                    <Route path="/editar-imagen" element={<FabricEditor />} />
-                    <Route path="/estudio/:id" element={<EstudioDetalle />} /> 
-                    <Route path="/predict" element={<FabricEditor />} /> 
-                    <Route path="*" element={<Navigate to="/" />} />
-                </Routes>
-            </Router>
-        </I18nextProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <I18nextProvider i18n={i18next}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route
+            path="/login"
+            element={
+              <AuthRoute>
+                <Login />
+              </AuthRoute>
+            }
+          />{" "}
+          #quite Authroute
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/dashboard"
+            element={
+              <AuthRoute>
+                <Dashboard />
+              </AuthRoute>
+            }
+          />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/editar-imagen" element={<PredictImage />} />
+          <Route path="/estudio/:id" element={<EstudioDetalle />} />
+          <Route path="/predict" element={<PredictImage />} />
+          <Route path="/my-studies" element={<MisEstudios />} />
+          <Route path="/models" element={<Models />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </I18nextProvider>
+  </React.StrictMode>,
 );

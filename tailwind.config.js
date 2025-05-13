@@ -9,6 +9,7 @@ module.exports = {
     extend: {},
   },
   plugins: [
+    require('@tailwindcss/typography'), // ✅ Añadido correctamente aquí
     function ({ addBase, theme }) {
       const colors = theme('colors');
       const newVars = Object.fromEntries(

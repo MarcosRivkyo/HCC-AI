@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import aiHealth from "../../assets/images/hcc_img_liver.png";
 import aiHealth3 from "../../assets/images/hcc_img_2.png";
+import aiHealth2 from "../../assets/images/hcc-ai_image2.jpg";
 
-const images: string[] = [aiHealth, aiHealth3];
+const images: string[] = [aiHealth, aiHealth3, aiHealth2];
 
 const ImageSlider2: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<number>(0);
@@ -15,7 +16,7 @@ const ImageSlider2: React.FC = () => {
         setCurrentImage((prev) => (prev + 1) % images.length); // Cambia a la siguiente imagen
         setFade(true); // Activa el efecto de entrada
       }, 800); // Duración del efecto de salida
-    }, 8000); // Cambio automático cada 8 segundos
+    }, 6000); // Cambio automático cada 8 segundos
 
     return () => clearInterval(interval);
   }, []);

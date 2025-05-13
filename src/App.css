@@ -132,10 +132,6 @@
   }
 }
 
-
-
-
-
 .brush-options {
   display: flex;
   flex-direction: column;
@@ -161,7 +157,7 @@
 
 .brush-type-picker {
   width: 120px;
-  z-index: 10
+  z-index: 10;
 }
 
 .brush-color-picker {
@@ -172,23 +168,22 @@
   width: 60px;
 }
 
-
-
-.slick-slider {
-  background-color: #000000; 
-  padding: 20px; 
+.btn-icon {
+  @apply w-10 h-10 flex items-center justify-center bg-gray-100 rounded hover:bg-blue-100 transition;
 }
 
+.slick-slider {
+  background-color: #000000;
+  padding: 20px;
+}
 
 .slick-prev {
-  left: 10px; 
+  left: 10px;
 }
 
 .slick-next {
-  right: 10px; 
+  right: 10px;
 }
-
-
 
 .react-calendar__tile--weekend {
   background-color: #e53e3e; /* Rojo */
@@ -198,4 +193,36 @@
 .react-calendar {
   background-color: #1a202c; /* Fondo oscuro */
   color: black;
+}
+
+/* Estilo para el modo de alto contraste */
+
+body.high-contrast {
+  background-color: black !important;
+  color: yellow !important;
+}
+
+body.high-contrast button,
+body.high-contrast input,
+body.high-contrast select {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: 2px solid yellow !important;
+}
+
+body.high-contrast a {
+  color: cyan !important;
+}
+
+body.high-contrast .bg-white {
+  background-color: #000 !important;
+}
+
+body.high-contrast .text-gray-800 {
+  color: yellow !important;
+}
+
+body.dark-theme {
+  background-color: #111;
+  color: #ccc;
 }

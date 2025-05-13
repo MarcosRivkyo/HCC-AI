@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import aiHealth from "../../assets/images/ai_health.jpg";
 import aiHealth2 from "../../assets/images/ai_health2.jpg";
+import aiHealth3 from "../../assets/images/ai_health3.jpg";
+import aiHealth4 from "../../assets/images/ai_health4.jpg";
 
-const images: string[] = [aiHealth, aiHealth2];
+const images: string[] = [aiHealth, aiHealth2, aiHealth3, aiHealth4];
 
 const ImageSlider: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<number>(0);
@@ -15,8 +17,8 @@ const ImageSlider: React.FC = () => {
       setTimeout(() => {
         setCurrentImage((prev) => (prev + 1) % images.length);
         setFade(true); // Activa el efecto de entrada
-      }, 800);
-    }, 8000);
+      }, 400);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, []);
