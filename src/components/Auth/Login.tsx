@@ -26,7 +26,8 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [showResetInput, setShowResetInput] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [transitioning, setTransitioning] = useState(false);
+  
   const signInWithEmail = async () => {
     setAuthing(true);
     setError("");
@@ -38,7 +39,9 @@ const Login = () => {
         console.log("Usuario validado?:", user);
 
         if (user.emailVerified === true) {
+          setTransitioning(true);
           navigate("/dashboard");
+     
         } else {
           await signOut(auth);
           setError("Debes verificar tu correo antes de acceder.");
@@ -78,6 +81,7 @@ const Login = () => {
       }
     }
   };
+
 
   return (
     <div className="w-full h-screen flex">
@@ -210,6 +214,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    
   );
 };
 

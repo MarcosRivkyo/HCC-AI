@@ -60,32 +60,25 @@ root.render(
     <I18nextProvider i18n={i18next}>
       <Router>
         <Routes>
+
+          {/* públicas */}
           <Route path="/" element={<App />} />
-          <Route
-            path="/login"
-            element={
-              <AuthRoute>
-                <Login />
-              </AuthRoute>
-            }
-          />{" "}
+          <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
           <Route path="/signup" element={<Signup />} />
-          <Route
-            path="/dashboard"
-            element={
-              <AuthRoute>
-                <Dashboard />
-              </AuthRoute>
-            }
-          />
-          <Route path="/assistant" element={<Assistant />} />
-          <Route path="/editar-imagen" element={<PredictImage />} />
-          <Route path="/estudio/:id" element={<EstudioDetalle />} />
-          <Route path="/predict" element={<PredictImage />} />
-          <Route path="/my-studies" element={<MisEstudios />} />
-          <Route path="/models" element={<Models />} />
+
+          {/* privadas */}
+          <Route path="/dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
+          <Route path="/assistant" element={<AuthRoute><Assistant /></AuthRoute>} />
+          <Route path="/editar-imagen" element={<AuthRoute><PredictImage /></AuthRoute>} />
+          <Route path="/estudio/:id" element={<AuthRoute><EstudioDetalle /></AuthRoute>} />
+          <Route path="/predict" element={<AuthRoute><PredictImage /></AuthRoute>} />
+          <Route path="/my-studies" element={<AuthRoute><MisEstudios /></AuthRoute>} />
+          <Route path="/models" element={<AuthRoute><Models /></AuthRoute>} />
+
+          {/* fallback */}
           <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+          
+          </Routes>
       </Router>
     </I18nextProvider>
   </React.StrictMode>,
