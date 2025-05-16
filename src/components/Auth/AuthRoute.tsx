@@ -16,31 +16,35 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
 
-  useEffect(() => {
-    const startTime = Date.now();
+useEffect(() => {
+  const startTime = Date.now();
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      const elapsedTime = Date.now() - startTime;
-      const delay = Math.max(1000 - elapsedTime, 0);
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const elapsedTime = Date.now() - startTime;
+    const delay = Math.max(1000 - elapsedTime, 0);
 
-      setTimeout(() => {
-        if (!currentUser || !currentUser.emailVerified) {
-          console.log(
-            "User not authenticated or email not verified:",
-            currentUser,
-          );
-        } else {
-          if (["/login", "/signup"].includes(location.pathname)) {
-            navigate("/dashboard");
-          }
+    setTimeout(() => {
+      const isPublicRoute = ["/", "/login", "/signup"].includes(location.pathname);
+
+      if (!currentUser || !currentUser.emailVerified) {
+        console.log("User not authenticated or email not verified:", currentUser);
+
+        if (!isPublicRoute) {
+          navigate("/login");
         }
+      } else {
+        if (["/login", "/signup"].includes(location.pathname)) {
+          navigate("/dashboard");
+        }
+      }
 
-        setLoading(false);
-      }, delay);
-    });
+      setLoading(false);
+    }, delay);
+  });
 
-    return () => unsubscribe();
-  }, [auth, navigate, location]);
+  return () => unsubscribe();
+}, [auth, navigate, location]);
+
 
   if (loading) {
     return (

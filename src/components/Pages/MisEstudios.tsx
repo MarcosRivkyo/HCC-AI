@@ -23,6 +23,7 @@ import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SettingsModal from "../UI/SettingsModal";
+import { useTranslation } from "react-i18next";
 
 interface Estudio {
   id: string;
@@ -53,6 +54,7 @@ const MisEstudios: React.FC = () => {
   const [ordenFecha, setOrdenFecha] = useState<"asc" | "desc">("desc");
   const [busqueda, setBusqueda] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
+  const { t , i18n } = useTranslation("global");
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const abrirFormulario = () => setMostrarFormulario(true);
@@ -230,7 +232,7 @@ const MisEstudios: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
+  <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -271,156 +273,177 @@ const MisEstudios: React.FC = () => {
         userData={userData}
       />
 
-      <div className="relative">
-        {/* Asistente flotante */}
-        <div
-          className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
-            showAssistant ? "translate-x-0" : "translate-x-full"
-          }`}
-          style={{ zIndex: 1000 }}
-        >
-          <Assistant />
-        </div>
+    <div className="relative">
+      <div
+        className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
+          showAssistant ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{ zIndex: 1000 }}
+      >
+        <Assistant />
       </div>
+    </div>
+
       <main className="flex-grow container mx-auto px-4 py-20">
-        <h1 className="text-3xl font-bold text-gray-800 mt-8 mb-8 text-center">
-          Estudios
+
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mt-8 mb-8 text-center">
+          {t("my_studies.title")}
         </h1>
+      
+      <div className="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow p-4 mt-6 mb-8 flex flex-col md:flex-row md:items-end gap-4 justify-between">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow w-full md:w-auto">
+          {t("my_studies.create_study")}
+        </button>
+        <input type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder={t("my_studies.search_by_name")}
+          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2 w-full md:w-1/4" />
 
-        <div className="bg-white rounded-xl shadow p-4 mt-6 mb-8 flex flex-col md:flex-row md:items-end gap-4 justify-between">
-          <button
-            onClick={abrirFormulario}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow w-full md:w-auto"
-          >
-            Crear Estudio
-          </button>
-          <input
-            type="text"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar por nombre"
-            className="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/4"
-          />
+        <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}
+          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2">
+          <option value="">{t("my_studies.filter_all")}</option>
+          <option value="En Progreso">{t("my_studies.status_in_progress")}</option>
+          <option value="Finalizado">{t("my_studies.status_done")}</option>
+        </select>
 
-          <select
-            value={estadoFiltro}
-            onChange={(e) => setEstadoFiltro(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2"
-          >
-            <option value="">Todos</option>
-            <option value="En Progreso">En Progreso</option>
-            <option value="Finalizado">Finalizado</option>
-          </select>
+        <input type="date" value={fechaFiltro} onChange={(e) => setFechaFiltro(e.target.value)}
+          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2 w-full md:w-1/4" />
 
-          <input
-            type="date"
-            value={fechaFiltro}
-            onChange={(e) => setFechaFiltro(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 w-full md:w-1/4"
-          />
+        <select value={ordenFecha} onChange={(e) => setOrdenFecha(e.target.value as "asc" | "desc")}
+          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2">
+          <option value="desc">{t("my_studies.sort_newest")}</option>
+          <option value="asc">{t("my_studies.sort_oldest")}</option>
+        </select>
+      </div>
 
-          <select
-            value={ordenFecha}
-            onChange={(e) => setOrdenFecha(e.target.value as "asc" | "desc")}
-            className="border border-gray-300 rounded-md px-3 py-2"
-          >
-            <option value="desc">Más recientes</option>
-            <option value="asc">Más antiguos</option>
-          </select>
-        </div>
+              {estudiosPaginados.length === 0 ? (
+                <p className="text-center text-gray-500">
+                  {t("my_studies.no_studies")}
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {estudiosPaginados.map((estudio) => (
+                    <div key={estudio.id} className="bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105">
+                      {estudio.imagenUrl ? (
+                        <div className="h-48 w-full overflow-hidden">
+                          <img
+                            src={estudio.imagenUrl}
+                            alt="Miniatura"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-48 w-full bg-gray-300 dark:bg-gray-800" />
+                      )}
+                      <div className="p-5 bg-gray-400 dark:bg-gray-900">
+                        <h2
+                          onClick={() => verEstudioDetalle(estudio.id)}
+                          className="text-lg font-bold text-blue-800 dark:text-blue-400 cursor-pointer hover:underline truncate"
+                        >
+                          {estudio.studieName}
+                        </h2>
+                        <p className="text-sm text-gray-900 dark:text-gray-400">
+                          {estudio.studieDate?.toDate
+                            ? estudio.studieDate.toDate().toLocaleDateString(i18n.language)
+                            : t("my_studies.no_date")}
+                        </p>
+                        <span
+                          className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
+                            estudio.status === "Finalizado"
+                              ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200"
+                              : "bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200"
+                          }`}
+                        >
+                          {t(
+                            estudio.status === "Finalizado"
+                              ? "my_studies.status_done"
+                              : "my_studies.status_in_progress"
+                          )}
+                        </span>
+                          <div className="flex justify-end gap-3 mt-4">
+                            <button
+                              onClick={() => descargarPDF(estudio.pdfReportUrl)}
+                              className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-700 text-blue-600 dark:text-blue-300 transition"
+                              title="Descargar PDF"
+                            >
+                              <FaDownload />
+                            </button>
+                            <button
+                              onClick={() => setConfirmarEliminacion(estudio.id)}
+                              className="p-2 rounded-full bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-700 text-red-600 dark:text-red-300 transition"
+                              title="Eliminar"
+                            >
+                              <FaTrashAlt />
+                            </button>
+                          </div>
 
-        {estudiosPaginados.length === 0 ? (
-          <p className="text-center text-gray-500">No hay estudios</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {estudiosPaginados.map((estudio) => (
-              <div
-                key={estudio.id}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105"
-              >
-                {estudio.imagenUrl ? (
-                  <div className="h-48 w-full overflow-hidden">
-                    <img
-                      src={estudio.imagenUrl}
-                      alt="Miniatura"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="h-48 w-full bg-gray-200" />
-                )}
-                <div className="p-5">
-                  <h2
-                    onClick={() => verEstudioDetalle(estudio.id)}
-                    className="text-lg font-bold text-blue-700 cursor-pointer hover:underline truncate"
-                  >
-                    {estudio.studieName}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    {estudio.studieDate?.toDate
-                      ? estudio.studieDate.toDate().toLocaleDateString("es-ES")
-                      : "Sin fecha"}
-                  </p>
-                  <span
-                    className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${estudio.status === "Finalizado" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}
-                  >
-                    {estudio.status}
-                  </span>
-                  <div className="flex justify-end gap-3 mt-4">
-                    <button
-                      onClick={() => descargarPDF(estudio.pdfReportUrl)}
-                      className="text-gray-500 hover:text-blue-600"
-                    >
-                      <FaDownload />
-                    </button>
-                    <button
-                      onClick={() => setConfirmarEliminacion(estudio.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <FaTrashAlt />
-                    </button>
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Confirmación de eliminación */}
+              {confirmarEliminacion && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full">
+                    <h2 className="text-lg font-bold text-gray-800 mb-4">
+                      {t("my_studies.delete_title")}
+                    </h2>
+                    <p className="text-sm text-gray-600 mb-6">
+                      {t("my_studies.delete_warning")}
+                    </p>
+                    <div className="flex justify-end gap-4">
+                      <button
+                        onClick={() => eliminarEstudio(confirmarEliminacion)}
+                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
+                      >
+                        {t("common.delete")}
+                      </button>
+                      <button
+                        onClick={() => setConfirmarEliminacion(null)}
+                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                      >
+                        {t("common.cancel")}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              )}
+              <div className="flex justify-between mt-6">
+                <button
+                  onClick={() => setPaginaActual((p) => Math.max(p - 1, 1))}
+                  disabled={paginaActual === 1}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition"
+                >
+                  {t("actions.previous")}
+                </button>
 
-        {estudiosFiltrados.length > estudiosPorPagina && (
-          <div className="flex justify-between mt-6">
-            <button
-              onClick={() => setPaginaActual((p) => Math.max(p - 1, 1))}
-              disabled={paginaActual === 1}
-              className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-            >
-              Anterior
-            </button>
-            <span className="text-gray-600">
-              Página {paginaActual} de{" "}
-              {Math.ceil(estudiosFiltrados.length / estudiosPorPagina)}
-            </span>
-            <button
-              onClick={() =>
-                setPaginaActual((p) =>
-                  p * estudiosPorPagina < estudiosFiltrados.length ? p + 1 : p,
-                )
-              }
-              disabled={
-                paginaActual * estudiosPorPagina >= estudiosFiltrados.length
-              }
-              className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-            >
-              Siguiente
-            </button>
-          </div>
-        )}
+                <span className="text-gray-700 dark:text-gray-300 text-sm">
+                  {t("pagination.page")} {paginaActual} {t("pagination.of")}{" "}
+                  {Math.ceil(estudiosFiltrados.length / estudiosPorPagina) || 1}
+                </span>
+
+                <button
+                  onClick={() =>
+                    setPaginaActual((p) =>
+                      p * estudiosPorPagina < estudiosFiltrados.length ? p + 1 : p
+                    )
+                  }
+                  disabled={paginaActual * estudiosPorPagina >= estudiosFiltrados.length}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition"
+                >
+                  {t("actions.next")}
+                </button>
+              </div>
+
+
       </main>
 
       {mostrarFormulario && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4 text-gray-800">
-              Nuevo Estudio
+              {t("my_studies.new_study")}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -428,7 +451,7 @@ const MisEstudios: React.FC = () => {
                 name="studieName"
                 value={formData.studieName}
                 onChange={handleChange}
-                placeholder="Nombre del estudio"
+                placeholder={t("my_studies.study_name")}
                 className="w-full border px-3 py-2 rounded-md"
                 required
               />
@@ -445,7 +468,7 @@ const MisEstudios: React.FC = () => {
                 name="patientName"
                 value={formData.patientName}
                 onChange={handleChange}
-                placeholder="Nombre del paciente"
+                placeholder={t("my_studies.patient_name")}
                 className="w-full border px-3 py-2 rounded-md"
               />
               <input
@@ -453,7 +476,7 @@ const MisEstudios: React.FC = () => {
                 name="clinicalDescription"
                 value={formData.clinicalDescription}
                 onChange={handleChange}
-                placeholder="Descripción clínica"
+                placeholder={t("my_studies.clinical_description")}
                 className="w-full border px-3 py-2 rounded-md"
               />
               <div className="flex justify-end gap-2">
@@ -462,13 +485,13 @@ const MisEstudios: React.FC = () => {
                   onClick={cerrarFormulario}
                   className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
                 >
-                  Cancelar
+                  {t("actions.cancel")}
                 </button>
                 <button
                   type="submit"
                   className="bg-blue-600 text-white px-4 py-2 rounded"
                 >
-                  Guardar
+                  {t("my_studies.create_study")}
                 </button>
               </div>
             </form>
@@ -503,7 +526,7 @@ const MisEstudios: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI
       </footer>
     </div>

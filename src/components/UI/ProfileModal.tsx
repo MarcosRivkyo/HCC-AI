@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../UI/Modal.tsx";
 import logo_user from "../../assets/images/logo_user.png";
+import { useTranslation } from "react-i18next";
 
 type ProfileModalProps = {
   isOpen: boolean;
@@ -15,6 +16,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   userData,
   user,
 }) => {
+  const { t , i18n } = useTranslation("global");
+
   if (!userData) {
     return <div>Loading...</div>; // O un mensaje de error si no se recibe userData
   }
@@ -39,14 +42,14 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       </p>
       <p className="mt-2 text-gray-400 text-sm">
         {" "}
-        📅 Registrado el:{" "}
+        📅 {t("profile.registeredAt")}:{" "}
         {userData?.createdAt
           ? userData.createdAt.toDate().toLocaleString()
           : "Fecha no disponible"}
       </p>
       <p className="mt-2 text-gray-400 text-sm">
         {" "}
-        ☎️ Teléfono: {userData?.phone || "Teléfono no disponible"}
+        ☎️ {t("profile.phoneNumber")}: {userData?.phone || "Teléfono no disponible"}
       </p>
     </Modal>
   );

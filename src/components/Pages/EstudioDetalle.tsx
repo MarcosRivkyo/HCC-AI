@@ -901,7 +901,7 @@ const EstudioDetalle = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-200 flex flex-col">
+    <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -943,7 +943,7 @@ const EstudioDetalle = () => {
       />
       {/* Panel lateral de estudios recientes */}
       {mostrarEstudiosRecientes && (
-        <div className="fixed top-0 left-0 h-full w-64  shadow-lg z-40 transition-transform transform">
+        <div className="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-40">
           <div className="h-full flex flex-col justify-center p-4">
             <EstudiosRecientesCompact />
           </div>
@@ -972,7 +972,7 @@ const EstudioDetalle = () => {
       />
 
       <div className="flex justify-center items-center min-h-[calc(100vh-100px)] px-4 py-10 mt-20">
-        <div className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-8 space-y-8">
+        <div className="w-full max-w-5xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 space-y-8">
           <div className="relative">
             {/* Asistente flotante */}
             <div
@@ -985,224 +985,221 @@ const EstudioDetalle = () => {
             </div>
           </div>
 
-          {/* FILA 1 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Columna izquierda: datos */}
-            <div className="bg-white rounded-xl p-6 space-y-4">
-              {editing ? (
-                <>
-                  <input
-                    type="text"
-                    name="studieName"
-                    value={editedEstudio?.studieName || ""}
-                    onChange={handleInputChange}
-                    className="text-3xl font-bold text-gray-800 w-full border-b-2 border-gray-300"
-                  />
-                  <textarea
-                    name="clinicalDescription"
-                    value={editedEstudio?.clinicalDescription || ""}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="text-gray-600 w-full mt-4 p-2 border-2 border-gray-300 rounded"
-                  />
-                  <div className="mt-4 flex space-x-4">
-                    <button
-                      onClick={handleSaveChanges}
-                      className="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600"
-                    >
-                      Guardar Cambios
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      className="bg-gray-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-gray-600"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <h1 className="text-3xl font-bold text-gray-800">
-                        {estudio?.studieName}
-                      </h1>
-                      <p className="text-sm text-gray-500">
-                        ID del estudio: {id}
-                      </p>
-                    </div>
-                    <p
-                      className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
-                        estudio?.status === "Finalizado"
-                          ? "bg-green-100 text-green-800"
-                          : estudio?.status === "Pendiente IA"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-gray-200 text-gray-700"
-                      }`}
-                    >
-                      {estudio?.status}
-                    </p>
-                  </div>
-
-                  <p className="text-sm text-gray-400 mb-1">
-                    {estudio?.studieDate?.toDate().toLocaleString("es-ES", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
-
-                  <p className="text-gray-700 mb-1">
-                    <strong>Médico:</strong>{" "}
-                    {estudio?.doctorName ?? "Desconocido"}
-                  </p>
-
-                  <p className="text-gray-700 mb-4">
-                    <strong>Paciente:</strong> {estudio?.patientName}
-                  </p>
-
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-700 mb-1">
-                      Descripción clínica
-                    </h2>
-                    <p className="text-gray-600">
-                      {estudio?.clinicalDescription}
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Columna derecha: contenedor flex que incluye la imagen y el menú */}
-            <div className="flex justify-between items-start w-full">
-              {/* Columna con la imagen */}
-              <div
-                onDragOver={(e) => {
-                  if (!estudio?.predictionId) {
-                    e.preventDefault();
-                  }
-                }}
-                onDrop={(e) => {
-                  if (!estudio?.predictionId) {
-                    handleDrop(e);
-                  }
-                }}
-                className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 overflow-hidden flex items-center justify-center"
-              >
-                <label className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center z-10">
-                  {subiendoImagen ? (
-                    <div className="flex flex-col items-center justify-center text-center text-gray-600">
-                      <svg
-                        className="animate-spin h-8 w-8 text-blue-500 mb-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v8H4z"
-                        ></path>
-                      </svg>
-                      Subiendo imagen...
-                    </div>
-                  ) : estudio?.imagenUrl ? (
-                    <img
-                      src={estudio.imagenUrl}
-                      alt="Imagen del estudio"
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <span className="text-gray-500 text-center">
-                      Arrastra o haz clic para subir
-                    </span>
-                  )}
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      estudio?.predictionId
-                        ? undefined
-                        : handleImagenChange(e)
-                    }
-                    disabled={!!estudio?.predictionId}
-                    className="hidden"
-                  />
-                </label>
-
-                {/* Botón eliminar */}
-                {estudio?.imagenUrl && !estudio.predictionId && (
-                  <button
-                    onClick={handleEliminarEcografia}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-20"
-                    title="Eliminar imagen"
-                  >
-                    <FaTrashAlt size={14} />
-                  </button>
-                )}
-              </div>
-
-              {/* Menu de acciones */}
-              <div className="relative">
-                <Menu
-                  as="div"
-                  className="w-48 origin-top-left focus:outline-none z-10"
-                >
-                  <div>
-                    <Menu.Button className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100">
-                      <EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-                    </Menu.Button>
-                  </div>
-                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10">
-                    <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={descargarPDF}
-                            className={`${active ? "bg-gray-100" : ""} w-full text-left px-4 py-2 text-sm text-gray-700`}
-                          >
-                            Descargar Informe
-                          </button>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={enviarPDFporCorreo}
-                            className={`${active ? "bg-gray-100" : ""} w-full text-left px-4 py-2 text-sm text-gray-700`}
-                          >
-                            Enviar informe por correo
-                          </button>
-                        )}
-                      </Menu.Item>
-
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={handleEliminarEstudio}
-                            className={`${active ? "bg-red-100 text-red-700" : ""} w-full text-left px-4 py-2 text-sm`}
-                          >
-                            Eliminar Estudio
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </div>
-                  </Menu.Items>
-                </Menu>
-              </div>
-            </div>
+{/* FILA 1 */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
+  {/* Columna izquierda: datos */}
+  <div className="bg-white rounded-xl p-6 space-y-4 dark:bg-gray-800">
+    {editing ? (
+      <>
+        <input
+          type="text"
+          name="studieName"
+          value={editedEstudio?.studieName || ""}
+          onChange={handleInputChange}
+          className="text-3xl font-bold text-gray-800 w-full border-b-2 border-gray-300 dark:text-white"
+        />
+        <textarea
+          name="clinicalDescription"
+          value={editedEstudio?.clinicalDescription || ""}
+          onChange={handleInputChange}
+          rows={4}
+          className="text-gray-600 w-full mt-4 p-2 border-2 border-gray-300 rounded"
+        />
+        <div className="mt-4 flex space-x-4">
+          <button
+            onClick={handleSaveChanges}
+            className="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600"
+          >
+            Guardar Cambios
+          </button>
+          <button
+            onClick={handleCancelEdit}
+            className="bg-gray-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-gray-600"
+          >
+            Cancelar
+          </button>
+        </div>
+      </>
+    ) : (
+      <>
+        <div className="flex items-center justify-between mb-2">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
+              {estudio?.studieName}
+            </h1>
+            <p className="text-sm text-gray-500 dark:text-white">ID del estudio: {id}</p>
           </div>
+          <p
+            className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
+              estudio?.status === "Finalizado"
+                ? "bg-green-100 text-green-800"
+                : estudio?.status === "Pendiente IA"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {estudio?.status}
+          </p>
+        </div>
+
+        <p className="text-sm text-gray-400 mb-1 ">
+          {estudio?.studieDate?.toDate().toLocaleString("es-ES", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
+
+        <p className="text-gray-700 mb-1 dark:text-white">
+          <strong>Médico:</strong> {estudio?.doctorName ?? "Desconocido"}
+        </p>
+
+        <p className="text-gray-700 mb-4 dark:text-white">
+          <strong>Paciente:</strong> {estudio?.patientName}
+        </p>
+
+        <div>
+          <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
+            Descripción clínica
+          </h2>
+          <p className="text-gray-600 dark:text-white">{estudio?.clinicalDescription}</p>
+        </div>
+      </>
+    )}
+  </div>
+
+  {/* Columna derecha: contenedor flex que incluye la imagen y el menú */}
+  <div className="flex justify-between items-start w-full">
+    {/* Columna con la imagen */}
+    <div
+      onDragOver={(e) => {
+        if (!estudio?.predictionId) {
+          e.preventDefault();
+        }
+      }}
+      onDrop={(e) => {
+        if (!estudio?.predictionId) {
+          handleDrop(e);
+        }
+      }}
+      className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 overflow-hidden flex items-center justify-center"
+    >
+      <label className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center z-10">
+        {subiendoImagen ? (
+          <div className="flex flex-col items-center justify-center text-center text-gray-600">
+            <svg
+              className="animate-spin h-8 w-8 text-blue-500 mb-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8H4z"
+              ></path>
+            </svg>
+            Subiendo imagen...
+          </div>
+        ) : estudio?.imagenUrl ? (
+          <img
+            src={estudio.imagenUrl}
+            alt="Imagen del estudio"
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <span className="text-gray-500 text-center">
+            Arrastra o haz clic para subir
+          </span>
+        )}
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) =>
+            estudio?.predictionId ? undefined : handleImagenChange(e)
+          }
+          disabled={!!estudio?.predictionId}
+          className="hidden"
+        />
+      </label>
+
+      {/* Botón eliminar */}
+      {estudio?.imagenUrl && !estudio.predictionId && (
+        <button
+          onClick={handleEliminarEcografia}
+          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-20"
+          title="Eliminar imagen"
+        >
+          <FaTrashAlt size={14} />
+        </button>
+      )}
+    </div>
+
+    {/* Menu de acciones */}
+    <div className="relative">
+      <Menu as="div" className="w-48 origin-top-left focus:outline-none z-10 ">
+        <div>
+          <Menu.Button className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:bg-blavk">
+            <EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+          </Menu.Button>
+        </div>
+        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10">
+          <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={descargarPDF}
+                  className={`${
+                    active ? "bg-gray-100" : ""
+                  } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                >
+                  Descargar Informe
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={enviarPDFporCorreo}
+                  className={`${
+                    active ? "bg-gray-100" : ""
+                  } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                >
+                  Enviar informe por correo
+                </button>
+              )}
+            </Menu.Item>
+
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={handleEliminarEstudio}
+                  className={`${
+                    active ? "bg-red-100 text-red-700" : ""
+                  } w-full text-left px-4 py-2 text-sm`}
+                >
+                  Eliminar Estudio
+                </button>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Menu>
+    </div>
+  </div>
+</div>
+
 
           {/* FILA 2 */}
           <div className="w-full flex justify-center my-4">
@@ -1399,12 +1396,13 @@ const EstudioDetalle = () => {
           <div className="flex-1 p-8">
             {segmentation && prediction ? (
               <div className="result-display p-6 rounded-lg border-2 border-dashed">
+
                 {/* Modelos utilizados */}
-                <div className="mt-8 bg-gray-100 border-l-4 border-blue-500 p-4 rounded-lg shadow-sm">
-                  <h4 className="text-lg font-semibold text-blue-700 mb-2">
+                <div className="mt-8 bg-gray-100 border-l-4 border-blue-500 p-4 rounded-lg shadow-sm dark:bg-gray-900">
+                  <h4 className="text-lg font-semibold text-blue-700 mb-2 dark:text-blue-300">
                     Parámetros Utilizados
                   </h4>
-                  <ul className="text-sm text-gray-700 leading-6">
+                  <ul className="text-sm text-gray-700 leading-6 dark:text-gray-200">
                     <li>
                       <strong>Modelo de Clasificación:</strong>{" "}
                       {selectedClassificationModel}
@@ -1427,7 +1425,7 @@ const EstudioDetalle = () => {
                 </div>
 
                 {/* Imagen Segmentada */}
-                <h3 className="text-xl mt-10 font-semibold text-black">
+                <h3 className="text-xl mt-10 font-semibold text-black dark:text-white">
                   Imagen Segmentada:
                 </h3>
 
@@ -1447,75 +1445,44 @@ const EstudioDetalle = () => {
                     alt="Segmentación"
                     className="max-w-full rounded-lg shadow-md"
                   />
-
                   {showLegendModal && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
-                      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-                        <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
                           Leyenda de Etiquetas
                         </h3>
-                        <ul className="text-sm text-gray-700 space-y-2">
-                          <li>
-                            <strong>HCC</strong>: Carcinoma hepatocelular
-                          </li>
-                          <li>
-                            <strong>HV</strong>: Vena hepática
-                          </li>
-                          <li>
-                            <strong>IVC</strong>: Vena cava inferior
-                          </li>
-                          <li>
-                            <strong>K</strong>: Riñón
-                          </li>
-                          <li>
-                            <strong>K-C</strong>: Corteza renal
-                          </li>
-                          <li>
-                            <strong>K-M</strong>: Médula renal
-                          </li>
-                          <li>
-                            <strong>TRANS</strong>: Corte transversal
-                          </li>
-                          <li>
-                            <strong>LVR</strong>: Hígado
-                          </li>
-                          <li>
-                            <strong>PV</strong>: Vena porta
-                          </li>
-                          <li>
-                            <strong>SAG</strong>: Corte sagital
-                          </li>
-                          <li>
-                            <strong>SAG K</strong>: Corte sagital renal
-                          </li>
-                          <li>
-                            <strong>LT SAG</strong>: Lóbulo izquierdo (sagital)
-                          </li>
-                          <li>
-                            <strong>RT TRANS</strong>: Lóbulo derecho
-                            (transversal)
-                          </li>
-                          <li>
-                            <strong>BND</strong>: Banda de fibrosis
-                          </li>
-                          <li>
-                            <strong>VSL</strong>: Vasos sanguíneos
-                          </li>
+                        <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
+                          <li><strong>HCC</strong>: Carcinoma hepatocelular</li>
+                          <li><strong>HV</strong>: Vena hepática</li>
+                          <li><strong>IVC</strong>: Vena cava inferior</li>
+                          <li><strong>K</strong>: Riñón</li>
+                          <li><strong>K-C</strong>: Corteza renal</li>
+                          <li><strong>K-M</strong>: Médula renal</li>
+                          <li><strong>TRANS</strong>: Corte transversal</li>
+                          <li><strong>LVR</strong>: Hígado</li>
+                          <li><strong>PV</strong>: Vena porta</li>
+                          <li><strong>SAG</strong>: Corte sagital</li>
+                          <li><strong>SAG K</strong>: Corte sagital renal</li>
+                          <li><strong>LT SAG</strong>: Lóbulo izquierdo (sagital)</li>
+                          <li><strong>RT TRANS</strong>: Lóbulo derecho (transversal)</li>
+                          <li><strong>BND</strong>: Banda de fibrosis</li>
+                          <li><strong>VSL</strong>: Vasos sanguíneos</li>
                         </ul>
                         <button
                           onClick={() => setShowLegendModal(false)}
-                          className="mt-6 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                          className="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
                         >
                           Cerrar
                         </button>
                       </div>
                     </div>
                   )}
+
                 </div>
 
                 {/* Clasificación Predicha */}
                 <h3 className="mt-8 text-xl font-semibold text-white">
-                  Clasificación Predicha:
+                  
                 </h3>
                 <p className="text-2xl font-bold text-blue-500">
                   Clase Predicha:{" "}
@@ -1526,10 +1493,10 @@ const EstudioDetalle = () => {
                       ]}
                 </p>
 
-                <p className="mt-4 text-lg text-black">
+                <p className="mt-4 text-lg text-black dark:text-white">
                   Probabilidades de cada clase:
                 </p>
-                <ul className="list-disc ml-6 text-black text-sm">
+                <ul className="list-disc ml-6 text-black text-sm dark:text-white">
                   {prediction.probabilities.map((prob, index) => {
                     const label =
                       selectedClassificationModel === "METAVIR-AI"
@@ -1547,9 +1514,7 @@ const EstudioDetalle = () => {
 
                 {/* Gráfico de Probabilidades */}
                 <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-white">
-                    Gráfico de Probabilidades
-                  </h3>
+
                   <div className="mt-4">
                     <BarChart
                       probabilities={prediction.probabilities}
@@ -1632,7 +1597,7 @@ const EstudioDetalle = () => {
         </div>
       </div>
       {/* Footer */}
-      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI
       </footer>
     </div>

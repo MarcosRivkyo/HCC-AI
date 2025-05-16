@@ -1,0 +1,299 @@
+{
+  "footer": {
+    "description": "Projet de fin d'études sur l'intelligence artificielle appliquée au diagnostic médical.",
+    "copyright": "HCC-AI. Développé par Marcos Rivas Kyoguro."
+  },
+
+
+  "navbar": {
+    "home": "ACCUEIL",
+    "objective": "OBJECTIFS",
+    "services": "SERVICES",
+    "technologies": "TECHNOLOGIES",
+    "contact": "CONTACT",
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "access": "Accéder",
+    "my_studies": "MES ÉTUDES",
+    "models": "MODÈLES",
+    "assistant": "ASSISTANT",
+    "analyze": "ANALYSER",
+    "view_profile": "Voir le profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter"
+  },
+
+  "main": {
+    "slogan": "IA appliquée au diagnostic du carcinome hépatocellulaire",
+    "description": "Le carcinome hépatocellulaire (CHC) est l'une des principales causes de mortalité par cancer dans le monde. Ce travail de fin d'études présente le développement d'un outil basé sur l'intelligence artificielle pour soutenir le diagnostic précoce du CHC à l'aide d'échographies hépatiques, dans le but d'améliorer la pratique clinique grâce à une technologie accessible et efficace."
+  },
+  "sections": {
+    "objectives": "Objectifs",
+    "ai_detection": "Détection par IA",
+    "ultrasound": "Échographie Hépatique",
+    "medical_analysis": "Analyse Médicale",
+    "key_benefits": "Avantages Clés",
+    "benefit_1": " Meilleure précision dans la détection du carcinome hépatocellulaire.",
+    "benefit_2": " Diagnostic plus rapide et efficace grâce à l'IA.",
+    "benefit_3": " Réduction des coûts liés aux examens médicaux inutiles.",
+    "benefit_4": " Aide à la prise de décision pour les professionnels de santé.",
+
+    "our_services": "Services",
+    "services_description": "J'ai développé des outils de diagnostic basés sur des réseaux neuronaux convolutifs (CNN) pour améliorer la précision dans la détection du carcinome hépatocellulaire. Le modèle analyse les échographies hépatiques pour assister le diagnostic clinique.",
+    "ai_diagnosis": "Diagnostic par IA",
+    "ai_diagnosis_description": "L'outil analyse les échographies hépatiques pour détecter et segmenter automatiquement et précisément les carcinomes hépatocellulaires.",
+    "advanced_nn": "Réseaux Neuronaux Convolutifs",
+    "advanced_nn_description": "J'utilise des CNN entraînés avec des données médicales pour obtenir une sensibilité et une spécificité élevées dans le diagnostic.",
+    "medical_collaboration": "Validation Médicale",
+    "medical_collaboration_description": "Le modèle a été évalué avec des images réelles et révisé avec une orientation professionnelle pour vérifier son utilité clinique.",
+    "interactive_platform": "Application Web Interactive",
+    "interactive_platform_description": "Comprend une plateforme web permettant de télécharger des échographies et d'obtenir instantanément des résultats prédictifs.",
+    "tumor_evaluation": "Évaluation de la Tumeur",
+    "tumor_evaluation_description": "L'IA ne détecte pas seulement la tumeur, elle en évalue également le stade pour soutenir les décisions cliniques.",
+    "r_and_d": "Améliorations Futures",
+    "r_and_d_description": "Ce travail de fin d'études pose les bases pour de futures améliorations du modèle avec de nouvelles techniques et davantage de données médicales.",
+
+    "technologies": "Technologies",
+    "ai_description": "Ce projet repose sur l'intelligence artificielle et l'apprentissage profond pour des applications cliniques réelles.",
+
+    "ai_python_description": "J'ai utilisé Python avec PyTorch et TensorFlow pour entraîner des modèles de détection d'images médicales.",
+    "opencv_title": "Vision par Ordinateur",
+    "opencv_description": "OpenCV a été utilisé pour le traitement et l’analyse préalable des images échographiques.",
+    "frontend_title": "Développement Frontend",
+    "frontend_description": "La plateforme web a été développée avec des technologies modernes pour une expérience intuitive.",
+    "backend_title": "Développement Backend",
+    "backend_description": "Les fonctionnalités du modèle et la gestion des données ont été mises en œuvre via des APIs personnalisées.",
+    "integration_title": "Intégration Clinique",
+    "integration_description": "L’outil a été conçu pour s’intégrer facilement aux flux de travail médicaux.",
+    "contact_title": "Contact",
+    "contact_description": "Vous avez des questions ou des suggestions concernant ce projet ? N'hésitez pas à me contacter."
+  },
+
+  "input": {
+    "name": "Nom",
+    "name_placeholder": "Entrez votre nom",
+    "mail": "Adresse e-mail",
+    "mail_placeholder": "votreadresse@gmail.com",
+    "message": "Message",
+    "message_placeholer": "Écrivez votre message ici...",
+    "submit": "Envoyer le Message",
+    "submiting": "Envoi du Message..."
+  },
+
+  "models": {
+    "title": "Modèles d'IA disponibles",
+    "classification": "Classification",
+    "segmentation": "Segmentation",
+    "generative": "Génératifs",
+    "types": {
+      "classification": "Classification",
+      "segmentation": "Segmentation",
+      "generative": "Génératif"
+    },
+    "accuracy": "Précision",
+    "trained_on": "Entraîné le",
+    "no_date": "Pas de date",
+    "metavir_description": "Classifie les échographies hépatiques selon l'échelle METAVIR...",
+    "application": "Application",
+    "application_value": "Assistance hépatique avec raisonnement contextuel",
+    "optimization": "Optimisation",
+    "optimization_value": "Prompt engineering clinique",
+    "provider": "Fournisseur",
+    "metavir_title": "Échelle METAVIR (F0 - F4) :",
+    "metavir": {
+      "f0": "Pas de fibrose",
+      "f1": "Fibrose portale sans septa",
+      "f2": "Fibrose avec quelques septa",
+      "f3": "De nombreux septa sans cirrhose",
+      "f4": "Cirrhose"
+    },
+    "submodels": {
+      "title": "Sous-modèles",
+      "resnet": "Extraction de caractéristiques profondes",
+      "vgg": "Détection des motifs fibreux"
+    },
+    "hcc_ai_description": "Modèle de classification qui analyse les images échographiques pour prédire l’état du foie : foie sain, stéatose, cirrhose ou carcinome hépatocellulaire (CHC).",
+    "metavir_ai_description": "Classe les échographies hépatiques selon l’échelle METAVIR (F0 à F4), qui évalue le degré de fibrose hépatique.",
+    "segmentator_ai_description": "Segmentation hépatique basée sur la technologie YOLO. Détecte des structures telles que le foie, les vaisseaux, les reins et les lésions (CHC).",
+
+    "segmented_structures_title": "Structures segmentées :",
+    "segmented_structures": {
+      "HCC": "Carcinome hépatocellulaire",
+      "HV": "Veine hépatique",
+      "IVC": "Veine cave inférieure",
+      "K": "Rein",
+      "K-C": "Cortex rénal",
+      "K-M": "Médullaire rénale",
+      "TRANS": "Coupe transversale",
+      "LVR": "Foie",
+      "PV": "Veine porte",
+      "SAG": "Coupe sagittale",
+      "SAG K": "Coupe sagittale du rein",
+      "LT SAG": "Lobe gauche (sagittal)",
+      "RT TRANS": "Lobe droit (transversal)"
+    },
+    "used_submodels_title": "Sous-modèles utilisés :",
+    "used_submodels": {
+      "YOLOv8": "Segmentation anatomique de base",
+      "YOLOv11": "Optimisation avancée des structures vasculaires et tumorales"
+    },
+    "gemini_description": "Modèle génératif, optimisé par des techniques de prompt engineering, adapté à l'assistance en santé hépatique."
+  },
+
+    "dashboard": {
+        "create_studie": "Créer une Étude",
+        "recent_studies": "Études Récentes",
+        "study_name": "Nom de l'Étude",
+        "study_date": "Date de l'Étude",
+        "patient_name": "Nom du Patient",
+        "clinical_description": "Description Clinique",
+        "image_editor": "Échographies Analysées",
+        "available_models": "Modèles Disponibles",
+        "all_statuses": "Tous les statuts",
+        "finished": "Terminé",
+        "pending": "En cours",
+        "status": "Statut",
+        "study": "Étude",
+        "no_date": "Date non disponible",
+        "download": "Télécharger l'Étude",
+        "delete": "Supprimer l'Étude",
+        "no_recent_studies": "Aucune étude récente.",
+        "search_by_name": "Rechercher par nom...",
+        "previous": "Précédent",
+        "next": "Suivant",
+        "page": "Page",
+        "of": "de",
+        "confirm_delete": "Êtes-vous sûr de vouloir supprimer cette étude ?",
+        "cancel": "Annuler",
+        "no_pdf_found": "Aucun rapport PDF trouvé pour cette étude."
+        },
+
+    "models_disponibles": {
+        "search": "Rechercher par nom...",
+        "all": "Tous",
+        "model": "Modèle",
+        "description": "Description",
+        "type": "Type de Modèle",
+        "date": "Date d'entraînement",
+        "no_description": "Description non disponible",
+        "unknown_type": "Type inconnu",
+        "no_date": "Date non disponible",
+        "no_models": "Aucun modèle disponible.",
+        "previous": "Précédent",
+        "next": "Suivant",
+        "page": "Page",
+        "of": "de"
+        },
+
+    "my_studies": {
+      "title": "Ses Études",
+      "create_study": "Créer une étude",
+      "search_by_name": "Rechercher par nom",
+      "filter_all": "Tous",
+      "status_in_progress": "En cours",
+      "status_done": "Terminé",
+      "sort_newest": "Les plus récents",
+      "sort_oldest": "Les plus anciens",
+      "no_studies": "Aucune étude disponible",
+      "new_study": "Nouvelle Étude",
+      "study_name": "Nom de l'étude",
+      "patient_name": "Nom du patient",
+      "clinical_description": "Description clinique",
+      "no_date": "Pas de date",
+      "delete_title": "Supprimer cette étude ?",
+      "delete_warning": "Cette action est irréversible."
+    },        
+  "pagination": {
+    "page": "Page",
+    "of": "de"
+  },
+
+  "assistant": {
+    "title": "Assistant HCC-AI",
+    "send_query": "Posez votre question...",
+    "send_button": "Demander"
+  },  
+
+  "profile": {
+    "registeredAt": "Enregistré le",
+    "phoneNumber": "Numéro de téléphone"
+  },
+  
+    "links": {
+        "title": "Liens utiles",
+        "name_placeholder": "Nom du lien",
+        "url_placeholder": "URL",
+        "add": "Ajouter",
+        "remove": "Supprimer",
+        "upload_icon": "Soumettre l'icône"
+    },
+
+
+    "actions": {
+        "delete": "Supprimer",
+        "edit": "Modifier",
+        "download": "Télécharger",
+        "view": "Voir",
+        "cancel": "Annuler",
+        "analyze": "Analyser"
+    },
+
+
+  "settings": {
+    "title": "Paramètres",
+    "sections": {
+      "account": "Compte",
+      "preferences": "Préférences",
+      "help": "Aide"
+    },
+    "account": {
+      "profile": "Profil",
+      "edit_data": "Modifier les données",
+      "change_password": "Modifier le mot de passe",
+      "delete_account": "Supprimer le compte",
+      "delete_warning": "Cette action supprimera définitivement votre compte !"
+    },
+    "profile": {
+      "username": "Nom d'utilisateur",
+      "first_name": "Prénom",
+      "last_name": "Nom de famille",
+      "email": "Email",
+      "phone": "Téléphone",
+      "role": "Rôle",
+      "no_photo": "Pas de photo",
+      "previsualization": "Aperçu de la photo",
+      "loading": "Chargement du profil..."
+    },
+    "preferences": {
+      "theme": "Thème :",
+      "current_theme": "Thème actuel :",
+      "language": "Langue :",
+      "ui_scale": "Échelle de l’interface :",
+      "select_language": "Choisir la langue :",
+      "current_zoom": "Zoom actuel :",
+      "high_contrast": "Mode Contraste Élevé :",
+      "accessibility": "Accessibilité",
+      "active": "Activé",
+      "desactive": "Désactivé",
+      "reset": "Réinitialiser les préférences"
+    },
+    "help": {
+      "system_status": "État du système :",
+      "all_ok": "🟢 Tous les systèmes fonctionnent normalement.",
+      "download_manual": "Télécharger le manuel d’utilisateur",
+      "faq": "Questions fréquentes",
+      "support": "Vous avez des questions ? Écrivez à :",
+      "question1": "Comment créer une nouvelle étude ?",
+      "question2": "Comment changer mon mot de passe ?",
+      "question3": "Où puis-je voir les résultats de l’IA ?",
+      "question4": "Puis-je télécharger un rapport PDF ?",
+      "answer1": "Allez dans la section Mes Études et cliquez sur Créer une étude.",
+      "answer2": "Allez dans Paramètres > Compte > Modifier le mot de passe.",
+      "answer3": "Une fois l’analyse terminée, vous verrez l’image segmentée et les résultats dans la vue de l’étude.",
+      "answer4": "Oui. Une fois généré, cliquez sur Télécharger le rapport dans le menu de l’étude. Il s’ouvrira dans un nouvel onglet où vous pourrez le télécharger ou le modifier."
+    },
+    "common": {
+      "save_changes": "Enregistrer les modifications"
+    }
+  }
+}

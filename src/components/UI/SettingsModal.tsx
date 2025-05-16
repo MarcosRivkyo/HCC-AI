@@ -4,6 +4,8 @@ import settingsIcon from "../../assets/images/settings_icon.png";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
 import { FaFilePdf } from "react-icons/fa";
+import i18next from "i18next"; 
+import { useTranslation } from "react-i18next";
 
 interface SettingsModalProps {
   open: boolean;
@@ -32,6 +34,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setHighContrast,
   userData,
 }) => {
+  
   const [activeSection, setActiveSection] = useState("Cuenta");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
@@ -41,6 +44,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [firstName, setFirstName] = useState(userData?.firstName || "");
   const [lastName, setLastName] = useState(userData?.lastName || "");
   const [phone, setPhone] = useState(userData?.phone || "");
+  const { t, i18n } = useTranslation("global");
 
   const handleToggle = (item: string) => {
     setExpandedItem(expandedItem === item ? null : item);
@@ -50,7 +54,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     const newLang = e.target.value;
     setLanguage(newLang);
     localStorage.setItem("language", newLang);
+    i18next.changeLanguage(newLang);
   };
+  lng: localStorage.getItem("language") || "es"
 
   const handleScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newScale = parseFloat(e.target.value);
@@ -66,7 +72,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       phone,
       newProfileImage,
     });
-    // Aquí iría la lógica para guardar cambios en base de datos o backend
   };
 
   if (!open) return null;
@@ -83,7 +88,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           <h2 className="text-3xl font-semibold mb-6 text-white text-center underline ">
-            Configuración
+            {t("settings.title")}
           </h2>
 
           <ul className="space-y-6 text-white">
@@ -91,19 +96,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               className="hover:text-gray-300 cursor-pointer"
               onClick={() => setActiveSection("Cuenta")}
             >
-              Cuenta
+              {t("settings.sections.account")}
             </li>
             <li
               className="hover:text-gray-300 cursor-pointer"
               onClick={() => setActiveSection("Preferencias")}
             >
-              Preferencias
+              {t("settings.sections.preferences")}
             </li>
             <li
               className="hover:text-gray-300 cursor-pointer"
               onClick={() => setActiveSection("Ayuda")}
             >
-              Ayuda
+              {t("settings.sections.help")}
             </li>
           </ul>
         </div>
@@ -115,7 +120,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="w-3/4 bg-gray-800 p-6 h-full overflow-y-auto rounded-lg shadow-lg">
           {activeSection === "Cuenta" && (
             <div className="space-y-8 bg-gray-800">
-              <h3 className="text-3xl text-white font-semibold mb-6">Cuenta</h3>
+              <h3 className="text-3xl text-white font-semibold mb-6">{t("settings.sections.account")}</h3>
 
               <ul className="space-y-6 text-white bg-gray-800">
                 {}
@@ -124,7 +129,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     className="w-full text-left p-4 text-lg font-medium hover:text-blue-500 transition"
                     onClick={() => handleToggle("perfil")}
                   >
-                    <span>Perfil</span>
+                    <span>{t("settings.account.profile")}</span>
                   </button>
 
                   {expandedItem === "perfil" || userData ? (
@@ -132,24 +137,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                       {}
                       <div className="flex-1 text-sm space-y-2">
                         <p>
-                          <strong>Nombre:</strong>{" "}
+                          <strong>{t("settings.profile.first_name")}:</strong>{" "}
                           {userData?.firstName || "Desconocido"}
                         </p>
                         <p>
-                          <strong>Apellidos:</strong>{" "}
+                          <strong>{t("settings.profile.last_name")}:</strong>{" "}
                           {userData?.lastName || "Desconocido"}
                         </p>
                         <p>
-                          <strong>Email:</strong>{" "}
+                          <strong>{t("settings.profile.email")}:</strong>{" "}
                           {userData?.email || "Desconocido"}
                         </p>
                         <p>
-                          <strong>Teléfono:</strong>{" "}
+                          <strong>{t("settings.profile.phone")}:</strong>{" "}
                           {userData?.phone || "Desconocido"}
-                        </p>
-                        <p>
-                          <strong>Rol:</strong>{" "}
-                          {userData?.jobTitle || "Desconocido"}
                         </p>
                       </div>
 
@@ -179,7 +180,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     className="w-full text-left p-4 text-lg font-medium hover:text-blue-500 transition"
                     onClick={() => handleToggle("modificarDatos")}
                   >
-                    <span>Modificar Datos</span>
+                    <span>{t("settings.account.edit_data")}</span>
                   </button>
 
                   {expandedItem === "modificarDatos" && (
@@ -205,10 +206,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                             e: React.ChangeEvent<HTMLInputElement>,
                           ) => {
                             const val = e.target.value;
-                            if (label === "Nombre de usuario") setUserName(val);
-                            if (label === "Nombre") setFirstName(val);
-                            if (label === "Apellido") setLastName(val);
-                            if (label === "Teléfono") setPhone(val);
+                            if (label === t("settings.profile.username")) setUserName(val);
+                            if (label === t("settings.profile.first_name")) setFirstName(val);
+                            if (label === t("settings.profile.last_name")) setLastName(val);
+                            if (label === t("settings.profile.phone")) setPhone(val);
                           };
 
                           return (
@@ -252,7 +253,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           {previewImage && (
                             <div className="mt-4">
                               <p className="text-gray-400 text-sm mb-1">
-                                Previsualización:
+                                {t("settings.profile.previsualization")}:
                               </p>
                               <img
                                 src={previewImage}
@@ -267,7 +268,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold p-4 rounded-md transition duration-300"
                           onClick={updateUserData}
                         >
-                          Guardar Cambios
+                            {t("settings.common.save_changes")}:
                         </button>
                       </div>
                     </div>
@@ -280,7 +281,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     className="w-full text-left p-4 text-lg font-medium hover:text-blue-500 transition"
                     onClick={() => handleToggle("modificarContraseña")}
                   >
-                    <span>Modificar Contraseña</span>
+                    <span>{t("settings.account.change_password")}</span>
                   </button>
 
                   {expandedItem === "modificarContraseña" && (
@@ -296,13 +297,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     className="w-full text-left p-4 text-lg font-medium text-red-500 hover:text-red-400 transition"
                     onClick={() => handleToggle("eliminarCuenta")}
                   >
-                    <span>Eliminar Cuenta</span>
+                    <span>{t("settings.account.delete_account")}</span>
                   </button>
 
                   {expandedItem === "eliminarCuenta" && (
                     <div className="pl-6 pt-6 pb-6 text-red-400 bg-gray-800 rounded-md">
                       <p className="text-lg font-semibold mb-4">
-                        ¡Esta acción eliminará tu cuenta permanentemente!
+                        {t("settings.account.delete_warning")}
                       </p>
                       <DeleteAccountButton />
                     </div>
@@ -315,14 +316,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           {activeSection === "Preferencias" && (
             <div className="space-y-8 w-full bg-gray-800 px-8 py-6 rounded-lg shadow-inner">
               <h3 className="text-3xl text-white font-semibold mb-6 border-b border-gray-600 pb-2">
-                Preferencias
+                {t("settings.sections.preferences")}
               </h3>
 
               {/* Tema */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
-                <h4 className="text-xl font-semibold text-white-400">Tema</h4>
+                <h4 className="text-xl font-semibold text-white-400">{t("settings.preferences.theme")}</h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-white">Tema actual:</span>
+                  <span className="text-white">{t("settings.preferences.current_theme")}</span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -331,11 +332,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         const newTheme = theme === "light" ? "dark" : "light";
                         setTheme(newTheme);
                         localStorage.setItem("theme", newTheme);
-                        // Sincroniza también el estilo general
-                        document.body.classList.toggle(
-                          "dark-theme",
-                          newTheme === "dark",
-                        );
+
+                        if (newTheme === "dark") {
+                          document.documentElement.classList.add("dark");
+                        } else {
+                          document.documentElement.classList.remove("dark");
+                        }
+
                       }}
                       className="sr-only peer"
                     />
@@ -358,10 +361,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Idioma */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
-                <h4 className="text-xl font-semibold text-white-400">Idioma</h4>
+                <h4 className="text-xl font-semibold text-white-400">{t("settings.preferences.language")}</h4>
                 <div className="flex items-center justify-between">
                   <label htmlFor="language" className="text-white">
-                    Selecciona el idioma:
+                    {t("settings.preferences.select_language")}
                   </label>
                   <select
                     id="language"
@@ -371,17 +374,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   >
                     <option value="es">Español</option>
                     <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
                   </select>
+
                 </div>
               </div>
 
               {/* Escala */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
                 <h4 className="text-xl font-semibold text-white-400">
-                  Escala de Interfaz
+                  {t("settings.preferences.ui_scale")}
                 </h4>
                 <div className="flex flex-col space-y-2 text-white">
-                  <label htmlFor="scale">Zoom actual:</label>
+                  <label htmlFor="scale">{t("settings.preferences.current_zoom")}</label>
                   <input
                     type="range"
                     id="scale"
@@ -401,10 +407,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               {/* Accesibilidad */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
                 <h4 className="text-xl font-semibold text-white-400">
-                  Accesibilidad
+                  {t("settings.preferences.accessibility")}
                 </h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-white">Modo Alto Contraste:</span>
+                  <span className="text-white">{t("settings.preferences.high_contrast")}</span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -435,7 +441,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     ></div>
                   </label>
                   <span className="text-white">
-                    {highContrast ? "Activado" : "Desactivado"}
+                    {highContrast ? t("settings.preferences.active") : t("settings.preferences.desactive")}
                   </span>
                 </div>
               </div>
@@ -449,7 +455,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   }}
                   className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition"
                 >
-                  Restaurar Preferencias
+                  {t("settings.preferences.reset")}
                 </button>
               </div>
             </div>
@@ -458,13 +464,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           {activeSection === "Ayuda" && (
             <div className="space-y-8 w-full bg-gray-800 px-8 py-6 rounded-lg shadow-inner">
               <h3 className="text-3xl text-white font-semibold mb-6 border-b border-gray-600 pb-2">
-                Ayuda
+                {t("settings.help.system_status")}
               </h3>
 
               <div className="bg-gray-900 p-4 mt-6 rounded-lg border border-gray-700">
                 <p className="text-white font-semibold">Estado del Sistema:</p>
                 <p className="text-green-400 text-sm mt-1">
-                  🟢 Todos los sistemas funcionan con normalidad.
+                  {t("settings.help.all_ok")}
                 </p>
               </div>
 
@@ -478,34 +484,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-700 text-white rounded-lg font-semibold transition"
               >
                 <FaFilePdf className="text-red-400 text-xl" />
-                Descargar Manual de Usuario
+                {t("settings.help.download_manual")}
               </button>
 
               <div className="space-y-4">
                 <h4 className="text-xl font-semibold text-white">
-                  Preguntas Frecuentes
+                  {t("settings.help.faq")}
                 </h4>
 
                 {[
                   {
-                    pregunta: "¿Cómo creo un nuevo estudio?",
+                    pregunta: t("settings.help.question1"),
                     respuesta:
-                      'Ve a la sección "Mis Estudios" y haz click en "Crear Estudio".',
+                      t("settings.help.answer1"),
                   },
                   {
-                    pregunta: "¿Cómo cambio mi contraseña?",
+                    pregunta: t("settings.help.question2"),
                     respuesta:
-                      'Ve a "Configuración" > "Cuenta" > "Modificar Contraseña".',
+                      t("settings.help.answer2"),
                   },
                   {
-                    pregunta: "¿Dónde puedo ver los resultados de la IA?",
+                    pregunta: t("settings.help.question3"),
                     respuesta:
-                      "Una vez que el análisis finaliza, verás la imagen segmentada y los resultados en la vista del estudio.",
+                      t("settings.help.answer3"),
                   },
                   {
-                    pregunta: "¿Puedo descargar un informe PDF?",
+                    pregunta: t("settings.help.question4"),
                     respuesta:
-                      'Sí. Una vez generado, haz clic en "Descargar Informe" en el menú del estudio. Esto te abrirá el informe en una nueva pestaña, donde podrás descargarlo, modificarlo ....',
+                      t("settings.help.answer4"),
                   },
                 ].map((faq, idx) => (
                   <div
@@ -522,7 +528,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
               <div className="mt-6">
                 <p className="text-white mb-2">
-                  ¿Tienes alguna duda? Escribe a:
+                  {t("settings.help.support")}
                 </p>
                 <a
                   href="mailto:soporte@hcc-ai.com"

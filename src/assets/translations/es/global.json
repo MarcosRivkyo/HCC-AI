@@ -1,75 +1,324 @@
 {
-    "footer": {
-      "description": "Proyecto de TFG sobre inteligencia artificial aplicada al diagnóstico médico.",
-      "copyright": "HCC-AI. Desarrollado por Marcos Rivas Kyoguro."
+  "footer": {
+    "description": "Proyecto de TFG sobre inteligencia artificial aplicada al diagnóstico médico.",
+    "copyright": "HCC-AI. Desarrollado por Marcos Rivas Kyoguro."
+  },
+
+  "navbar": {
+    "home": "INICIO",
+    "objective": "OBJETIVOS",
+    "services": "SERVICIOS",
+    "technologies": "TECNOLOGÍAS",
+    "contact": "CONTACTO",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "access": "Acceder",
+    "logout": "Cerrar sesión",
+    "my_studies": "MIS ESTUDIOS",
+    "models": "MODELOS",
+    "analyze": "ANALIZAR",
+    "view_profile": "Ver Perfil",
+    "assistant": "ASISTENTE",
+    "settings": "Configuración"
+  },
+
+
+  "main": {
+    "slogan": "IA aplicada al diagnóstico del carcinoma hepatocelular",
+    "description": "El carcinoma hepatocelular (HCC) es una de las principales causas de mortalidad por cáncer a nivel mundial. Este Trabajo de Fin de Grado presenta el desarrollo de una herramienta basada en inteligencia artificial para apoyar el diagnóstico temprano del HCC mediante ecografías hepáticas, buscando mejorar la práctica clínica con tecnología accesible y eficaz."
+  },
+
+
+  "sections": {
+    "objectives": "Objetivos",
+    "ai_detection": "Detección con IA",
+    "ultrasound": "Ecografía Hepática",
+    "medical_analysis": "Análisis Médico",
+    "key_benefits": "Beneficios Clave",
+    "benefit_1": " Mayor precisión en la detección del hepatocarcinoma.",
+    "benefit_2": " Diagnóstico más rápido y eficaz mediante IA.",
+    "benefit_3": " Reducción de costos en pruebas médicas innecesarias.",
+    "benefit_4": " Asistencia a profesionales de la salud en la toma de decisiones.",
+
+    "our_services": "Servicios",
+    "services_description": "He desarrollado herramientas de diagnóstico basadas en redes neuronales convolucionales (CNNs) para mejorar la precisión en la detección del carcinoma hepatocelular. El modelo analiza ecografías hepáticas para asistir en el diagnóstico clínico.",
+    "ai_diagnosis": "Diagnóstico con IA",
+    "ai_diagnosis_description": "La herramienta analiza ecografías hepáticas para detectar y segmentar hepatocarcinomas de forma automática y precisa.",
+    "advanced_nn": "Redes Neuronales Convolucionales",
+    "advanced_nn_description": "Utilizo CNNs entrenadas con datos médicos para lograr una alta sensibilidad y especificidad en el diagnóstico.",
+    "medical_collaboration": "Validación Médica",
+    "medical_collaboration_description": "El modelo ha sido evaluado con imágenes reales y revisado con orientación profesional para comprobar su utilidad clínica.",
+    "interactive_platform": "Aplicación Web Interactiva",
+    "interactive_platform_description": "Incluye una plataforma web que permite cargar ecografías y obtener resultados predictivos de forma instantánea.",
+    "tumor_evaluation": "Evaluación del Tumor",
+    "tumor_evaluation_description": "La IA no solo detecta el tumor, sino que clasifica su grado de evolución para apoyar decisiones clínicas.",
+    "r_and_d": "Mejoras Futuras",
+    "r_and_d_description": "Este TFG sienta las bases para futuras mejoras del modelo con nuevas técnicas y más datos médicos.",
+
+    "technologies": "Tecnologías",
+    "ai_description": "Este proyecto está basado en inteligencia artificial con aprendizaje profundo para aplicaciones clínicas reales.",
+
+    "ai_python_description": "He usado Python junto a PyTorch y TensorFlow para entrenar modelos de detección de imágenes médicas.",
+    "opencv_title": "Visión por Computador",
+    "opencv_description": "OpenCV se ha utilizado para el procesamiento y análisis previo de las imágenes de ecografía.",
+    "frontend_title": "Desarrollo Frontend",
+    "frontend_description": "La plataforma web ha sido desarrollada con tecnologías modernas para una experiencia intuitiva.",
+    "backend_title": "Desarrollo Backend",
+    "backend_description": "Las funcionalidades del modelo y la gestión de datos se implementaron con APIs personalizadas.",
+    "integration_title": "Integración Clínica",
+    "integration_description": "La herramienta se ha diseñado para integrarse fácilmente en flujos de trabajo médicos.",
+    "contact_title": "Contacto",
+    "contact_description": "¿Tienes preguntas o sugerencias sobre este TFG? No dudes en escribirme."
+  },
+
+  "input": {
+    "name": "Nombre",
+    "name_placeholder": "Introduzca su nombre ",
+    "mail": "Correo Electrónico",
+    "mail_placeholder": "tucorreo@gmail.com",
+    "message": "Mensaje",
+    "message_placeholer": "Escribe tu mensaje aquí ...",
+    "submit": "Enviar Mensaje",
+    "submiting": "Enviando Mensaje ..."
+  },
+
+  "models": {
+    "title": "Modelos de IA Disponibles",
+    "classification": "Clasificación",
+    "segmentation": "Segmentación",
+    "generative": "Generativos",
+    "types": {
+      "classification": "Clasificación",
+      "segmentation": "Segmentación",
+      "generative": "Generativo"
     },
-    "navbar": {
-      "home": "INICIO",
-      "objective": "OBJETIVOS",
-      "services": "SERVICIOS",
-      "technologies": "TECNOLOGÍAS",
-      "contact": "CONTACTO",
-      "login": "Iniciar sesión",
-      "register": "Registrarse",
-      "access": "Acceder",
-      "logout": "Cerrar sesión"
+    "accuracy": "Precisión",
+    "trained_on": "Entrenado el",
+    "no_date": "Sin fecha",
+    "metavir_description": "Clasifica ecografías hepáticas según la escala METAVIR...",
+    "application": "Aplicación",
+    "application_value": "Asistencia hepática con razonamiento contextual",
+    "optimization": "Optimización",
+    "optimization_value": "Prompt Engineering clínico",
+    "provider": "Proveedor",
+    "metavir_title": "Escala METAVIR (F0 - F4):",
+    "metavir": {
+      "f0": "Sin fibrosis",
+      "f1": "Fibrosis portal sin septos",
+      "f2": "Fibrosis con pocos septos",
+      "f3": "Muchos septos sin cirrosis",
+      "f4": "Cirrosis"
     },
-    "main": {
-      "slogan": "IA aplicada al diagnóstico del carcinoma hepatocelular",
-      "description": "El carcinoma hepatocelular (HCC) es una de las principales causas de mortalidad por cáncer a nivel mundial. Este Trabajo de Fin de Grado presenta el desarrollo de una herramienta basada en inteligencia artificial para apoyar el diagnóstico temprano del HCC mediante ecografías hepáticas, buscando mejorar la práctica clínica con tecnología accesible y eficaz."
+    "submodels": {
+      "title": "Submodelos",
+      "resnet": "Extracción de características profundas",
+      "vgg": "Detección de patrones fibróticos"
     },
+    "hcc_ai_description": "Modelo de clasificación que analiza imágenes ecográficas para predecir el estado hepático: hígado sano, esteatosis, cirrosis o carcinoma hepatocelular (HCC).",
+    "metavir_ai_description": "Clasifica ecografías hepáticas según la escala METAVIR (F0 a F4), que evalúa el grado de fibrosis hepática.",
+    "segmentator_ai_description": "Segmentación hepática mediante la tecnología YOLO. Detecta estructuras como el hígado, vasos, riñones y lesiones (HCC).",
+    "segmented_structures_title": "Estructuras segmentadas:",
+    "segmented_structures": {
+      "HCC": "Carcinoma hepatocelular",
+      "HV": "Vena hepática",
+      "IVC": "Vena cava inferior",
+      "K": "Riñón",
+      "K-C": "Corteza renal",
+      "K-M": "Médula renal",
+      "TRANS": "Corte transversal",
+      "LVR": "Hígado",
+      "PV": "Vena porta",
+      "SAG": "Corte sagital",
+      "SAG K": "Corte sagital renal",
+      "LT SAG": "Lóbulo izquierdo (sagital)",
+      "RT TRANS": "Lóbulo derecho (transversal)"
+    },
+    "used_submodels_title": "Submodelos utilizados:",
+    "used_submodels": {
+      "YOLOv8": "Segmentación anatómica base",
+      "YOLOv11": "Optimización avanzada en estructuras vasculares y tumorales"
+    },
+    "gemini_description": "Modelo generativo, optimizado mediante técnicas de prompt engineering, adaptado a la asistencia en la salud hepática."
+  },
+
+  "dashboard": {
+    "create_studie": "Crear Estudio",
+    "recent_studies": "Estudios Recientes",
+    "study_name": "Nombre del Estudio",
+    "study_date": "Fecha de Estudio",
+    "patient_name": "Nombre del Paciente",
+    "clinical_description": "Descripción Clínica",
+    "image_editor": "Ecografías Analizadas",
+    "available_models": "Modelos Disponibles",
+    "all_statuses": "Todos los estados",
+    "finished": "Finalizado",
+    "pending": "Pendiente",
+    "status": "Estado",
+    "study": "Estudio",
+    "no_date": "Fecha no disponible",
+    "download": "Descargar Estudio",
+    "delete": "Eliminar Estudio",
+    "no_recent_studies": "No hay estudios recientes.",
+    "search_by_name": "Buscar por nombre...",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de",
+    "confirm_delete": "¿Estás seguro de eliminar este estudio?",
+    "cancel": "Cancelar",
+    "no_pdf_found": "No se encontró el informe PDF para este estudio."
+  },
+
+  "models_disponibles": {
+    "search": "Buscar por nombre...",
+    "all": "Todos",
+    "model": "Modelo",
+    "description": "Descripción",
+    "type": "Tipo de Modelo",
+    "date": "Fecha de Entrenamiento",
+    "no_description": "Descripción no disponible",
+    "unknown_type": "Tipo no disponible",
+    "no_date": "Fecha no disponible",
+    "no_models": "No hay modelos disponibles.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de"
+  },
+
+  "links": {
+    "title": "Enlaces útiles",
+    "name_placeholder": "Nombre del enlace",
+    "url_placeholder": "URL",
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "upload_icon": "Subir ícono"
+  },
+
+  "my_studies": {
+      "title": "Sus Estudios",
+      "create_study": "Crear Estudio",
+      "search_by_name": "Buscar por nombre",
+      "filter_all": "Todos",
+      "status_in_progress": "En Progreso",
+      "status_done": "Finalizado",
+      "sort_newest": "Más recientes",
+      "sort_oldest": "Más antiguos",
+      "no_studies": "No hay estudios",
+      "new_study": "Nuevo Estudio",
+      "study_name": "Nombre del estudio",
+      "patient_name": "Nombre del paciente",
+      "clinical_description": "Descripción clínica",
+      "no_date": "Sin fecha",
+      "delete_title": "¿Eliminar este estudio?",
+      "delete_warning": "Esta acción no se puede deshacer."
+    },
+  
+  "pagination": {
+    "page": "Página",
+    "of": "de"
+  },
+
+  "assistant": {
+    "title": "Asistente HCC-AI",
+    "send_query": "Escribe tu pregunta...",
+    "send_button": "Preguntar"
+  },  
+
+  "editor": {
+    "title": "Editor de Imágenes",
+    "upload_image": "Subir Imagen",
+    "drop_image": "Suelta una imagen aquí",
+    "analyze_image": "Analizar Imagen",
+    "segmented_image": "Imagen Segmentada",
+    
+    "image_analysis_results": "Resultados del Análisis de la Imagen",
+    "no_image_uploaded": "No se ha subido ninguna imagen.",
+    "image_uploaded": "Imagen subida con éxito.",
+    "image_analysis_in_progress": "Análisis de la imagen en progreso...",
+    "image_analysis_completed": "Análisis de la imagen completado.",
+    "image_analysis_failed": "Error en el análisis de la imagen."
+  },
+
+  "profile": {
+    "registeredAt": "Registrado el",
+    "phoneNumber": "Teléfono"
+  },
+
+  "actions": {
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "upload": "Subir",
+    "download": "Descargar",
+    "view": "Ver",
+    "analyze": "Analizar",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+
+  "settings":{
+    
+    "title": "Configuración",
     "sections": {
-      "objectives": "Objetivos",
-      "ai_detection": "Detección con IA",
-      "ultrasound": "Ecografía Hepática",
-      "medical_analysis": "Análisis Médico",
-      "key_benefits": "Beneficios Clave",
-      "benefit_1": " Mayor precisión en la detección del hepatocarcinoma.",
-      "benefit_2": " Diagnóstico más rápido y eficaz mediante IA.",
-      "benefit_3": " Reducción de costos en pruebas médicas innecesarias.",
-      "benefit_4": " Asistencia a profesionales de la salud en la toma de decisiones.",
-  
-      "our_services": "Servicios",
-      "services_description": "He desarrollado herramientas de diagnóstico basadas en redes neuronales convolucionales (CNNs) para mejorar la precisión en la detección del carcinoma hepatocelular. El modelo analiza ecografías hepáticas para asistir en el diagnóstico clínico.",
-      "ai_diagnosis": "Diagnóstico con IA",
-      "ai_diagnosis_description": "La herramienta analiza ecografías hepáticas para detectar y segmentar hepatocarcinomas de forma automática y precisa.",
-      "advanced_nn": "Redes Neuronales Convolucionales",
-      "advanced_nn_description": "Utilizo CNNs entrenadas con datos médicos para lograr una alta sensibilidad y especificidad en el diagnóstico.",
-      "medical_collaboration": "Validación Médica",
-      "medical_collaboration_description": "El modelo ha sido evaluado con imágenes reales y revisado con orientación profesional para comprobar su utilidad clínica.",
-      "interactive_platform": "Aplicación Web Interactiva",
-      "interactive_platform_description": "Incluye una plataforma web que permite cargar ecografías y obtener resultados predictivos de forma instantánea.",
-      "tumor_evaluation": "Evaluación del Tumor",
-      "tumor_evaluation_description": "La IA no solo detecta el tumor, sino que clasifica su grado de evolución para apoyar decisiones clínicas.",
-      "r_and_d": "Mejoras Futuras",
-      "r_and_d_description": "Este TFG sienta las bases para futuras mejoras del modelo con nuevas técnicas y más datos médicos.",
-  
-      "technologies": "Tecnologías",
-      "ai_description": "Este proyecto está basado en inteligencia artificial con aprendizaje profundo para aplicaciones clínicas reales.",
-  
-      "ai_python_description": "He usado Python junto a PyTorch y TensorFlow para entrenar modelos de detección de imágenes médicas.",
-      "opencv_title": "Visión por Computador",
-      "opencv_description": "OpenCV se ha utilizado para el procesamiento y análisis previo de las imágenes de ecografía.",
-      "frontend_title": "Desarrollo Frontend",
-      "frontend_description": "La plataforma web ha sido desarrollada con tecnologías modernas para una experiencia intuitiva.",
-      "backend_title": "Desarrollo Backend",
-      "backend_description": "Las funcionalidades del modelo y la gestión de datos se implementaron con APIs personalizadas.",
-      "integration_title": "Integración Clínica",
-      "integration_description": "La herramienta se ha diseñado para integrarse fácilmente en flujos de trabajo médicos.",
-      "contact_title": "Contacto",
-      "contact_description": "¿Tienes preguntas o sugerencias sobre este TFG? No dudes en escribirme."
-  
+      "account": "Cuenta",
+      "preferences": "Preferencias",
+      "help": "Ayuda"
     },
-  
-    "input": {
-      "name": "Nombre",
-      "name_placeholder": "Introduzca su nombre ",
-      "mail": "Correo Electrónico",
-      "mail_placeholder": "tucorreo@gmail.com",
-      "message": "Mensaje",
-      "message_placeholer": "Escribe tu mensaje aquí ...",
-      "submit": "Enviar Mensaje",
-      "submiting": "Enviando Mensaje ..."
+    "account": {
+      "profile": "Perfil",
+      "edit_data": "Modificar Datos",
+      "change_password": "Modificar Contraseña",
+      "delete_account": "Eliminar Cuenta",
+      "delete_warning": "¡Esta acción eliminará tu cuenta permanentemente!"
+    },
+    "profile": {
+      "username": "Nombre de Usuario",
+      "first_name": "Nombre",
+      "last_name": "Apellidos",
+      "email": "Email",
+      "phone": "Teléfono",
+      "role": "Rol",
+      "no_photo": "Sin foto",
+      "previsualization": "Previsualización de la foto",
+      "loading": "Cargando perfil..."
+    },
+    "preferences": {
+      "theme": "Tema:",
+      "current_theme": "Tema actual:",
+      "language": "Idioma:",
+      "ui_scale": "Escala de la interfaz:",
+      "select_language": "Selecciona el idioma:",
+      "current_zoom": "Zoom actual:",
+      "high_contrast": "Modo Alto Contraste:",
+      "accessibility": "Accesibilidad",
+      "active": "Activado",
+      "desactive": "Desactivado",
+      "reset": "Restaurar Preferencias"
+    },
+    "help": {
+      "system_status": "Estado del Sistema:",
+      "all_ok": "🟢 Todos los sistemas funcionan con normalidad.",
+      "download_manual": "Descargar Manual de Usuario",
+      "faq": "Preguntas Frecuentes",
+      "support": "¿Tienes alguna duda? Escribe a:",
+      "question1": "¿Cómo creo un nuevo estudio?",
+      "question2": "¿Cómo cambio mi contraseña?",
+      "question3": "¿Dónde puedo ver los resultados de la IA?",
+      "question4": "¿Puedo descargar un informe PDF?",
+      "answer1": "Ve a la sección Mis Estudios y haz click en Crear Estudio.",
+      "answer2": "Ve a Configuración > Cuenta > Modificar Contraseña.",
+      "answer3": "Una vez que el análisis finaliza, verás la imagen segmentada y los resultados en la vista del estudio.",
+      "answer4": "Sí. Una vez generado, haz clic en Descargar Informe en el menú del estudio. Esto te abrirá el informe en una nueva pestaña, donde podrás descargarlo, modificarlo ..."
+      
+
+      
+    },
+    "common": {
+      "save_changes": "Guardar Cambios"
     }
   }
-  
+
+}

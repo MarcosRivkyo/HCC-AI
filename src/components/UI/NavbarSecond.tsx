@@ -8,6 +8,7 @@ import logo_user from "../../assets/images/logo_user.png";
 import Logout from "../Auth/Logout.tsx";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { useTranslation } from "react-i18next";
 
 type NavbarSecondProps = {
   userData?: any;
@@ -97,19 +98,40 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   const [activePath, setActivePath] = useState<string>(
     window.location.pathname,
   );
+  const { t, i18n } = useTranslation("global"); 
 
   useEffect(() => {
     const auth = getAuth();
     setUser(auth.currentUser);
+    console.log("Idioma actual:", i18n.language);
+    console.log("Traducción de navbar.home:", t("navbar.my_studies"));
+    console.log("Traducción de navbar.assistant:", t("navbar.assistant"));
+    console.log("Traducción de navbar.settings:", t("navbar.settings"));
+    console.log("Traducción de navbar.view_profile:", t("navbar.view_profile"));
+    console.log("Traducción de navbar.analyze:", t("navbar.analyze"));
+
   }, []);
+
+  useEffect(() => {
+      const handleLangChange = () => {
+        setActivePath((p) => p); 
+      };
+      i18n.on("languageChanged", handleLangChange);
+      return () => {
+        i18n.off("languageChanged", handleLangChange);
+      };
+  }, [i18n]);
+
+
+
 
   return (
     <nav className="bg-black p-4 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">
       <ul className="flex items-center space-x-14 text-sm">
         {[
-          { path: "/dashboard", label: "INICIO" },
-          { path: "/my-studies", label: "MIS ESTUDIOS" },
-          { path: "/models", label: "MODELOS" },
+          { path: "/dashboard", label: t("navbar.home") },
+          { path: "/my-studies", label: t("navbar.my_studies") },
+          { path: "/models", label: t("navbar.models") },
         ].map((item, index) => (
           <li key={item.path} className={index === 0 ? "ml-8" : ""}>
             <button
@@ -140,7 +162,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
                 : "hover:text-gray-300"
             }`}
           >
-            ASISTENTE
+            {t("navbar.assistant")}
           </button>
         </li>
 
@@ -156,7 +178,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
                 : "bg-yellow-500 hover:bg-yellow-600 text-black"
             }`}
           >
-            ANALIZAR
+            {t("navbar.analyze")}
           </button>
         </li>
       </ul>
@@ -203,7 +225,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
               onClick={() => onProfileClick()}
               className="block px-4 py-3 w-full text-left hover:bg-gray-700"
             >
-              👤 Ver Perfil
+              👤 {t("navbar.view_profile")}
             </button>
             <button
               onClick={() => {
@@ -211,7 +233,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
               }}
               className="block px-4 py-3 w-full text-left hover:bg-gray-700"
             >
-              ⚙️ Configuración
+              ⚙️ {t("navbar.settings")}
             </button>
 
             <Logout />

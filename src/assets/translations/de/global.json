@@ -1,0 +1,326 @@
+{
+  "footer": {
+    "description": "Abschlussprojekt über künstliche Intelligenz zur medizinischen Diagnostik.",
+    "copyright": "HCC-AI. Entwickelt von Marcos Rivas Kyoguro."
+  },
+
+
+  "navbar": {
+    "home": "STARTSEITE",
+    "objective": "ZIELE",
+    "services": "DIENSTLEISTUNGEN",
+    "technologies": "TECHNOLOGIEN",
+    "contact": "KONTAKT",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "access": "Zugreifen",
+    "logout": "Abmelden",
+    "my_studies": "MEINE STUDIEN",
+    "models": "MODELLE",
+    "analyze": "ANALYSIEREN",
+    "view_profile": "Profil anzeigen",
+    "assistant": "ASSISTENT",
+    "settings": "Einstellungen"
+  },
+
+
+
+  "main": {
+    "slogan": "KI zur Diagnose von hepatozellulärem Karzinom",
+    "description": "Das hepatozelluläre Karzinom (HCC) ist weltweit eine der Hauptursachen für krebsbedingte Todesfälle. Diese Abschlussarbeit entwickelt ein KI-basiertes Werkzeug zur Früherkennung von HCC mittels Leberultraschall und zielt darauf ab, die klinische Praxis durch zugängliche und effektive Technologie zu verbessern."
+  },
+
+
+  "sections": {
+    "objectives": "Ziele",
+    "ai_detection": "KI-Erkennung",
+    "ultrasound": "Leberultraschall",
+    "medical_analysis": "Medizinische Analyse",
+    "key_benefits": "Wichtigste Vorteile",
+    "benefit_1": " Höhere Genauigkeit bei der Erkennung von hepatozellulärem Karzinom.",
+    "benefit_2": " Schnellere und effektivere Diagnose durch KI.",
+    "benefit_3": " Kostensenkung durch Vermeidung unnötiger medizinischer Tests.",
+    "benefit_4": " Unterstützung von Gesundheitsfachkräften bei Entscheidungsprozessen.",
+
+    "our_services": "Dienstleistungen",
+    "services_description": "Ich habe Diagnosewerkzeuge entwickelt, die auf Convolutional Neural Networks (CNNs) basieren, um die Genauigkeit bei der Erkennung des hepatozellulären Karzinoms zu verbessern. Das Modell analysiert Leberultraschallbilder zur Unterstützung der klinischen Diagnose.",
+    "ai_diagnosis": "KI-Diagnose",
+    "ai_diagnosis_description": "Das Tool analysiert Leberultraschallbilder, um HCCs automatisch und präzise zu erkennen und zu segmentieren.",
+    "advanced_nn": "Convolutional Neural Networks",
+    "advanced_nn_description": "Ich verwende mit medizinischen Daten trainierte CNNs, um eine hohe Sensitivität und Spezifität in der Diagnose zu erreichen.",
+    "medical_collaboration": "Medizinische Validierung",
+    "medical_collaboration_description": "Das Modell wurde mit echten Bildern evaluiert und unter professioneller Anleitung überprüft, um seine klinische Nützlichkeit zu bestätigen.",
+    "interactive_platform": "Interaktive Webanwendung",
+    "interactive_platform_description": "Beinhaltet eine Webplattform, die das Hochladen von Ultraschallbildern und die sofortige Ausgabe prädiktiver Ergebnisse ermöglicht.",
+    "tumor_evaluation": "Tumorbewertung",
+    "tumor_evaluation_description": "Die KI erkennt nicht nur den Tumor, sondern klassifiziert auch dessen Fortschrittsgrad zur Unterstützung klinischer Entscheidungen.",
+    "r_and_d": "Zukünftige Verbesserungen",
+    "r_and_d_description": "Diese Abschlussarbeit bildet die Grundlage für zukünftige Modellverbesserungen mit neuen Techniken und erweiterten medizinischen Daten.",
+
+    "technologies": "Technologien",
+    "ai_description": "Dieses Projekt basiert auf künstlicher Intelligenz mit Deep Learning für den klinischen Einsatz.",
+
+    "ai_python_description": "Ich habe Python zusammen mit PyTorch und TensorFlow verwendet, um Modelle zur Erkennung medizinischer Bilder zu trainieren.",
+    "opencv_title": "Computer Vision",
+    "opencv_description": "OpenCV wurde für die Vorverarbeitung und Analyse von Ultraschallbildern eingesetzt.",
+    "frontend_title": "Frontend-Entwicklung",
+    "frontend_description": "Die Webplattform wurde mit modernen Technologien für eine intuitive Benutzererfahrung entwickelt.",
+    "backend_title": "Backend-Entwicklung",
+    "backend_description": "Die Modellfunktionen und die Datenverwaltung wurden mit maßgeschneiderten APIs implementiert.",
+    "integration_title": "Klinische Integration",
+    "integration_description": "Das Tool wurde entwickelt, um sich problemlos in medizinische Arbeitsabläufe zu integrieren.",
+    "contact_title": "Kontakt",
+    "contact_description": "Hast du Fragen oder Anregungen zu dieser Abschlussarbeit? Schreib mir gerne."
+  },
+
+  "input": {
+    "name": "Name",
+    "name_placeholder": "Geben Sie Ihren Namen ein",
+    "mail": "E-Mail-Adresse",
+    "mail_placeholder": "ihreemail@gmail.com",
+    "message": "Nachricht",
+    "message_placeholer": "Schreiben Sie hier Ihre Nachricht ...",
+    "submit": "Nachricht senden",
+    "submiting": "Nachricht wird gesendet ..."
+  },
+
+
+    "models": {
+    "title": "Verfügbare KI-Modelle",
+    "classification": "Klassifikation",
+    "segmentation": "Segmentierung",
+    "generative": "Generativ",
+    "types": {
+        "classification": "Klassifikation",
+        "segmentation": "Segmentierung",
+        "generative": "Generativ"
+    },
+    "accuracy": "Genauigkeit",
+    "trained_on": "Trainiert am",
+    "no_date": "Kein Datum",
+    "metavir_description": "Klassifiziert Leberultraschallbilder gemäß der METAVIR-Skala...",
+    "application": "Anwendung",
+    "application_value": "Leberunterstützung mit kontextuellem Denken",
+    "optimization": "Optimierung",
+    "optimization_value": "Klinisches Prompt Engineering",
+    "provider": "Anbieter",
+    "metavir_title": "METAVIR-Skala (F0 - F4):",
+    "metavir": {
+        "f0": "Keine Fibrose",
+        "f1": "Portale Fibrose ohne Septen",
+        "f2": "Fibrose mit wenigen Septen",
+        "f3": "Viele Septen ohne Zirrhose",
+        "f4": "Zirrhose"
+    },
+    "submodels": {
+        "title": "Submodelle",
+        "resnet": "Extraktion tiefer Merkmale",
+        "vgg": "Erkennung fibröser Muster"
+    },
+    "hcc_ai_description": "Klassifikationsmodell zur Analyse von Ultraschallbildern zur Vorhersage des Leberzustands: gesunde Leber, Steatose, Zirrhose oder hepatozelluläres Karzinom (HCC).",
+    "metavir_ai_description": "Klassifiziert Leberultraschallbilder gemäß der METAVIR-Skala (F0 bis F4), die den Fibrosegrad der Leber bewertet.",
+    "segmentator_ai_description": "Lebersegmentierung mit YOLO-Technologie. Erkennt Strukturen wie Leber, Gefäße, Nieren und Läsionen (HCC).",
+    "segmented_structures_title": "Segmentierte Strukturen:",
+    "segmented_structures": {
+        "HCC": "Hepatozelluläres Karzinom",
+        "HV": "Lebervene",
+        "IVC": "Vena cava inferior",
+        "K": "Niere",
+        "K-C": "Nierenrinde",
+        "K-M": "Nierenmark",
+        "TRANS": "Querschnitt",
+        "LVR": "Leber",
+        "PV": "Pfortader",
+        "SAG": "Sagittalschnitt",
+        "SAG K": "Sagittalschnitt Niere",
+        "LT SAG": "Linker Lappen (sagittal)",
+        "RT TRANS": "Rechter Lappen (transversal)"
+    },
+    "used_submodels_title": "Verwendete Submodelle:",
+    "used_submodels": {
+        "YOLOv8": "Grundlegende anatomische Segmentierung",
+        "YOLOv11": "Erweiterte Optimierung für Gefäß- und Tumorstrukturen"
+    },
+    "gemini_description": "Generatives Modell, optimiert mit Prompt-Engineering-Techniken, angepasst zur Unterstützung der Lebergesundheit."
+    },
+
+    "dashboard": {
+        "create_studie": "Studie erstellen",
+        "recent_studies": "Kürzliche Studien",
+        "study_name": "Studienname",
+        "study_date": "Studiendatum",
+        "patient_name": "Patientenname",
+        "clinical_description": "Klinische Beschreibung",
+        "image_editor": "Analysierte Ultraschallbilder",
+        "available_models": "Verfügbare Modelle",
+        "all_statuses": "Alle Status",
+        "finished": "Abgeschlossen",
+        "pending": "Ausstehend",
+        "status": "Status",
+        "study": "Studie",
+        "no_date": "Kein Datum verfügbar",
+        "download": "Studie herunterladen",
+        "delete": "Studie löschen",
+        "no_recent_studies": "Keine aktuellen Studien vorhanden.",
+        "search_by_name": "Nach Namen suchen...",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "page": "Seite",
+        "of": "von",
+        "confirm_delete": "Möchten Sie diese Studie wirklich löschen?",
+        "cancel": "Abbrechen",
+        "no_pdf_found": "Kein PDF-Bericht für diese Studie gefunden."
+    },
+
+
+    "models_disponibles": {
+    "search": "Nach Namen suchen...",
+    "all": "Alle",
+    "model": "Modell",
+    "description": "Beschreibung",
+    "type": "Modelltyp",
+    "date": "Trainingsdatum",
+    "no_description": "Keine Beschreibung verfügbar",
+    "unknown_type": "Unbekannter Typ",
+    "no_date": "Kein Datum verfügbar",
+    "no_models": "Keine Modelle verfügbar.",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite",
+    "of": "von"
+    },
+
+    "links": {
+    "title": "Nützliche Links",
+    "name_placeholder": "Name des Links",
+    "url_placeholder": "URL",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "upload_icon": "Symbol hochladen"
+    },
+
+    "my_studies": {
+        "title": "Ihre Studien",
+        "create_study": "Studie erstellen",
+        "search_by_name": "Nach Namen suchen",
+        "filter_all": "Alle",
+        "status_in_progress": "In Bearbeitung",
+        "status_done": "Abgeschlossen",
+        "sort_newest": "Neueste zuerst",
+        "sort_oldest": "Älteste zuerst",
+        "no_studies": "Keine Studien vorhanden",
+        "new_study": "Neue Studie",
+        "study_name": "Studienname",
+        "patient_name": "Patientenname",
+        "clinical_description": "Klinische Beschreibung",
+        "no_date": "Kein Datum",
+        "delete_title": "Diese Studie löschen?",
+        "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+
+  
+  "pagination": {
+    "page": "Página",
+    "of": "de"
+  },
+
+    "assistant": {
+        "title": "HCC-AI Assistent",
+        "send_query": "Stellen Sie Ihre Frage...",
+        "send_button": "Fragen"
+    },
+
+    "editor": {
+        "title": "Bildeditor",
+        "upload_image": "Bild hochladen",
+        "drop_image": "Bild hier ablegen",
+        "analyze_image": "Bild analysieren",
+        "segmented_image": "Segmentiertes Bild",
+
+        "image_analysis_results": "Analyseergebnisse des Bildes",
+        "no_image_uploaded": "Kein Bild hochgeladen.",
+        "image_uploaded": "Bild erfolgreich hochgeladen.",
+        "image_analysis_in_progress": "Analyse des Bildes läuft...",
+        "image_analysis_completed": "Bildanalyse abgeschlossen.",
+        "image_analysis_failed": "Fehler bei der Bildanalyse."
+    },
+
+
+    "profile": {
+        "registeredAt": "Registriert am",
+        "phoneNumber": "Telefonnummer"
+    },
+
+    "actions": {
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "upload": "Hochladen",
+        "download": "Herunterladen",
+        "view": "Ansehen",
+        "analyze": "Analysieren",
+        "previous": "Zurück",
+        "next": "Weiter"
+    },
+
+    "settings": {
+        "title": "Einstellungen",
+        "sections": {
+            "account": "Konto",
+            "preferences": "Einstellungen",
+            "help": "Hilfe"
+        },
+        "account": {
+            "profile": "Profil",
+            "edit_data": "Daten bearbeiten",
+            "change_password": "Passwort ändern",
+            "delete_account": "Konto löschen",
+            "delete_warning": "Diese Aktion wird dein Konto dauerhaft löschen!"
+        },
+        "profile": {
+            "username": "Benutzername",
+            "first_name": "Vorname",
+            "last_name": "Nachname",
+            "email": "E-Mail",
+            "phone": "Telefon",
+            "role": "Rolle",
+            "no_photo": "Kein Foto",
+            "previsualization": "Foto-Vorschau",
+            "loading": "Profil wird geladen..."
+        },
+        "preferences": {
+            "theme": "Design:",
+            "current_theme": "Aktuelles Design:",
+            "language": "Sprache:",
+            "ui_scale": "UI-Skalierung:",
+            "select_language": "Sprache auswählen:",
+            "current_zoom": "Aktueller Zoom:",
+            "high_contrast": "Hoher Kontrastmodus:",
+            "accessibility": "Barrierefreiheit",
+            "active": "Aktiviert",
+            "desactive": "Deaktiviert",
+            "reset": "Einstellungen zurücksetzen"
+        },
+        "help": {
+            "system_status": "Systemstatus:",
+            "all_ok": "🟢 Alle Systeme funktionieren einwandfrei.",
+            "download_manual": "Benutzerhandbuch herunterladen",
+            "faq": "Häufige Fragen",
+            "support": "Hast du Fragen? Schreib an:",
+            "question1": "Wie erstelle ich eine neue Studie?",
+            "question2": "Wie ändere ich mein Passwort?",
+            "question3": "Wo sehe ich die KI-Ergebnisse?",
+            "question4": "Kann ich einen PDF-Bericht herunterladen?",
+            "answer1": "Gehe zum Bereich 'Meine Studien' und klicke auf 'Studie erstellen'.",
+            "answer2": "Gehe zu Einstellungen > Konto > Passwort ändern.",
+            "answer3": "Nach Abschluss der Analyse siehst du das segmentierte Bild und die Ergebnisse in der Studienansicht.",
+            "answer4": "Ja. Nach der Generierung klicke im Studienmenü auf 'Bericht herunterladen'. Dies öffnet den Bericht in einem neuen Tab, wo du ihn herunterladen oder bearbeiten kannst."
+        },
+        "common": {
+            "save_changes": "Änderungen speichern"
+        }
+    }
+
+}
