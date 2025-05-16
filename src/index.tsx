@@ -11,11 +11,12 @@ import {
 } from "react-router-dom";
 
 import i18next from "i18next";
-import { I18nextProvider } from "react-i18next";
+import { I18nextProvider, initReactI18next } from "react-i18next";
 
 import global_en from "./assets/translations/en/global.json";
 import global_es from "./assets/translations/es/global.json";
-
+import global_fr from "./assets/translations/fr/global.json";
+import global_de from "./assets/translations/de/global.json";
 import Dashboard from "./components/Pages/Dashboard.tsx";
 import Login from "./components/Auth/Login.tsx";
 import Signup from "./components/Auth/Signup.tsx";
@@ -26,22 +27,33 @@ import EstudioDetalle from "./components/Pages/EstudioDetalle.tsx";
 import MisEstudios from "./components/Pages/MisEstudios.tsx";
 import Models from "./components/Pages/Models.tsx";
 
-i18next.init({
-  interpolation: { escapeValue: false },
-  lng: "es",
-  resources: {
-    es: {
-      global: global_es,
+i18next
+  .use(initReactI18next)
+  .init({
+    interpolation: { escapeValue: false },
+    lng: localStorage.getItem("language") || "es", 
+    fallbackLng: "es", 
+    resources: {
+      es: { global: global_es },
+      en: { global: global_en },
+      fr: { global: global_fr },
+      de: { global: global_de },
     },
-    en: {
-      global: global_en,
-    },
-  },
-});
+  });
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
+
+const storedTheme = localStorage.getItem("theme") || "light";
+if (storedTheme === "dark") {
+  document.documentElement.classList.add("dark");
+} else {
+  document.documentElement.classList.remove("dark");
+}
+
+
+
 
 root.render(
   <React.StrictMode>
@@ -57,7 +69,6 @@ root.render(
               </AuthRoute>
             }
           />{" "}
-          #quite Authroute
           <Route path="/signup" element={<Signup />} />
           <Route
             path="/dashboard"

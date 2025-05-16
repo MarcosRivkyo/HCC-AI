@@ -20,6 +20,8 @@ import ia_cancer from "./assets/images/ia_cancer.png";
 import hepato_eco from "./assets/images/hepatic_eco.png";
 import spanishFlag from "./assets/images/spanish_language.png";
 import englishFlag from "./assets/images/english_language.png";
+import frenchFlag from "./assets/images/french_language.jpg";
+import germanFlag from "./assets/images/german_language.png";
 import analisis_medico from "./assets/images/analisis_medico.png";
 
 import {
@@ -46,32 +48,72 @@ const sectionVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
 };
 
-const LanguageToggleButton: React.FC = () => {
-  const [isSpanish, setIsSpanish] = useState<boolean>(
-    i18next.language === "es",
-  );
+const languages = [
+  { code: "es", label: "Español", flag: spanishFlag },
+  { code: "en", label: "English", flag: englishFlag },
+  { code: "fr", label: "Français", flag: frenchFlag },
+  { code: "de", label: "Deutsch", flag: germanFlag },
+  
+];
 
-  const toggleLanguage = () => {
-    const newLanguage = isSpanish ? "en" : "es";
-    i18next.changeLanguage(newLanguage);
-    setIsSpanish(!isSpanish);
+
+const LanguageSelector: React.FC = () => {
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language;
+
+  const handleChange = (lang: string) => {
+    if (lang !== currentLang) i18next.changeLanguage(lang);
   };
 
   return (
-    <div className="fixed bottom-5 left-5 z-50">
-      <button
-        onClick={toggleLanguage}
-        className="w-16 h-16 rounded-full shadow-lg overflow-hidden border-2 border-white"
-      >
-        <img
-          src={isSpanish ? spanishFlag : englishFlag}
-          alt={isSpanish ? "Español" : "English"}
-          className="w-full h-full object-cover"
-        />
-      </button>
+    <div className="fixed bottom-5 left-5 z-50 p-2 rounded-lg shadow-lg flex space-x-2 bg-transparent">
+      {languages.map(({ code, label, flag }) => {
+        const isSelected = code === currentLang;
+        return (
+          <button
+            key={code}
+            onClick={() => handleChange(code)}
+            className={`${
+              isSelected ? "w-14 h-14 border-4 border-red-600 ring-2 ring-red-500" : "w-10 h-10 border border-gray-300 hover:border-red-400"
+            } rounded-full overflow-hidden transition-all duration-200 ease-in-out`}
+            title={label}
+          >
+            <img src={flag} alt={label} className="w-full h-full object-cover" />
+          </button>
+        );
+      })}
     </div>
   );
 };
+
+
+
+// const LanguageToggleButton: React.FC = () => {
+//   const [isSpanish, setIsSpanish] = useState<boolean>(
+//     i18next.language === "es",
+//   );
+
+//   const toggleLanguage = () => {
+//     const newLanguage = isSpanish ? "en" : "es";
+//     i18next.changeLanguage(newLanguage);
+//     setIsSpanish(!isSpanish);
+//   };
+
+//   return (
+//     <div className="fixed bottom-5 left-5 z-50">
+//       <button
+//         onClick={toggleLanguage}
+//         className="w-16 h-16 rounded-full shadow-lg overflow-hidden border-2 border-white"
+//       >
+//         <img
+//           src={isSpanish ? spanishFlag : englishFlag}
+//           alt={isSpanish ? "Español" : "English"}
+//           className="w-full h-full object-cover"
+//         />
+//       </button>
+//     </div>
+//   );
+// };
 
 const ContactButton: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<string>("home");
@@ -203,20 +245,20 @@ const About: React.FC = () => {
         <ul className="flex flex-col items-center space-y-3">
           <li className="flex items-center gap-3">
             <FaCheckCircle className="text-green-500" />
-            <span>Mayor precisión en la detección del hepatocarcinoma.</span>
+            <span>{t("sections.benefit_1")}</span>
           </li>
           <li className="flex items-center gap-3">
             <FaCheckCircle className="text-green-500" />
-            <span>Diagnóstico más rápido y eficaz mediante IA.</span>
+            <span>{t("sections.benefit_2")}</span>
           </li>
           <li className="flex items-center gap-3">
             <FaCheckCircle className="text-green-500" />
-            <span>Reducción de costos en pruebas médicas innecesarias.</span>
+            <span>{t("sections.benefit_3")}</span>
           </li>
           <li className="flex items-center gap-3">
             <FaCheckCircle className="text-green-500" />
             <span>
-              Asistencia a profesionales de la salud en la toma de decisiones.
+              {t("sections.benefit_4")}
             </span>
           </li>
         </ul>
@@ -525,7 +567,7 @@ function App() {
       <Technology />
       <Contact />
       <ContactButton />
-      <LanguageToggleButton />
+      <LanguageSelector />
       <Footer />
     </div>
   );

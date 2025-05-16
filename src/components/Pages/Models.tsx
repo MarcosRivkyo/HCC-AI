@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../config/firebase";
+import { useTranslation } from "react-i18next";
+
 
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
@@ -39,6 +41,9 @@ const Models = () => {
     localStorage.getItem("highContrast") === "true",
   );
 
+  const { t, i18n } = useTranslation("global"); 
+
+
   const db = getFirestore(app);
   const auth = getAuth();
 
@@ -54,33 +59,37 @@ const Models = () => {
     });
     return () => unsubscribe();
   }, [db]);
+useEffect(() => {
+  const fetchModels = async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "hcc_ai_models"));
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        modelId: doc.id,
+      })) as ModelData[];
 
-  useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "hcc_ai_models"));
-        const data = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-          modelId: doc.id,
-        })) as ModelData[];
+      const geminiModel: ModelData = {
+        modelId: "gemini-1.5-pro",
+        modelName: "Gemini 1.5 Pro",
+        modelType: "Generative",
+        accuracy: NaN,
+        description:
+          i18n.language === "fr"
+            ? "Modèle génératif avancé de Google pour les tâches multimodales de traitement du langage naturel."
+            : i18n.language === "es"
+            ? "Modelo generativo avanzado de Google para tareas multimodales de lenguaje natural."
+            : "Google's advanced generative model for multimodal natural language tasks.",
+        trainDate: null,
+      };
 
-        const geminiModel: ModelData = {
-          modelId: "gemini-1.5-pro",
-          modelName: "Gemini 1.5 Pro",
-          modelType: "Generative",
-          accuracy: NaN,
-          description:
-            "Modelo generativo, optimizado mediante técnicas de prompt engineering, adaptado a la asistencia en la salud hepática.",
-          trainDate: null,
-        };
+      setModels([...data, geminiModel]);
+    } catch (error) {
+      console.error("Error al obtener modelos:", error);
+    }
+  };
 
-        setModels([...data, geminiModel]);
-      } catch (error) {
-        console.error("Error al obtener modelos:", error);
-      }
-    };
-    fetchModels();
-  }, [db]);
+  fetchModels();
+}, [db, i18n.language]); 
 
   const renderModelCards = (filteredModels: ModelData[]) =>
     filteredModels.length === 0 ? null : (
@@ -101,41 +110,47 @@ const Models = () => {
               transition={{ delay: index * 0.1 }}
               onMouseEnter={() => setHoveredModelId(model.modelId)}
               onMouseLeave={() => setHoveredModelId(null)}
-              className="w-full max-w-2xl bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition duration-300"
+              className="w-full max-w-2xl bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300"
             >
               <div className="mb-4">
-                <span className="text-xs uppercase font-bold text-gray-400">
+                {/* <span className="text-xs uppercase font-bold text-gray-400">
                   {model.modelType}
-                </span>
+                </span> */}
                 <h2 className="text-xl font-bold text-blue-700 mt-1">
                   {model.modelName}
                 </h2>
               </div>
 
-              <p className="text-sm text-gray-600 mb-4">
-                {model.modelId === "sJNL0uZfOclYDPsLVavU"
-                  ? "Clasifica ecografías hepáticas según la escala METAVIR (F0 a F4), que evalúa el grado de fibrosis hepática."
-                  : model.description}
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                {
+                  model.modelId === "sJNL0uZfOclYDPsLVavU"
+                    ? t("models.metavir_ai_description")
+                    : model.modelId === "2eq0qaAR4C3lHabTxp9z"
+                    ? t("models.hcc_ai_description") 
+                    : model.modelId === "nbiJGYKysFXTCeONkSvv"
+                    ? t("models.segmentator_ai_description")
+                    : model.description 
+                }
               </p>
 
               {isGemini ? (
-                <div className="text-sm text-gray-700 mt-4 space-y-1">
+                <div className="text-sm text-gray-700 dark:text-gray-300 mt-4 space-y-1">
+
                   <p>
-                    <strong>Aplicación:</strong> Asistencia hepática con
-                    razonamiento contextual
+                    <strong>{t("models.application")}:</strong> {t("models.application_value")}
                   </p>
                   <p>
-                    <strong>Optimización:</strong> Prompt Engineering clínico
+                    <strong>{t("models.optimization")}:</strong> {t("models.optimization_value")}
                   </p>
                   <p>
-                    <strong>Proveedor:</strong> Google
+                    <strong>{t("models.provider")}:</strong> Google
                   </p>
                 </div>
               ) : (
                 <div className="flex justify-between items-center text-sm text-gray-700 mt-4">
                   <div>
                     <p>
-                      <strong>Accuracy:</strong>{" "}
+                      <strong>{t("models.accuracy")}</strong>{" "}
                       <span className="text-green-600 font-semibold">
                         {formattedAccuracy}
                       </span>
@@ -146,18 +161,17 @@ const Models = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-gray-500">Entrenado el:</p>
-                    <p className="text-sm font-medium">
-                      {model.trainDate?.seconds
-                        ? new Date(
-                            model.trainDate.seconds * 1000,
-                          ).toLocaleDateString("es-ES", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })
-                        : "Sin fecha"}
-                    </p>
+                    <p className="text-xs text-gray-500">{t("models.trained_on")}</p>
+                      <p className="text-sm font-medium">
+                        {model.trainDate?.seconds
+                          ? new Date(model.trainDate.seconds * 1000).toLocaleDateString(i18n.language, {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })
+                          : t("models.no_date")}
+                      </p>
+
                   </div>
                 </div>
               )}
@@ -168,39 +182,38 @@ const Models = () => {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 1, ease: "easeInOut" }}
-                  className="mt-6 text-sm text-gray-700 bg-gray-100 rounded-xl p-4 space-y-4"
+                  className="mt-6 text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-xl p-4 space-y-4"
                 >
                   <div>
                     <p className="font-semibold mb-1">
-                      Escala METAVIR (F0 - F4):
+                      {t("models.metavir_title")}:
                     </p>
                     <ul className="text-xs text-gray-600 list-disc pl-4">
                       <li>
-                        <strong>F0:</strong> Sin fibrosis
+                        <strong>F0:</strong> {t("models.metavir.f0")}
                       </li>
                       <li>
-                        <strong>F1:</strong> Fibrosis portal sin septos
+                        <strong>F1:</strong> {t("models.metavir.f1")}
                       </li>
                       <li>
-                        <strong>F2:</strong> Fibrosis con pocos septos
+                        <strong>F2:</strong> {t("models.metavir.f2")}
                       </li>
                       <li>
-                        <strong>F3:</strong> Muchos septos sin cirrosis
+                        <strong>F3:</strong> {t("models.metavir.f3")}
                       </li>
                       <li>
-                        <strong>F4:</strong> Cirrosis
+                        <strong>F4:</strong> {t("models.metavir.f4")}
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold mb-1">Submodelos utilizados:</p>
+                    <p className="font-semibold mb-1">{t("models.submodels.title")}:</p>
                     <ul className="list-disc pl-5 text-xs text-gray-600">
                       <li>
-                        <strong>ResNet:</strong> Extracción de características
-                        profundas
+                        <strong>ResNet:</strong> {t("models.submodels.resnet")}
                       </li>
                       <li>
-                        <strong>VGG:</strong> Detección de patrones fibróticos
+                        <strong>VGG:</strong> {t("models.submodels.vgg")}
                       </li>
                     </ul>
                   </div>
@@ -213,63 +226,63 @@ const Models = () => {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 1, ease: "easeInOut" }}
-                  className="mt-6 text-sm text-gray-700 bg-gray-100 rounded-xl p-4 space-y-4"
+                  className="mt-6 text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-xl p-4 space-y-4"
                 >
                   <div>
                     <p className="font-semibold mb-1">
-                      Estructuras segmentadas:
+                      {t("models.segmented_structures_title")}:
                     </p>
                     <ul className="text-xs text-gray-600 list-disc pl-4 grid grid-cols-2 gap-y-1">
                       <li>
-                        <strong>HCC:</strong> Carcinoma hepatocelular
+                        <strong>HCC:</strong> {t("models.segmented_structures.HCC")}
+
                       </li>
                       <li>
-                        <strong>HV:</strong> Vena hepática
+                        <strong>HV:</strong> {t("models.segmented_structures.HV")}
                       </li>
                       <li>
-                        <strong>IVC:</strong> Vena cava inferior
+                        <strong>IVC:</strong> {t("models.segmented_structures.IVC")}
                       </li>
                       <li>
-                        <strong>K:</strong> Riñón
+                        <strong>K:</strong> {t("models.segmented_structures.K")}
                       </li>
                       <li>
-                        <strong>K-C:</strong> Corteza renal
+                        <strong>K-C:</strong> {t("models.segmented_structures.K-C")}
                       </li>
                       <li>
-                        <strong>K-M:</strong> Médula renal
+                        <strong>K-M:</strong> {t("models.segmented_structures.K-m")}
                       </li>
                       <li>
-                        <strong>TRANS:</strong> Corte transversal
+                        <strong>TRANS:</strong> {t("models.segmented_structures.TRANS")}
                       </li>
                       <li>
-                        <strong>LVR:</strong> Hígado
+                        <strong>LVR:</strong> {t("models.segmented_structures.LVR")}
                       </li>
                       <li>
-                        <strong>PV:</strong> Vena porta
+                        <strong>PV:</strong> {t("models.segmented_structures.PV")}
                       </li>
                       <li>
-                        <strong>SAG:</strong> Corte sagital
+                        <strong>SAG:</strong> {t("models.segmented_structures.SAG")}
                       </li>
                       <li>
-                        <strong>SAG K:</strong> Corte sagital renal
+                        <strong>SAG K:</strong> {t("models.segmented_structures.SAG K")}
                       </li>
                       <li>
-                        <strong>LT SAG:</strong> Lóbulo izquierdo (sagital)
+                        <strong>LT SAG:</strong> {t("models.segmented_structures.LT SAG")}
                       </li>
                       <li>
-                        <strong>RT TRANS:</strong> Lóbulo derecho (transversal)
+                        <strong>RT TRANS:</strong> {t("models.segmented_structures.RT TRANS")}
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold mb-1">Submodelos utilizados:</p>
+                    <p className="font-semibold mb-1">{t("models.used_submodels_title")}:</p>
                     <ul className="list-disc pl-5 text-xs text-gray-600">
                       <li>
-                        <strong>YOLOv8:</strong> Segmentación anatómica base
+                        <strong>YOLOv8:</strong> {t("models.used_submodels.YOLOv8")}
                       </li>
                       <li>
-                        <strong>YOLOv11:</strong> Optimización avanzada en
-                        estructuras vasculares y tumorales
+                        <strong>YOLOv11:</strong> {t("models.used_submodels.YOLOv11")}
                       </li>
                     </ul>
                   </div>
@@ -292,7 +305,7 @@ const Models = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
+  <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -333,36 +346,36 @@ const Models = () => {
       </div>
 
       <main className="flex-grow container mx-auto px-4 py-20">
-        <h1 className="text-4xl mt-8 font-bold text-center text-gray-800 mb-16 flex items-center justify-center gap-2">
+        <h1 className="text-4xl mt-8 font-bold text-center text-gray-800 dark:text-white mb-16 flex items-center justify-center gap-2">
           <CubeTransparentIcon className="w-8 h-8 text-blue-500" />
-          Modelos de IA Disponibles
+          {t("models.title")}
         </h1>
 
         <div className="flex flex-col lg:flex-row gap-10">
           <section className="flex-1">
             <h2 className="text-2xl font-semibold text-blue-600 mb-6 border-b border-blue-300 pb-2 text-center">
-              Clasificación
+              {t("models.classification")}
             </h2>
             {renderModelCards(classificationModels)}
           </section>
 
           <section className="flex-1">
             <h2 className="text-2xl font-semibold text-purple-600 mb-6 border-b border-purple-300 pb-2 text-center">
-              Segmentación
+              {t("models.segmentation")}
             </h2>
             {renderModelCards(segmentationModels)}
           </section>
 
           <section className="flex-1">
             <h2 className="text-2xl font-semibold text-pink-600 mb-6 border-b border-pink-300 pb-2 text-center">
-              Generativos
+              {t("models.generative")}
             </h2>
             {renderModelCards(generativeModels)}
           </section>
         </div>
       </main>
 
-      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI
       </footer>
     </div>

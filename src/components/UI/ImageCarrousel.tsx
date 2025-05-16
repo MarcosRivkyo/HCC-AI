@@ -71,7 +71,7 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
   };
 
   return (
-    <div className="flex-1 bg-white rounded-lg shadow-md p-6 border border-gray-300">
+    <div className="flex-1 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700">
       <main className="flex-1 overflow-auto">
         {loading ? (
           <p>Cargando imágenes...</p>

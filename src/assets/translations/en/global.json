@@ -1,74 +1,319 @@
 {
-    "footer": {
-      "description": "Bachelor's thesis project on artificial intelligence applied to medical diagnosis.",
-      "copyright": "HCC-AI. Created by Marcos Rivas Kyoguro."
+  "footer": {
+    "description": "Bachelor's thesis project on artificial intelligence applied to medical diagnosis.",
+    "copyright": "HCC-AI. Created by Marcos Rivas Kyoguro."
+  },
+
+  "navbar": {
+    "home": "HOME",
+    "objective": "OBJECTIVES",
+    "services": "SERVICES",
+    "technologies": "TECHNOLOGIES",
+    "contact": "CONTACT",
+    "login": "Login",
+    "register": "Register",
+    "access": "Access",
+    "logout": "Logout",
+    "my_studies": "MY STUDIES",
+    "models": "MODELS",
+    "assistant": "ASSISTANT",
+    "analyze": "ANALYZE",
+    "view_profile": "View Profile",
+    "settings": "Settings"
+  },
+
+  "main": {
+    "slogan": "Artificial Intelligence for Hepatocellular Carcinoma Diagnosis",
+    "description": "Hepatocellular carcinoma (HCC) is one of the leading causes of cancer-related deaths worldwide. This Bachelor's Thesis focuses on the development of an AI-based tool to support early and accurate diagnosis of HCC using liver ultrasound images, aiming to improve clinical practice through accessible and effective technology."
+  },
+
+  "sections": {
+    "objectives": "Objectives",
+    "ai_detection": "AI Detection",
+    "ultrasound": "Liver Ultrasound",
+    "medical_analysis": "Medical Analysis",
+    "key_benefits": "Key Benefits",
+    "benefit_1": " Higher accuracy in detecting hepatocellular carcinoma.",
+    "benefit_2": " Faster and more efficient diagnosis using AI.",
+    "benefit_3": " Reduced costs in unnecessary medical tests.",
+    "benefit_4": " Assistance to healthcare professionals in decision-making.",
+
+    "our_services": "Services",
+    "services_description": "I have developed diagnostic tools based on convolutional neural networks (CNNs) to improve the precision and early detection of hepatocellular carcinoma. The model analyzes liver ultrasound images to support clinical decision-making.",
+    "ai_diagnosis": "AI-Powered Diagnosis",
+    "ai_diagnosis_description": "The tool analyzes liver ultrasound images to detect and segment hepatocellular carcinoma automatically and accurately.",
+    "advanced_nn": "Convolutional Neural Networks",
+    "advanced_nn_description": "CNNs trained with medical data have been used to achieve high diagnostic sensitivity and specificity.",
+    "medical_collaboration": "Medical Validation",
+    "medical_collaboration_description": "The model has been evaluated using real medical images and reviewed with professional input to ensure clinical relevance.",
+    "interactive_platform": "Interactive Web Application",
+    "interactive_platform_description": "Includes a web platform that allows users to upload ultrasound images and receive real-time predictions.",
+    "tumor_evaluation": "Tumor Assessment",
+    "tumor_evaluation_description": "The AI not only detects the tumor but also assesses its stage and progression to support clinical decisions.",
+    "r_and_d": "Future Improvements",
+    "r_and_d_description": "This thesis lays the groundwork for future improvements through new deep learning techniques and expanded medical datasets.",
+
+    "technologies": "Technologies",
+    "ai_description": "This project is based on deep learning techniques to enhance diagnostic accuracy in medical imaging.",
+
+    "ai_python_description": "I used Python with PyTorch and TensorFlow to train advanced medical image detection models.",
+    "opencv_title": "Computer Vision",
+    "opencv_description": "OpenCV was used for pre-processing and analyzing ultrasound images.",
+    "frontend_title": "Frontend Development",
+    "frontend_description": "The web platform was built using modern frontend technologies for a seamless user experience.",
+    "backend_title": "Backend Development",
+    "backend_description": "Custom APIs were created to manage medical data and connect the AI model.",
+    "integration_title": "Clinical Integration",
+    "integration_description": "The tool is designed to integrate smoothly into medical workflows.",
+    "contact_title": "Contact Me",
+    "contact_description": "Do you have questions or feedback about this thesis? Feel free to get in touch."
+  },
+
+  "input": {
+    "name": "Name",
+    "name_placeholder": "Enter your name",
+    "mail": "Email",
+    "mail_placeholder": "yourmail@gmail.com",
+    "message": "Message",
+    "message_placeholer": "Write your message here...",
+    "submit": "Send Message",
+    "submiting": "Sending Message..."
+  },
+
+  "models": {
+    "title": "Available AI Models",
+    "classification": "Classification",
+    "segmentation": "Segmentation",
+    "generative": "Generative",
+    "types": {
+      "classification": "Classification",
+      "segmentation": "Segmentation",
+      "generative": "Generative"
     },
-    "navbar": {
-      "home": "HOME",
-      "objective": "OBJECTIVES",
-      "services": "SERVICES",
-      "technologies": "TECHNOLOGIES",
-      "contact": "CONTACT",
-      "login": "Login",
-      "register": "Register",
-      "access": "Access",
-      "logout": "Logout"
+    "accuracy": "Accuracy",
+    "trained_on": "Trained on",
+    "no_date": "No date",
+    "metavir_description": "Classifies liver ultrasounds according to the METAVIR scale...",
+    "application": "Application",
+    "application_value": "Liver assistance with contextual reasoning",
+    "optimization": "Optimization",
+    "optimization_value": "Clinical prompt engineering",
+    "provider": "Provider",
+    "metavir_title": "METAVIR Scale (F0 - F4):",
+    "metavir": {
+      "f0": "No fibrosis",
+      "f1": "Portal fibrosis without septa",
+      "f2": "Fibrosis with few septa",
+      "f3": "Many septa without cirrhosis",
+      "f4": "Cirrhosis"
     },
-    "main": {
-      "slogan": "Artificial Intelligence for Hepatocellular Carcinoma Diagnosis",
-      "description": "Hepatocellular carcinoma (HCC) is one of the leading causes of cancer-related deaths worldwide. This Bachelor's Thesis focuses on the development of an AI-based tool to support early and accurate diagnosis of HCC using liver ultrasound images, aiming to improve clinical practice through accessible and effective technology."
+    "submodels": {
+      "title": "Submodels",
+      "resnet": "Deep feature extraction",
+      "vgg": "Detection of fibrotic patterns"
     },
+
+    "hcc_ai_description": "Classification model that analyzes ultrasound images to predict liver condition: healthy liver, steatosis, cirrhosis, or hepatocellular carcinoma (HCC).",
+    "metavir_ai_description": "Classifies liver ultrasounds based on the METAVIR scale (F0 to F4), which assesses the degree of liver fibrosis.",
+    "segmentator_ai_description": "Liver segmentation using YOLO technology. Detects structures such as the liver, vessels, kidneys, and lesions (HCC).",
+
+    "segmented_structures_title": "Segmented structures:",
+    "segmented_structures": {
+      "HCC": "Hepatocellular carcinoma",
+      "HV": "Hepatic vein",
+      "IVC": "Inferior vena cava",
+      "K": "Kidney",
+      "K-C": "Renal cortex",
+      "K-M": "Renal medulla",
+      "TRANS": "Transverse section",
+      "LVR": "Liver",
+      "PV": "Portal vein",
+      "SAG": "Sagittal section",
+      "SAG K": "Renal sagittal section",
+      "LT SAG": "Left lobe (sagittal)",
+      "RT TRANS": "Right lobe (transverse)"
+    },
+    "used_submodels_title": "Used submodels:",
+    "used_submodels": {
+      "YOLOv8": "Basic anatomical segmentation",
+      "YOLOv11": "Advanced optimization of vascular and tumor structures"
+    },
+
+    "gemini_description": "Generative model, optimized through prompt engineering techniques, tailored for assistance in liver health."
+  },
+  
+  
+  "dashboard": {
+    "create_studie": "Create Study",
+    "recent_studies": "Recent Studies",
+    "study_name": "Study Name",
+    "study_date": "Study Date",
+    "patient_name": "Patient Name",
+    "clinical_description": "Clinical Description",
+    "image_editor": "Analyzed Ultrasounds",
+    "available_models": "Available Models"
+  },
+
+  "dashboard": {
+    "create_studie": "Create Study",
+    "recent_studies": "Recent Studies",
+    "study_name": "Study Name",
+    "study_date": "Study Date",
+    "patient_name": "Patient Name",
+    "clinical_description": "Clinical Description",
+    "image_editor": "Analyzed Images",
+    "available_models": "Available Models",
+    "all_statuses": "All statuses",
+    "finished": "Finished",
+    "pending": "Pending",
+    "status": "Status",
+    "study": "Study",
+    "no_date": "No date available",
+    "download": "Download Study",
+    "delete": "Delete Study",
+    "no_recent_studies": "No recent studies.",
+    "search_by_name": "Search by name...",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "confirm_delete": "Are you sure you want to delete this study?",
+    "cancel": "Cancel",
+    "no_pdf_found": "PDF report not found for this study."
+  },
+
+  "models_disponibles": {
+    "search": "Search by name...",
+    "all": "All",
+    "model": "Model",
+    "description": "Description",
+    "type": "Model Type",
+    "date": "Training Date",
+    "no_description": "No description available",
+    "unknown_type": "Unknown type",
+    "no_date": "No date available",
+    "no_models": "No models available.",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  },
+
+  "my_studies": {
+      "title": "Your Studies",
+      "create_study": "Create Study",
+      "search_by_name": "Search by name",
+      "filter_all": "All",
+      "status_in_progress": "In Progress",
+      "status_done": "Completed",
+      "sort_newest": "Newest",
+      "sort_oldest": "Oldest",
+      "no_studies": "No studies available",
+      "new_study": "New Study",
+      "study_name": "Study name",
+      "patient_name": "Patient name",
+      "clinical_description": "Clinical description",
+      "no_date": "No date",
+      "delete_title": "Delete this study?",
+      "delete_warning": "This action cannot be undone."
+    },
+
+  "pagination": {
+    "page": "Page",
+    "of": "of"
+  },
+  
+  "profile": {
+    "registeredAt": "Registered at",
+    "phoneNumber": "Phone number"
+  },
+
+  "assistant": {
+    "title": "Asistente HCC-AI",
+    "send_query": "Ask your question...",
+    "send_button": "Ask"
+  },  
+
+  "links": {
+    "title": "Useful Links",
+    "name_placeholder": "Link name",
+    "url_placeholder": "URL",
+    "add": "Add",
+    "remove": "Remove",
+    "upload_icon": "Upload icon"
+  },
+
+
+  "actions": {
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "upload": "Upload",
+    "download": "Download",
+    "view": "View",
+    "previous": "Previous",
+    "next": "Next"
+
+  },
+
+  "settings": {
+    "title": "Settings",
     "sections": {
-      "objectives": "Objectives",
-      "ai_detection": "AI Detection",
-      "ultrasound": "Liver Ultrasound",
-      "medical_analysis": "Medical Analysis",
-      "key_benefits": "Key Benefits",
-      "benefit_1": " Higher accuracy in detecting hepatocellular carcinoma.",
-      "benefit_2": " Faster and more efficient diagnosis using AI.",
-      "benefit_3": " Reduced costs in unnecessary medical tests.",
-      "benefit_4": " Assistance to healthcare professionals in decision-making.",
-  
-      "our_services": "Services",
-      "services_description": "I have developed diagnostic tools based on convolutional neural networks (CNNs) to improve the precision and early detection of hepatocellular carcinoma. The model analyzes liver ultrasound images to support clinical decision-making.",
-      "ai_diagnosis": "AI-Powered Diagnosis",
-      "ai_diagnosis_description": "The tool analyzes liver ultrasound images to detect and segment hepatocellular carcinoma automatically and accurately.",
-      "advanced_nn": "Convolutional Neural Networks",
-      "advanced_nn_description": "CNNs trained with medical data have been used to achieve high diagnostic sensitivity and specificity.",
-      "medical_collaboration": "Medical Validation",
-      "medical_collaboration_description": "The model has been evaluated using real medical images and reviewed with professional input to ensure clinical relevance.",
-      "interactive_platform": "Interactive Web Application",
-      "interactive_platform_description": "Includes a web platform that allows users to upload ultrasound images and receive real-time predictions.",
-      "tumor_evaluation": "Tumor Assessment",
-      "tumor_evaluation_description": "The AI not only detects the tumor but also assesses its stage and progression to support clinical decisions.",
-      "r_and_d": "Future Improvements",
-      "r_and_d_description": "This thesis lays the groundwork for future improvements through new deep learning techniques and expanded medical datasets.",
-  
-      "technologies": "Technologies",
-      "ai_description": "This project is based on deep learning techniques to enhance diagnostic accuracy in medical imaging.",
-  
-      "ai_python_description": "I used Python with PyTorch and TensorFlow to train advanced medical image detection models.",
-      "opencv_title": "Computer Vision",
-      "opencv_description": "OpenCV was used for pre-processing and analyzing ultrasound images.",
-      "frontend_title": "Frontend Development",
-      "frontend_description": "The web platform was built using modern frontend technologies for a seamless user experience.",
-      "backend_title": "Backend Development",
-      "backend_description": "Custom APIs were created to manage medical data and connect the AI model.",
-      "integration_title": "Clinical Integration",
-      "integration_description": "The tool is designed to integrate smoothly into medical workflows.",
-      "contact_title": "Contact Me",
-      "contact_description": "Do you have questions or feedback about this thesis? Feel free to get in touch."
+      "account": "Account",
+      "preferences": "Preferences",
+      "help": "Help"
     },
-  
-    "input": {
-      "name": "Name",
-      "name_placeholder": "Enter your name",
-      "mail": "Email",
-      "mail_placeholder": "yourmail@gmail.com",
-      "message": "Message",
-      "message_placeholer": "Write your message here...",
-      "submit": "Send Message",
-      "submiting": "Sending Message..."
+    "account": {
+      "profile": "Profile",
+      "edit_data": "Edit Data",
+      "change_password": "Change Password",
+      "delete_account": "Delete Account",
+      "delete_warning": "This action will permanently delete your account!"
+    },
+    "profile": {
+      "username": "Username",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "no_photo": "No photo",
+      "previsualization": "Photo preview",
+      "loading": "Loading profile..."
+    },
+    "preferences": {
+      "theme": "Theme:",
+      "current_theme": "Current theme:",
+      "language": "Language:",
+      "ui_scale": "UI Scale:",
+      "select_language": "Select language:",
+      "current_zoom": "Current zoom:",
+      "high_contrast": "High Contrast Mode:",
+      "accessibility": "Accessibility",
+      "active": "Active",
+      "desactive": "Inactive",
+      "reset": "Reset Preferences"
+    },
+    "help": {
+      "system_status": "System Status:",
+      "all_ok": "🟢 All systems are operating normally.",
+      "download_manual": "Download User Manual",
+      "faq": "Frequently Asked Questions",
+      "support": "Have any questions? Contact:",
+      "question1": "How do I create a new study?",
+      "question2": "How do I change my password?",
+      "question3": "Where can I see the AI results?",
+      "question4": "Can I download a PDF report?",
+      "answer1": "Go to the My Studies section and click on Create Study.",
+      "answer2": "Go to Settings > Account > Change Password.",
+      "answer3": "Once the analysis is complete, you’ll see the segmented image and results in the study view.",
+      "answer4": "Yes. Once generated, click Download Report in the study menu. It will open in a new tab where you can download or edit it."
+    },
+    "common": {
+      "save_changes": "Save Changes"
     }
   }
-  
+
+}

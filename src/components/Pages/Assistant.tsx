@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { marked } from "marked";
+import { useTranslation } from "react-i18next";
 
 const Assistant = () => {
   const [question, setQuestion] = useState("");
@@ -8,7 +9,7 @@ const Assistant = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
-
+  const { t , i18n } = useTranslation("global");
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -19,6 +20,7 @@ const Assistant = () => {
     if (!question.trim()) return;
 
     setChatHistory((prev) => [...prev, { type: "user", content: question }]);
+    setQuestion("");
     setIsLoading(true);
 
     try {
@@ -60,9 +62,8 @@ const Assistant = () => {
 
   return (
     <div className="flex flex-col h-full max-h-screen bg-gray-900 text-white">
-      {/* Encabezado */}
       <h2 className="text-xl font-bold p-4 border-b border-gray-700">
-        🧠 HCC-AI Assistant
+        🧠 {t("assistant.title")}
       </h2>
 
       {/* Historial de chat */}
@@ -91,17 +92,41 @@ const Assistant = () => {
         <textarea
           className="flex-1 p-2 bg-gray-700 text-white rounded resize-none"
           rows={2}
-          placeholder="Escribe tu pregunta..."
+          placeholder={t("assistant.send_query")}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
         <button
           onClick={sendQuestion}
           disabled={isLoading}
-          className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-white"
+          className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-white flex items-center justify-center w-15 h-10"
         >
-          {isLoading ? "..." : "Enviar"}
+          {isLoading ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              />
+            </svg>
+          ) : (
+            t("assistant.send_button")
+          )}
         </button>
+
       </div>
     </div>
   );

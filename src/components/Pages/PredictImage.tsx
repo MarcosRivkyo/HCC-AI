@@ -21,6 +21,7 @@ import NavbarSecond from "../UI/NavbarSecond.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import Assistant from "./Assistant.tsx";
 import SettingsModal from "../UI/SettingsModal";
+import { useTranslation } from "react-i18next";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -45,7 +46,7 @@ const PredictImage: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
-
+  const { t, i18n } = useTranslation("global");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
@@ -252,7 +253,7 @@ const PredictImage: React.FC = () => {
                   onDragOver={(e) => e.preventDefault()}
                   className="py-4 px-6 bg-gray-800 rounded-md border-2 border-dashed border-gray-600 hover:bg-gray-700 transition duration-300"
                 >
-                  <p>Suelta una imagen aquí</p>
+                  <p>{t("editor.drop_image")}</p>
                   <input
                     ref={inputRef}
                     type="file"
@@ -266,7 +267,7 @@ const PredictImage: React.FC = () => {
                   className="py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
                   onClick={() => inputRef.current?.click()}
                 >
-                  Seleccionar Imagen
+                  {t("editor.upload_image")}
                 </button>
               </div>
 
@@ -278,13 +279,14 @@ const PredictImage: React.FC = () => {
               >
                 <option value="resnet">ResNet</option>
                 <option value="VGG16">VGG</option>
+                <option value="VGG19">VGG19</option>
               </select>
 
               <button
                 className="mt-2 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
                 onClick={handleSubmit}
               >
-                Predecir
+                {t("editor.analyze_image")}
               </button>
             </div>
           </div>
@@ -293,7 +295,7 @@ const PredictImage: React.FC = () => {
           <div className="flex-1 bg-gray-800 p-4 rounded-lg shadow-xl max-w-[800px]">
             {segmentation && prediction ? (
               <div className="p-4 rounded-lg border-2 border-dashed border-yellow-500 bg-black">
-                <h3 className="text-lg font-semibold">Imagen Segmentada:</h3>
+                <h3 className="text-lg font-semibold">{t("editor.segmented_image")}:</h3>
                 <img
                   src={segmentation.segmented_image_url}
                   alt="Segmentación"
