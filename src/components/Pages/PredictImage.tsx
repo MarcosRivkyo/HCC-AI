@@ -17,7 +17,7 @@ import {
   where,
 } from "firebase/firestore";
 import { app } from "../../config/firebase.ts";
-import NavbarSecond from "../UI/NavbarSecond.tsx";
+import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import Assistant from "./Assistant.tsx";
 import SettingsModal from "../UI/SettingsModal";
@@ -295,7 +295,9 @@ const PredictImage: React.FC = () => {
           <div className="flex-1 bg-gray-800 p-4 rounded-lg shadow-xl max-w-[800px]">
             {segmentation && prediction ? (
               <div className="p-4 rounded-lg border-2 border-dashed border-yellow-500 bg-black">
-                <h3 className="text-lg font-semibold">{t("editor.segmented_image")}:</h3>
+                <h3 className="text-lg font-semibold">
+                  {t("editor.segmented_image")}:
+                </h3>
                 <img
                   src={segmentation.segmented_image_url}
                   alt="Segmentación"

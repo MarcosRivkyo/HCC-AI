@@ -215,7 +215,50 @@
         "clinical_description": "Klinische Beschreibung",
         "no_date": "Kein Datum",
         "delete_title": "Diese Studie löschen?",
-        "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden."
+        "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+        
+        "id_study": "Studien-ID",
+        "doctor_name": "Arzt",
+        "upload_image": "Bild wird hochgeladen...",
+        "drag_or_drop": "Ziehen oder klicken zum Hochladen",
+        "start_analysis": "Analyse starten",
+        "choose_parameters": "Analyseparameter wählen",
+        "classification_models": "Klassifikationsmodell",
+        "hcc_ai_description": "Modell speziell trainiert zur Klassifikation von HCC-Leberfibrosestufen.",
+        "metavir_ai_description": "Modell basierend auf der METAVIR-Skala (F0 bis F4) zur Analyse der Leberfibrose.",
+        "metavir_submodels": "METAVIR-AI-Submodell",
+        "choose_submodel": "Ein Submodell auswählen",
+        "segmentation_models": "Segmentierungsmodell",
+        "segmentation_submodels": "Segmentierungs-Submodell",
+        "yolob8": "YOLOv8",
+        "yolov11": "YOLOv11",
+        "minimum_threshold": "Minimale Vertrauensschwelle",
+        "threshold_explanation": "Nur Segmentierungen mit gleicher oder höherer Zuverlässigkeit werden angezeigt.",
+        "generate_ai_explanation": "Automatische medizinische Erklärung basierend auf den Ergebnissen generieren",
+        "start_prediction": "Vorhersage starten",
+        "used_parameters": "Verwendete Parameter",
+        "tags_list": "Legende der Beschriftungen",
+        "segmented_structures": {
+            "HCC": "Hepatozelluläres Karzinom",
+            "HV": "Lebervene",
+            "IVC": "Untere Hohlvene",
+            "K": "Niere",
+            "K-C": "Nierenrinde",
+            "K-M": "Nierenmark",
+            "TRANS": "Querschnitt",
+            "LVR": "Leber",
+            "PV": "Pfortader",
+            "SAG": "Sagittalschnitt",
+            "SAG K": "Sagittalschnitt der Niere",
+            "LT SAG": "Linker Lappen (sagittal)",
+            "RT TRANS": "Rechter Lappen (transversal)"
+        },
+        "predicted_class": "Vorhergesagte Klasse",
+        "class_probabilities": "Wahrscheinlichkeiten je Klasse",
+        "see_explanation": "Erklärung der Ergebnisse anzeigen",
+        "medical_explanation": "Medizinische Erklärung durch KI",
+        "processing_image": "Bild wird mit KI verarbeitet...",
+        "may_take_time": "Dies kann einige Sekunden dauern. Bitte warten."
     },
 
   
@@ -277,7 +320,28 @@
             "edit_data": "Daten bearbeiten",
             "change_password": "Passwort ändern",
             "delete_account": "Konto löschen",
-            "delete_warning": "Diese Aktion wird dein Konto dauerhaft löschen!"
+            "delete_warning": "Diese Aktion wird dein Konto dauerhaft löschen!",
+            "change_passwd": "Möchten Sie Ihr Passwort ändern?",
+            "sending": "Wird gesendet...",
+            "send": "Passwort-Wiederherstellung senden",
+            "success": "Eine Wiederherstellungs-E-Mail wurde gesendet. Bitte prüfen Sie Ihren Posteingang.",
+            "error": "Beim Senden der Wiederherstellungs-E-Mail ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+            "error_no_user": "Es ist keine E-Mail mit diesem Benutzer verknüpft.",
+            "error_no_auth": "Es ist kein authentifizierter Benutzer vorhanden.",
+            "delete_acount_warning": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion ist unwiderruflich.",
+            "delete_success": "Konto erfolgreich gelöscht.",
+            "reauth_required": "Sie müssen sich erneut anmelden, bevor Sie Ihr Konto löschen können.",
+            "reauth_prompt": "Um Ihr Konto zu löschen, müssen Sie sich erneut anmelden.",
+            "prompt_email": "Geben Sie Ihre E-Mail-Adresse ein:",
+            "prompt_password": "Geben Sie Ihr Passwort ein:",
+            "reauth_error": "Fehler bei der erneuten Anmeldung. Bitte versuchen Sie es erneut.",
+            "delete_error": "Beim Löschen des Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+            "confirm_label": "Geben Sie ein",
+            "confirm_word": "löschen",
+            "confirm_error": "Bitte geben Sie den Bestätigungstext korrekt ein.",
+            "deleting": "Wird gelöscht..."
+
+
         },
         "profile": {
             "username": "Benutzername",
@@ -301,7 +365,11 @@
             "accessibility": "Barrierefreiheit",
             "active": "Aktiviert",
             "desactive": "Deaktiviert",
-            "reset": "Einstellungen zurücksetzen"
+            "reset": "Einstellungen zurücksetzen",
+            "dark": "Dunkel",
+            "light": "Hell"
+ 
+
         },
         "help": {
             "system_status": "Systemstatus:",
@@ -321,6 +389,37 @@
         "common": {
             "save_changes": "Änderungen speichern"
         }
+    },
+
+    "login": {
+        "login_text": "Anmelden",
+        "welcome_text": "Willkommen zurück! Gib deine Zugangsdaten ein, um dich anzumelden.",
+        "email_placeholder": "E-Mail",
+        "passwd_placeholder": "Passwort",
+        "forgot_passwd": "Passwort vergessen?",
+        "no_account": "Noch kein Konto?",
+        "register": "Registrieren",
+        "error_send_mail": "Wiederherstellungs-E-Mail senden",
+        "cancel_remake": "Wiederherstellung abbrechen"
+    },
+
+    "signup": {
+        "title": "Registrieren",
+        "subtitle": "Willkommen! Gib deine Daten ein, um dich zu registrieren.",
+        "username": "Benutzername",
+        "firstname": "Vorname",
+        "lastname": "Nachname",
+        "email": "E-Mail",
+        "password": "Passwort",
+        "confirm_password": "Passwort wiederholen",
+        "access_code": "Zugangscode",
+        "phone": "Telefon",
+        "button": "Registrieren",
+        "or": "ODER",
+        "have_account": "Du hast bereits ein Konto?",
+        "login_link": "Anmelden"
     }
+
+
 
 }

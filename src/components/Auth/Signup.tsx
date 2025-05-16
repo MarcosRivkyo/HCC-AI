@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   getAuth,
@@ -29,6 +30,7 @@ function Signup() {
   const auth = getAuth();
   const db = getFirestore();
   const navigate = useNavigate();
+  const { t , i18n } = useTranslation("global");
 
   const [authing, setAuthing] = useState(false);
   const [email, setEmail] = useState("");
@@ -156,15 +158,15 @@ function Signup() {
               className="w-80 rounded-md center mx-auto mb-10 cursor-pointer"
               onClick={() => navigate("/")}
             />
-            <h3 className="text-4xl font-bold mb-2 text-center">Registrarse</h3>
+            <h3 className="text-4xl font-bold mb-2 text-center">{t("signup.title")}</h3>
             <p className="text-lg mb-4 text-center">
-              ¡Bienvenido! Introduce tus datos para registrarte.
+              {t("signup.subtitle")}
             </p>
           </div>
 
           <input
             type="text"
-            placeholder="Nombre de Usuario"
+            placeholder={t("signup.username")}
             className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white mb-4"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
@@ -173,14 +175,14 @@ function Signup() {
           <div className="w-full flex flex-wrap gap-4 mb-6">
             <input
               type="text"
-              placeholder="Nombre"
+              placeholder={t("signup.firstname")}
               className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <input
               type="text"
-              placeholder="Apellidos"
+              placeholder={t("signup.lastname")}
               className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
@@ -189,7 +191,7 @@ function Signup() {
 
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t("signup.email")}
             className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -199,7 +201,7 @@ function Signup() {
             <div className="relative flex-1">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Contraseña"
+                placeholder={t("signup.password")}
                 className="w-full text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white pr-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -216,7 +218,7 @@ function Signup() {
             <div className="relative flex-1">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Repetir Contraseña"
+                placeholder={t("signup.confirm_password")}
                 className="w-full text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white pr-10"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -234,7 +236,7 @@ function Signup() {
           <div className="w-full flex flex-wrap gap-4 mb-6">
             <input
               type="text"
-              placeholder="Código de acceso"
+              placeholder={t("signup.access_code")}
               className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value)}
@@ -242,7 +244,7 @@ function Signup() {
 
             <input
               type="text"
-              placeholder="Teléfono"
+              placeholder={t("signup.phone")}
               className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -261,7 +263,7 @@ function Signup() {
               disabled={authing}
               className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
             >
-              Registrarse
+              {t("signup.button")}
             </button>
           </div>
 
@@ -273,9 +275,9 @@ function Signup() {
 
         <div className="w-full flex items-center justify-center mt-10">
           <p className="text-sm font-normal text-gray-400">
-            ¿Ya tienes cuenta?
+            {t("signup.have_account")}{" "}
             <span className="font-semibold text-white cursor-pointer underline">
-              <Link to="/login">Inicia Sesión</Link>
+              <Link to="/login">{t("signup.login_link")}</Link>
             </span>
           </p>
         </div>

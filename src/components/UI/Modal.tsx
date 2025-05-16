@@ -4,7 +4,7 @@ type ModalProps = {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  size?: "small" | "medium" | "large"; // Añadimos el parámetro de tamaño
+  size?: "small" | "medium" | "large";
 };
 
 const Modal: React.FC<ModalProps> = ({
@@ -15,11 +15,10 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   if (!open) return null;
 
-  // Definir las clases según el tamaño
   const sizeClasses = {
-    small: "w-80", // Pequeño
-    medium: "w-96", // Medio
-    large: "w-full max-w-4xl h-[80vh]", // Grande
+    small: "w-80",
+    medium: "w-96",
+    large: "w-full max-w-4xl h-[80vh]",
   };
 
   return (

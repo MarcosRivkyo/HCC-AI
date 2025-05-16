@@ -4,10 +4,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "../../config/firebase";
 import { useTranslation } from "react-i18next";
 
-
 import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
-import NavbarSecond from "../UI/NavbarSecond";
+import NavbarSecond from "../UI/InsideNavbar";
 import ProfileModal from "../UI/ProfileModal";
 import Assistant from "./Assistant";
 import SettingsModal from "../UI/SettingsModal";
@@ -41,8 +40,7 @@ const Models = () => {
     localStorage.getItem("highContrast") === "true",
   );
 
-  const { t, i18n } = useTranslation("global"); 
-
+  const { t, i18n } = useTranslation("global");
 
   const db = getFirestore(app);
   const auth = getAuth();
@@ -59,37 +57,37 @@ const Models = () => {
     });
     return () => unsubscribe();
   }, [db]);
-useEffect(() => {
-  const fetchModels = async () => {
-    try {
-      const snapshot = await getDocs(collection(db, "hcc_ai_models"));
-      const data = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        modelId: doc.id,
-      })) as ModelData[];
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "hcc_ai_models"));
+        const data = snapshot.docs.map((doc) => ({
+          ...doc.data(),
+          modelId: doc.id,
+        })) as ModelData[];
 
-      const geminiModel: ModelData = {
-        modelId: "gemini-1.5-pro",
-        modelName: "Gemini 1.5 Pro",
-        modelType: "Generative",
-        accuracy: NaN,
-        description:
-          i18n.language === "fr"
-            ? "Modèle génératif avancé de Google pour les tâches multimodales de traitement du langage naturel."
-            : i18n.language === "es"
-            ? "Modelo generativo avanzado de Google para tareas multimodales de lenguaje natural."
-            : "Google's advanced generative model for multimodal natural language tasks.",
-        trainDate: null,
-      };
+        const geminiModel: ModelData = {
+          modelId: "gemini-1.5-pro",
+          modelName: "Gemini 1.5 Pro",
+          modelType: "Generative",
+          accuracy: NaN,
+          description:
+            i18n.language === "fr"
+              ? "Modèle génératif avancé de Google pour les tâches multimodales de traitement du langage naturel."
+              : i18n.language === "es"
+                ? "Modelo generativo avanzado de Google para tareas multimodales de lenguaje natural."
+                : "Google's advanced generative model for multimodal natural language tasks.",
+          trainDate: null,
+        };
 
-      setModels([...data, geminiModel]);
-    } catch (error) {
-      console.error("Error al obtener modelos:", error);
-    }
-  };
+        setModels([...data, geminiModel]);
+      } catch (error) {
+        console.error("Error al obtener modelos:", error);
+      }
+    };
 
-  fetchModels();
-}, [db, i18n.language]); 
+    fetchModels();
+  }, [db, i18n.language]);
 
   const renderModelCards = (filteredModels: ModelData[]) =>
     filteredModels.length === 0 ? null : (
@@ -113,65 +111,64 @@ useEffect(() => {
               className="w-full max-w-2xl bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition duration-300"
             >
               <div className="mb-4">
-                {/* <span className="text-xs uppercase font-bold text-gray-400">
-                  {model.modelType}
-                </span> */}
-                <h2 className="text-xl font-bold text-blue-700 mt-1">
+                <h2 className="text-xl font-bold text-blue-700 mt-1 dark:text-blue-300">
                   {model.modelName}
                 </h2>
               </div>
 
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                {
-                  model.modelId === "sJNL0uZfOclYDPsLVavU"
-                    ? t("models.metavir_ai_description")
-                    : model.modelId === "2eq0qaAR4C3lHabTxp9z"
-                    ? t("models.hcc_ai_description") 
+                {model.modelId === "sJNL0uZfOclYDPsLVavU"
+                  ? t("models.metavir_ai_description")
+                  : model.modelId === "2eq0qaAR4C3lHabTxp9z"
+                    ? t("models.hcc_ai_description")
                     : model.modelId === "nbiJGYKysFXTCeONkSvv"
-                    ? t("models.segmentator_ai_description")
-                    : model.description 
-                }
+                      ? t("models.segmentator_ai_description")
+                      : model.description}
               </p>
 
               {isGemini ? (
                 <div className="text-sm text-gray-700 dark:text-gray-300 mt-4 space-y-1">
-
                   <p>
-                    <strong>{t("models.application")}:</strong> {t("models.application_value")}
+                    <strong>{t("models.application")}:</strong>{" "}
+                    {t("models.application_value")}
                   </p>
                   <p>
-                    <strong>{t("models.optimization")}:</strong> {t("models.optimization_value")}
+                    <strong>{t("models.optimization")}:</strong>{" "}
+                    {t("models.optimization_value")}
                   </p>
                   <p>
                     <strong>{t("models.provider")}:</strong> Google
                   </p>
                 </div>
               ) : (
-                <div className="flex justify-between items-center text-sm text-gray-700 mt-4">
+                <div className="flex justify-between items-center text-sm text-gray-700 dark:text-white mt-4">
                   <div>
                     <p>
                       <strong>{t("models.accuracy")}</strong>{" "}
-                      <span className="text-green-600 font-semibold">
+                      <span className="text-green-600  font-semibold">
                         {formattedAccuracy}
                       </span>
                     </p>
                     <p>
                       <strong>ID:</strong>{" "}
-                      <span className="text-gray-500">{model.modelId}</span>
+                      <span className="text-gray-500 dark:text-gray-400">{model.modelId}</span>
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-gray-500">{t("models.trained_on")}</p>
-                      <p className="text-sm font-medium">
-                        {model.trainDate?.seconds
-                          ? new Date(model.trainDate.seconds * 1000).toLocaleDateString(i18n.language, {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })
-                          : t("models.no_date")}
-                      </p>
-
+                    <p className="text-xs text-gray-500 dark:text-white">
+                      {t("models.trained_on")}
+                    </p>
+                    <p className="text-sm font-medium dark:text-white">
+                      {model.trainDate?.seconds
+                        ? new Date(
+                            model.trainDate.seconds * 1000,
+                          ).toLocaleDateString(i18n.language, {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
+                        : t("models.no_date")}
+                    </p>
                   </div>
                 </div>
               )}
@@ -207,7 +204,9 @@ useEffect(() => {
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold mb-1">{t("models.submodels.title")}:</p>
+                    <p className="font-semibold mb-1">
+                      {t("models.submodels.title")}:
+                    </p>
                     <ul className="list-disc pl-5 text-xs text-gray-600">
                       <li>
                         <strong>ResNet:</strong> {t("models.submodels.resnet")}
@@ -234,55 +233,70 @@ useEffect(() => {
                     </p>
                     <ul className="text-xs text-gray-600 list-disc pl-4 grid grid-cols-2 gap-y-1">
                       <li>
-                        <strong>HCC:</strong> {t("models.segmented_structures.HCC")}
-
+                        <strong>HCC:</strong>{" "}
+                        {t("models.segmented_structures.HCC")}
                       </li>
                       <li>
-                        <strong>HV:</strong> {t("models.segmented_structures.HV")}
+                        <strong>HV:</strong>{" "}
+                        {t("models.segmented_structures.HV")}
                       </li>
                       <li>
-                        <strong>IVC:</strong> {t("models.segmented_structures.IVC")}
+                        <strong>IVC:</strong>{" "}
+                        {t("models.segmented_structures.IVC")}
                       </li>
                       <li>
                         <strong>K:</strong> {t("models.segmented_structures.K")}
                       </li>
                       <li>
-                        <strong>K-C:</strong> {t("models.segmented_structures.K-C")}
+                        <strong>K-C:</strong>{" "}
+                        {t("models.segmented_structures.K-C")}
                       </li>
                       <li>
-                        <strong>K-M:</strong> {t("models.segmented_structures.K-m")}
+                        <strong>K-M:</strong>{" "}
+                        {t("models.segmented_structures.K-m")}
                       </li>
                       <li>
-                        <strong>TRANS:</strong> {t("models.segmented_structures.TRANS")}
+                        <strong>TRANS:</strong>{" "}
+                        {t("models.segmented_structures.TRANS")}
                       </li>
                       <li>
-                        <strong>LVR:</strong> {t("models.segmented_structures.LVR")}
+                        <strong>LVR:</strong>{" "}
+                        {t("models.segmented_structures.LVR")}
                       </li>
                       <li>
-                        <strong>PV:</strong> {t("models.segmented_structures.PV")}
+                        <strong>PV:</strong>{" "}
+                        {t("models.segmented_structures.PV")}
                       </li>
                       <li>
-                        <strong>SAG:</strong> {t("models.segmented_structures.SAG")}
+                        <strong>SAG:</strong>{" "}
+                        {t("models.segmented_structures.SAG")}
                       </li>
                       <li>
-                        <strong>SAG K:</strong> {t("models.segmented_structures.SAG K")}
+                        <strong>SAG K:</strong>{" "}
+                        {t("models.segmented_structures.SAG K")}
                       </li>
                       <li>
-                        <strong>LT SAG:</strong> {t("models.segmented_structures.LT SAG")}
+                        <strong>LT SAG:</strong>{" "}
+                        {t("models.segmented_structures.LT SAG")}
                       </li>
                       <li>
-                        <strong>RT TRANS:</strong> {t("models.segmented_structures.RT TRANS")}
+                        <strong>RT TRANS:</strong>{" "}
+                        {t("models.segmented_structures.RT TRANS")}
                       </li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold mb-1">{t("models.used_submodels_title")}:</p>
+                    <p className="font-semibold mb-1">
+                      {t("models.used_submodels_title")}:
+                    </p>
                     <ul className="list-disc pl-5 text-xs text-gray-600">
                       <li>
-                        <strong>YOLOv8:</strong> {t("models.used_submodels.YOLOv8")}
+                        <strong>YOLOv8:</strong>{" "}
+                        {t("models.used_submodels.YOLOv8")}
                       </li>
                       <li>
-                        <strong>YOLOv11:</strong> {t("models.used_submodels.YOLOv11")}
+                        <strong>YOLOv11:</strong>{" "}
+                        {t("models.used_submodels.YOLOv11")}
                       </li>
                     </ul>
                   </div>
@@ -305,7 +319,7 @@ useEffect(() => {
   );
 
   return (
-  <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}

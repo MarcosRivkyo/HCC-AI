@@ -11,7 +11,7 @@ import { FirebaseError } from "firebase/app";
 import { auth } from "../../config/firebase";
 import ImageSlider from "../UI/ImageSlider";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-
+import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
@@ -27,7 +27,8 @@ const Login = () => {
   const [showResetInput, setShowResetInput] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
-  
+  const { t , i18n } = useTranslation("global");
+
   const signInWithEmail = async () => {
     setAuthing(true);
     setError("");
@@ -41,7 +42,6 @@ const Login = () => {
         if (user.emailVerified === true) {
           setTransitioning(true);
           navigate("/dashboard");
-     
         } else {
           await signOut(auth);
           setError("Debes verificar tu correo antes de acceder.");
@@ -82,7 +82,6 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className="w-full h-screen flex">
       {/* Parte izquierda */}
@@ -102,10 +101,10 @@ const Login = () => {
               onClick={() => navigate("/")}
             />
             <h3 className="text-4xl font-bold mb-2 text-center">
-              Iniciar Sesión
+              {t("login.login_text")}
             </h3>
             <p className="text-lg mb-4 text-center">
-              ¡Hola de nuevo! Introduce tus datos para entrar.
+              {t("login.welcome_text")}
             </p>
           </div>
 
@@ -113,7 +112,7 @@ const Login = () => {
           <div className="w-full flex flex-col mb-6">
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t("login.email_placeholder")}
               className="w-full text-white py-2 mb-4 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -122,7 +121,7 @@ const Login = () => {
             <div className="relative mb-4">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Contraseña"
+                placeholder={t("login.passwd_placeholder")}
                 className="w-full text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white pr-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -144,7 +143,7 @@ const Login = () => {
               onClick={signInWithEmail}
               disabled={authing}
             >
-              Iniciar Sesión
+              {t("login.login_text")}
             </button>
           </div>
 
@@ -165,7 +164,7 @@ const Login = () => {
                 onClick={() => setShowResetInput(true)}
                 className="text-gray-400 text-sm underline"
               >
-                ¿Olvidaste tu contraseña?
+                {t("login.forgot_passwd")}
               </button>
             </div>
           ) : (
@@ -182,7 +181,7 @@ const Login = () => {
                   onClick={handlePasswordReset}
                   className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
                 >
-                  Enviar correo de recuperación
+                  {t("login.error_send_email")}
                 </button>
               </div>
               <div className="text-center mt-2">
@@ -190,7 +189,7 @@ const Login = () => {
                   onClick={() => setShowResetInput(false)}
                   className="text-gray-400 text-sm underline"
                 >
-                  Cancelar recuperación
+                  {t("login.error_remake")}
                 </button>
               </div>
             </div>
@@ -205,16 +204,15 @@ const Login = () => {
           {/* Enlace para registrarse */}
           <div className="w-full flex items-center justify-center mt-10">
             <p className="text-sm font-normal text-gray-400">
-              ¿No tienes cuenta?
+              {t("login.no_account")}
               <span className="font-semibold text-white cursor-pointer underline">
-                <Link to="/signup"> Regístrate</Link>
+                <Link to="/signup"> {t("login.register")}</Link>
               </span>
             </p>
           </div>
         </div>
       </div>
     </div>
-    
   );
 };
 

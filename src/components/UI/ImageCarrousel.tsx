@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import Slider from "react-slick";
 import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 import "../../App.css";
 
 interface ImageCarrouselProps {

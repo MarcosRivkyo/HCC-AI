@@ -4,7 +4,7 @@ import settingsIcon from "../../assets/images/settings_icon.png";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
 import { FaFilePdf } from "react-icons/fa";
-import i18next from "i18next"; 
+import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 
 interface SettingsModalProps {
@@ -34,7 +34,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setHighContrast,
   userData,
 }) => {
-  
   const [activeSection, setActiveSection] = useState("Cuenta");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
@@ -56,7 +55,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     localStorage.setItem("language", newLang);
     i18next.changeLanguage(newLang);
   };
-  lng: localStorage.getItem("language") || "es"
+  lng: localStorage.getItem("language") || "es";
 
   const handleScaleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newScale = parseFloat(e.target.value);
@@ -120,7 +119,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="w-3/4 bg-gray-800 p-6 h-full overflow-y-auto rounded-lg shadow-lg">
           {activeSection === "Cuenta" && (
             <div className="space-y-8 bg-gray-800">
-              <h3 className="text-3xl text-white font-semibold mb-6">{t("settings.sections.account")}</h3>
+              <h3 className="text-3xl text-white font-semibold mb-6">
+                {t("settings.sections.account")}
+              </h3>
 
               <ul className="space-y-6 text-white bg-gray-800">
                 {}
@@ -188,10 +189,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                       <div className="space-y-6">
                         {}
                         {[
-                          "Nombre de usuario",
-                          "Nombre",
-                          "Apellido",
-                          "Teléfono",
+                          t("settings.profile.username"),
+                          t("settings.profile.first_name"),
+                          t("settings.profile.last_name"),
+                          t("settings.profile.phone"),
                         ].map((label, idx) => {
                           const value =
                             label === "Nombre de usuario"
@@ -206,10 +207,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                             e: React.ChangeEvent<HTMLInputElement>,
                           ) => {
                             const val = e.target.value;
-                            if (label === t("settings.profile.username")) setUserName(val);
-                            if (label === t("settings.profile.first_name")) setFirstName(val);
-                            if (label === t("settings.profile.last_name")) setLastName(val);
-                            if (label === t("settings.profile.phone")) setPhone(val);
+                            if (label === t("settings.profile.username"))
+                              setUserName(val);
+                            if (label === t("settings.profile.first_name"))
+                              setFirstName(val);
+                            if (label === t("settings.profile.last_name"))
+                              setLastName(val);
+                            if (label === t("settings.profile.phone"))
+                              setPhone(val);
                           };
 
                           return (
@@ -268,7 +273,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                           className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold p-4 rounded-md transition duration-300"
                           onClick={updateUserData}
                         >
-                            {t("settings.common.save_changes")}:
+                          {t("settings.common.save_changes")}:
                         </button>
                       </div>
                     </div>
@@ -321,9 +326,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Tema */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
-                <h4 className="text-xl font-semibold text-white-400">{t("settings.preferences.theme")}</h4>
+                <h4 className="text-xl font-semibold text-white-400">
+                  {t("settings.preferences.theme")}
+                </h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-white">{t("settings.preferences.current_theme")}</span>
+                  <span className="text-white">
+                    {t("settings.preferences.current_theme")}
+                  </span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -338,7 +347,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                         } else {
                           document.documentElement.classList.remove("dark");
                         }
-
                       }}
                       className="sr-only peer"
                     />
@@ -354,14 +362,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     ></div>
                   </label>
                   <span className="text-white">
-                    {theme === "dark" ? "Oscuro" : "Claro"}
+                    {theme === "dark"
+                      ? t("settings.preferences.dark")
+                      : t("settings.preferences.light")}
                   </span>
                 </div>
               </div>
 
               {/* Idioma */}
               <div className="bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
-                <h4 className="text-xl font-semibold text-white-400">{t("settings.preferences.language")}</h4>
+                <h4 className="text-xl font-semibold text-white-400">
+                  {t("settings.preferences.language")}
+                </h4>
                 <div className="flex items-center justify-between">
                   <label htmlFor="language" className="text-white">
                     {t("settings.preferences.select_language")}
@@ -377,7 +389,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     <option value="fr">Français</option>
                     <option value="de">Deutsch</option>
                   </select>
-
                 </div>
               </div>
 
@@ -387,7 +398,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   {t("settings.preferences.ui_scale")}
                 </h4>
                 <div className="flex flex-col space-y-2 text-white">
-                  <label htmlFor="scale">{t("settings.preferences.current_zoom")}</label>
+                  <label htmlFor="scale">
+                    {t("settings.preferences.current_zoom")}
+                  </label>
                   <input
                     type="range"
                     id="scale"
@@ -410,7 +423,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                   {t("settings.preferences.accessibility")}
                 </h4>
                 <div className="flex items-center justify-between">
-                  <span className="text-white">{t("settings.preferences.high_contrast")}</span>
+                  <span className="text-white">
+                    {t("settings.preferences.high_contrast")}
+                  </span>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -441,7 +456,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     ></div>
                   </label>
                   <span className="text-white">
-                    {highContrast ? t("settings.preferences.active") : t("settings.preferences.desactive")}
+                    {highContrast
+                      ? t("settings.preferences.active")
+                      : t("settings.preferences.desactive")}
                   </span>
                 </div>
               </div>
@@ -495,23 +512,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 {[
                   {
                     pregunta: t("settings.help.question1"),
-                    respuesta:
-                      t("settings.help.answer1"),
+                    respuesta: t("settings.help.answer1"),
                   },
                   {
                     pregunta: t("settings.help.question2"),
-                    respuesta:
-                      t("settings.help.answer2"),
+                    respuesta: t("settings.help.answer2"),
                   },
                   {
                     pregunta: t("settings.help.question3"),
-                    respuesta:
-                      t("settings.help.answer3"),
+                    respuesta: t("settings.help.answer3"),
                   },
                   {
                     pregunta: t("settings.help.question4"),
-                    respuesta:
-                      t("settings.help.answer4"),
+                    respuesta: t("settings.help.answer4"),
                   },
                 ].map((faq, idx) => (
                   <div
@@ -527,9 +540,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
 
               <div className="mt-6">
-                <p className="text-white mb-2">
-                  {t("settings.help.support")}
-                </p>
+                <p className="text-white mb-2">{t("settings.help.support")}</p>
                 <a
                   href="mailto:soporte@hcc-ai.com"
                   className="text-blue-400 underline hover:text-blue-600"

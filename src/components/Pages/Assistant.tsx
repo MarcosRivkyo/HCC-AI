@@ -9,7 +9,7 @@ const Assistant = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const { t , i18n } = useTranslation("global");
+  const { t, i18n } = useTranslation("global");
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -24,13 +24,14 @@ const Assistant = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`https://hcc-ai-backend-1084523848624.europe-west2.run.app/ask-assistant/`, {
-
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          instruction: question,
-          input_text: `
+      const response = await fetch(
+        `https://hcc-ai-backend-1084523848624.europe-west2.run.app/ask-assistant/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            instruction: question,
+            input_text: `
             Eres HCC-AI Assistant, un asistente médico experto en enfermedades hepáticas, integrado en la aplicación HCC-AI.
             Debes ayudar al médico a identificar posibles casos de carcinoma hepatocelular (HCC).
 
@@ -42,8 +43,9 @@ const Assistant = () => {
 
             Responde en Markdown para una correcta visualización en formato web.
           `,
-        }),
-      });
+          }),
+        },
+      );
 
       const data = await response.json();
       const html = await marked.parse(data.respuesta);
@@ -126,7 +128,6 @@ const Assistant = () => {
             t("assistant.send_button")
           )}
         </button>
-
       </div>
     </div>
   );

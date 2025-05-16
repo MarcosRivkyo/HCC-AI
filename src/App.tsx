@@ -13,7 +13,7 @@ import ImageSlider from "./components/UI/ImageSlider2.tsx";
 import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
 
 import Footer from "./components/UI/Footer.tsx";
-import Navbar from "./components/UI/Navbar.tsx";
+import Navbar from "./components/UI/AppNavbar.tsx";
 import usePreventZoom from "./components/UI/usePreventZoom.tsx";
 
 import ia_cancer from "./assets/images/ia_cancer.png";
@@ -27,11 +27,8 @@ import analisis_medico from "./assets/images/analisis_medico.png";
 import {
   FaPython,
   FaReact,
-  FaAngular,
   FaCogs,
   FaPhone,
-  FaEnvelope,
-  FaMapMarkerAlt,
 } from "react-icons/fa";
 import { SiPytorch, SiTensorflow, SiOpencv, SiSharp } from "react-icons/si";
 import {
@@ -53,9 +50,7 @@ const languages = [
   { code: "en", label: "English", flag: englishFlag },
   { code: "fr", label: "Français", flag: frenchFlag },
   { code: "de", label: "Deutsch", flag: germanFlag },
-  
 ];
-
 
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
@@ -74,46 +69,23 @@ const LanguageSelector: React.FC = () => {
             key={code}
             onClick={() => handleChange(code)}
             className={`${
-              isSelected ? "w-14 h-14 border-4 border-red-600 ring-2 ring-red-500" : "w-10 h-10 border border-gray-300 hover:border-red-400"
+              isSelected
+                ? "w-14 h-14 border-4 border-red-600 ring-2 ring-red-500"
+                : "w-10 h-10 border border-gray-300 hover:border-red-400"
             } rounded-full overflow-hidden transition-all duration-200 ease-in-out`}
             title={label}
           >
-            <img src={flag} alt={label} className="w-full h-full object-cover" />
+            <img
+              src={flag}
+              alt={label}
+              className="w-full h-full object-cover"
+            />
           </button>
         );
       })}
     </div>
   );
 };
-
-
-
-// const LanguageToggleButton: React.FC = () => {
-//   const [isSpanish, setIsSpanish] = useState<boolean>(
-//     i18next.language === "es",
-//   );
-
-//   const toggleLanguage = () => {
-//     const newLanguage = isSpanish ? "en" : "es";
-//     i18next.changeLanguage(newLanguage);
-//     setIsSpanish(!isSpanish);
-//   };
-
-//   return (
-//     <div className="fixed bottom-5 left-5 z-50">
-//       <button
-//         onClick={toggleLanguage}
-//         className="w-16 h-16 rounded-full shadow-lg overflow-hidden border-2 border-white"
-//       >
-//         <img
-//           src={isSpanish ? spanishFlag : englishFlag}
-//           alt={isSpanish ? "Español" : "English"}
-//           className="w-full h-full object-cover"
-//         />
-//       </button>
-//     </div>
-//   );
-// };
 
 const ContactButton: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<string>("home");
@@ -141,13 +113,12 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
-      setShowFirstTextEffect(true); // Mostrar el primer efecto
-    }, 500); // Espera 500 ms para que el primer efecto aparezca
+      setShowFirstTextEffect(true); 
+    }, 500); 
 
-    // Mostrar el segundo efecto después del primer
     const timer2 = setTimeout(() => {
-      setShowSecondTextEffect(true); // Mostrar el segundo efecto después de 3 segundos
-    }, 3500); // Espera 3500 ms para mostrar el segundo
+      setShowSecondTextEffect(true); 
+    }, 3500); 
 
     return () => {
       clearTimeout(timer1);
@@ -160,7 +131,6 @@ const Home: React.FC = () => {
       id="home"
       className="text-center text-2xl pt-16 p-10 relative h-screen"
     >
-      {/* Contenedor del texto - Absoluto sobre el slider */}
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black bg-opacity-50">
         <div className="flex flex-col items-center justify-center bg-black bg-opacity-50 p-6 rounded-lg">
           <h1 className="text-[100px] font-bold mb-6">
@@ -168,15 +138,12 @@ const Home: React.FC = () => {
             <span className="text-red-500">AI</span>
           </h1>
 
-          {/* Primer TextEffectDemo */}
           {showFirstTextEffect && <TextEffectDemo lang="es" />}
 
-          {/* Segundo TextEffectDemo debajo del primero */}
           {showSecondTextEffect && <TextEffectDemo lang="eng" />}
         </div>
       </div>
 
-      {/* Slider en el fondo */}
       <div className="absolute inset-0 z-10">
         <ImageSlider />
       </div>
@@ -201,7 +168,6 @@ const About: React.FC = () => {
       </h2>
       <p className="text-lg max-w-3xl mx-auto mb-10">{t("main.description")}</p>
 
-      {/* Sección de imágenes */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className="relative group">
           <img
@@ -237,7 +203,6 @@ const About: React.FC = () => {
         </div>
       </div>
 
-      {/* Beneficios del proyecto */}
       <div className="mt-16 max-w-4xl mx-auto text-center">
         <h3 className="text-2xl font-semibold text-green-300 mb-4">
           {t("sections.key_benefits")}
@@ -257,9 +222,7 @@ const About: React.FC = () => {
           </li>
           <li className="flex items-center gap-3">
             <FaCheckCircle className="text-green-500" />
-            <span>
-              {t("sections.benefit_4")}
-            </span>
+            <span>{t("sections.benefit_4")}</span>
           </li>
         </ul>
       </div>
@@ -457,8 +420,8 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Activa el estado de carga
-    setResponseMessage(""); // Borra mensajes anteriores
+    setIsLoading(true); 
+    setResponseMessage(""); 
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -476,7 +439,7 @@ const Contact: React.FC = () => {
     } catch (error) {
       setResponseMessage("Hubo un error al enviar el mensaje.");
     } finally {
-      setIsLoading(false); // Desactiva el estado de carga
+      setIsLoading(false); 
     }
   };
 
@@ -541,7 +504,7 @@ const Contact: React.FC = () => {
         <button
           type="submit"
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isLoading} // Deshabilita el botón mientras carga
+          disabled={isLoading} 
         >
           {isLoading ? t("input.submiting") : t("input.submit")}
         </button>

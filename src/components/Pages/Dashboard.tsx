@@ -18,9 +18,9 @@ import Assistant from "./Assistant.tsx";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
 import Modal from "../UI/Modal.tsx";
 import DeleteAccountButton from "../UI/DeleteAccountButton.tsx";
-import EstudiosRecientes from "../UI/EstudiosRecientes.tsx";
+import EstudiosRecientes from "../UI/RecentStudies.tsx";
 import ChangePasswordForm from "../UI/ChangePasswordForm.tsx";
-import ModelosDisponibles from "../UI/ModelosDisponibles.tsx";
+import ModelosDisponibles from "../UI/AvailableModels.tsx";
 import ImageCarrousel from "../UI/ImageCarrousel.tsx";
 import { FaFilePdf } from "react-icons/fa";
 
@@ -36,7 +36,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import NavbarSecond from "../UI/NavbarSecond.tsx";
+import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
 
@@ -489,7 +489,10 @@ const Dashboard = () => {
                     </h2>
                     <form onSubmit={handleSubmit}>
                       <div className="mb-4">
-                        <label className="block mb-2 text-gray-700 dark:text-gray-300" htmlFor="studieName">
+                        <label
+                          className="block mb-2 text-gray-700 dark:text-gray-300"
+                          htmlFor="studieName"
+                        >
                           {t("dashboard.study_name")}
                         </label>
                         <input
@@ -503,7 +506,10 @@ const Dashboard = () => {
                       </div>
 
                       <div className="mb-4">
-                        <label className="block mb-2 text-gray-700 dark:text-gray-300" htmlFor="studieDate">
+                        <label
+                          className="block mb-2 text-gray-700 dark:text-gray-300"
+                          htmlFor="studieDate"
+                        >
                           {t("dashboard.study_date")}
                         </label>
                         <input
@@ -517,7 +523,10 @@ const Dashboard = () => {
                       </div>
 
                       <div className="mb-4">
-                        <label className="block mb-2 text-gray-700 dark:text-gray-300" htmlFor="patientName">
+                        <label
+                          className="block mb-2 text-gray-700 dark:text-gray-300"
+                          htmlFor="patientName"
+                        >
                           {t("dashboard.patient_name")}
                         </label>
                         <input
@@ -590,15 +599,13 @@ const Dashboard = () => {
               </main>
             </div>
           </div>
-
         </div>
 
         {}
-      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-        © 2025 HCC-AI
-      </footer>
+        <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+          © 2025 HCC-AI
+        </footer>
       </div>
-
     </div>
   );
 };

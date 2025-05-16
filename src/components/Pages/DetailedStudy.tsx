@@ -10,7 +10,7 @@ import {
   collection,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { app, storage } from "../../config/firebase";
+import { app, storage } from "../../config/firebase.ts";
 import {
   ref,
   uploadBytesResumable,
@@ -26,16 +26,17 @@ import "react-toastify/dist/ReactToastify.css";
 import BarChart from "../UI/BarChart.tsx";
 import { marked } from "marked";
 
-import NavbarSecond from "../UI/NavbarSecond.tsx";
+import NavbarSecond from "../UI/InsideNavbar.tsx";
 
 import ProfileModal from "../UI/ProfileModal.tsx";
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import Assistant from "./Assistant.tsx";
 import { FaEllipsisV, FaDownload, FaTrashAlt } from "react-icons/fa";
-import SettingsModal from "../UI/SettingsModal";
+import SettingsModal from "../UI/SettingsModal.tsx";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
-import EstudiosRecientesCompact from "../UI/EstudioRecientesCompact.tsx";
+import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
+import { useTranslation } from "react-i18next";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -79,7 +80,7 @@ const EstudioDetalle = () => {
 
   const [estudio, setEstudio] = useState<Estudio | null>(null);
   const [selectedSubModel, setSelectedSubModel] = useState("");
-
+  const { t , i18n } = useTranslation("global");
   const [loading, setLoading] = useState(true);
   const [subiendoImagen, setSubiendoImagen] = useState(false);
   const [predict, setPredict] = useState(false);
@@ -496,11 +497,14 @@ const EstudioDetalle = () => {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/send-report`, {
-        name: userData?.firstName || user.displayName || "Médico HCC-AI",
-        email: destinatario,
-        message: `Te comparto el informe clínico del estudio "${estudio.studieName}". Puedes descargarlo aquí:\n\n${estudio.pdfReportUrl}`,
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+        {
+          name: userData?.firstName || user.displayName || "Médico HCC-AI",
+          email: destinatario,
+          message: `Te comparto el informe clínico del estudio "${estudio.studieName}". Puedes descargarlo aquí:\n\n${estudio.pdfReportUrl}`,
+        },
+      );
 
       if (response.status === 200) {
         toast.success("Informe enviado correctamente.");
@@ -682,16 +686,14 @@ const EstudioDetalle = () => {
     );
   };
 
-  const handleImagenChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleImagenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       procesarImagen(file, "ecografias");
       setImagenSeleccionada(file);
     }
   };
-  
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     console.log("Drag over event triggered");
     e.preventDefault();
@@ -718,7 +720,7 @@ const EstudioDetalle = () => {
         {
           predicted_class: predicted_class,
           labels: etiquetas,
-        }
+        },
       );
 
       if (response.status === 200 && response.data?.explicacion) {
@@ -766,7 +768,6 @@ const EstudioDetalle = () => {
         { headers: { "Content-Type": "multipart/form-data" } },
       );
 
-
       setPrediction(predictionResponse.data);
       console.log("Predicción:", predictionResponse.data);
       setProgress(100);
@@ -784,15 +785,13 @@ const EstudioDetalle = () => {
       //   }
       // );
 
-
       const segmentationResponse = await axios.post(
         `${backendUrl}/segment/?confidence_threshold=${confidenceThreshold.toFixed(2)}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        }
+        },
       );
-
 
       const { image_base64, detected_labels, confidence_threshold } =
         segmentationResponse.data;
@@ -985,221 +984,200 @@ const EstudioDetalle = () => {
             </div>
           </div>
 
-{/* FILA 1 */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
-  {/* Columna izquierda: datos */}
-  <div className="bg-white rounded-xl p-6 space-y-4 dark:bg-gray-800">
-    {editing ? (
-      <>
-        <input
-          type="text"
-          name="studieName"
-          value={editedEstudio?.studieName || ""}
-          onChange={handleInputChange}
-          className="text-3xl font-bold text-gray-800 w-full border-b-2 border-gray-300 dark:text-white"
-        />
-        <textarea
-          name="clinicalDescription"
-          value={editedEstudio?.clinicalDescription || ""}
-          onChange={handleInputChange}
-          rows={4}
-          className="text-gray-600 w-full mt-4 p-2 border-2 border-gray-300 rounded"
-        />
-        <div className="mt-4 flex space-x-4">
-          <button
-            onClick={handleSaveChanges}
-            className="bg-blue-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-blue-600"
-          >
-            Guardar Cambios
-          </button>
-          <button
-            onClick={handleCancelEdit}
-            className="bg-gray-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-gray-600"
-          >
-            Cancelar
-          </button>
-        </div>
-      </>
-    ) : (
-      <>
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
-              {estudio?.studieName}
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-white">ID del estudio: {id}</p>
-          </div>
-          <p
-            className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
-              estudio?.status === "Finalizado"
-                ? "bg-green-100 text-green-800"
-                : estudio?.status === "Pendiente IA"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            {estudio?.status}
-          </p>
-        </div>
+          {/* FILA 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
+            {/* Columna izquierda: datos */}
+            <div className="bg-white rounded-xl p-6 space-y-4 dark:bg-gray-800">
+              
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
+                        {estudio?.studieName}
+                      </h1>
+                      <p className="text-sm text-gray-500 dark:text-white">
+                        {t("my_studies.id_study")}: {id}
+                      </p>
+                    </div>
+                      <p
+                        className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
+                          estudio?.status === "Finalizado"
+                            ? "bg-green-100 text-green-800"
+                            : estudio?.status === "En Progreso"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {estudio?.status === "Finalizado"
+                          ? t("my_studies.status_done")
+                          : estudio?.status === "En Progreso"
+                          ? t("my_studies.status_in_progress")
+                          : estudio?.status}
+                      </p>
 
-        <p className="text-sm text-gray-400 mb-1 ">
-          {estudio?.studieDate?.toDate().toLocaleString("es-ES", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </p>
+                  </div>
 
-        <p className="text-gray-700 mb-1 dark:text-white">
-          <strong>Médico:</strong> {estudio?.doctorName ?? "Desconocido"}
-        </p>
+                  <p className="text-sm text-gray-400 mb-1">
+                    {estudio?.studieDate?.toDate().toLocaleString(i18n.language, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
 
-        <p className="text-gray-700 mb-4 dark:text-white">
-          <strong>Paciente:</strong> {estudio?.patientName}
-        </p>
 
-        <div>
-          <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
-            Descripción clínica
-          </h2>
-          <p className="text-gray-600 dark:text-white">{estudio?.clinicalDescription}</p>
-        </div>
-      </>
-    )}
-  </div>
+                  <p className="text-gray-700 mb-1 dark:text-white">
+                    <strong>{t("my_studies.doctor_name")}:</strong>{" "}
+                    {estudio?.doctorName ?? "Desconocido"}
+                  </p>
 
-  {/* Columna derecha: contenedor flex que incluye la imagen y el menú */}
-  <div className="flex justify-between items-start w-full">
-    {/* Columna con la imagen */}
-    <div
-      onDragOver={(e) => {
-        if (!estudio?.predictionId) {
-          e.preventDefault();
-        }
-      }}
-      onDrop={(e) => {
-        if (!estudio?.predictionId) {
-          handleDrop(e);
-        }
-      }}
-      className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 overflow-hidden flex items-center justify-center"
-    >
-      <label className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center z-10">
-        {subiendoImagen ? (
-          <div className="flex flex-col items-center justify-center text-center text-gray-600">
-            <svg
-              className="animate-spin h-8 w-8 text-blue-500 mb-2"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v8H4z"
-              ></path>
-            </svg>
-            Subiendo imagen...
-          </div>
-        ) : estudio?.imagenUrl ? (
-          <img
-            src={estudio.imagenUrl}
-            alt="Imagen del estudio"
-            className="w-full h-full object-contain"
-          />
-        ) : (
-          <span className="text-gray-500 text-center">
-            Arrastra o haz clic para subir
-          </span>
-        )}
+                  <p className="text-gray-700 mb-4 dark:text-white">
+                    <strong>{t("my_studies.patient_name")}:</strong> {estudio?.patientName}
+                  </p>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            estudio?.predictionId ? undefined : handleImagenChange(e)
-          }
-          disabled={!!estudio?.predictionId}
-          className="hidden"
-        />
-      </label>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
+                      {t("my_studies.clinical_description")}
+                    </h2>
+                    <p className="text-gray-600 dark:text-white">
+                      {estudio?.clinicalDescription}
+                    </p>
+                  </div>
+    
+            </div>
 
-      {/* Botón eliminar */}
-      {estudio?.imagenUrl && !estudio.predictionId && (
-        <button
-          onClick={handleEliminarEcografia}
-          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-20"
-          title="Eliminar imagen"
-        >
-          <FaTrashAlt size={14} />
-        </button>
-      )}
-    </div>
+            <div className="flex justify-between items-start w-full">
+              {/* Columna con la imagen */}
+              <div
+                onDragOver={(e) => {
+                  if (!estudio?.predictionId) {
+                    e.preventDefault();
+                  }
+                }}
+                onDrop={(e) => {
+                  if (!estudio?.predictionId) {
+                    handleDrop(e);
+                  }
+                }}
+                className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 dark:bg-black overflow-hidden flex items-center justify-center"
+              >
+                <label className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center z-10">
+                  {subiendoImagen ? (
+                    <div className="flex flex-col items-center justify-center text-center text-gray-600">
+                      <svg
+                        className="animate-spin h-8 w-8 text-blue-500 mb-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      {t("my_studies.upload_image")}
+                    </div>
+                  ) : estudio?.imagenUrl ? (
+                    <img
+                      src={estudio.imagenUrl}
+                      alt="Imagen del estudio"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-gray-500 text-center">
+                      {t("my_studies.drag_or_drop")}
+                    </span>
+                  )}
 
-    {/* Menu de acciones */}
-    <div className="relative">
-      <Menu as="div" className="w-48 origin-top-left focus:outline-none z-10 ">
-        <div>
-          <Menu.Button className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:bg-blavk">
-            <EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-          </Menu.Button>
-        </div>
-        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10">
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={descargarPDF}
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) =>
+                      estudio?.predictionId ? undefined : handleImagenChange(e)
+                    }
+                    disabled={!!estudio?.predictionId}
+                    className="hidden"
+                  />
+                </label>
+
+                {/* Botón eliminar */}
+                {estudio?.imagenUrl && !estudio.predictionId && (
+                  <button
+                    onClick={handleEliminarEcografia}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-20"
+                    title="Eliminar imagen"
+                  >
+                    <FaTrashAlt size={14} />
+                  </button>
+                )}
+              </div>
+
+              {/* Menu de acciones */}
+              <div className="relative">
+                <Menu
+                  as="div"
+                  className="w-48 origin-top-left focus:outline-none z-10 "
                 >
-                  Descargar Informe
-                </button>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={enviarPDFporCorreo}
-                  className={`${
-                    active ? "bg-gray-100" : ""
-                  } w-full text-left px-4 py-2 text-sm text-gray-700`}
-                >
-                  Enviar informe por correo
-                </button>
-              )}
-            </Menu.Item>
+                  <div>
+                    <Menu.Button className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:bg-blavk">
+                      <EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+                    </Menu.Button>
+                  </div>
+                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={descargarPDF}
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                          >
+                            Descargar Informe
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={enviarPDFporCorreo}
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                          >
+                            Enviar informe por correo
+                          </button>
+                        )}
+                      </Menu.Item>
 
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  onClick={handleEliminarEstudio}
-                  className={`${
-                    active ? "bg-red-100 text-red-700" : ""
-                  } w-full text-left px-4 py-2 text-sm`}
-                >
-                  Eliminar Estudio
-                </button>
-              )}
-            </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={handleEliminarEstudio}
+                            className={`${
+                              active ? "bg-red-100 text-red-700" : ""
+                            } w-full text-left px-4 py-2 text-sm`}
+                          >
+                            Eliminar Estudio
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Menu>
+              </div>
+            </div>
           </div>
-        </Menu.Items>
-      </Menu>
-    </div>
-  </div>
-</div>
-
 
           {/* FILA 2 */}
           <div className="w-full flex justify-center my-4">
@@ -1212,7 +1190,7 @@ const EstudioDetalle = () => {
                 onClick={() => setParametersVisible(true)}
                 className={`bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 ${parametersVisible ? "bg-blue-700" : ""}`}
               >
-                Iniciar Análisis
+                {t("my_studies.start_analysis")}
               </button>
             </div>
           )}
@@ -1221,25 +1199,25 @@ const EstudioDetalle = () => {
           {parametersVisible && (
             <div className="mt-6 text-center">
               <h3 className="text-xl font-semibold mb-4">
-                Elige los parámetros del análisis
+                {t("my_studies.choose_parameters")}
               </h3>
 
               {/* Modelo de Clasificación */}
               <div className="mb-6">
                 <label className="block text-lg font-semibold text-gray-800 mb-2">
-                  Modelo de Clasificación
+                  {t("my_studies.classification_models")}
                 </label>
                 <div className="flex gap-4">
                   {[
                     {
                       name: "HCC-AI",
                       description:
-                        "Modelo entrenado específicamente para clasificar etapas de fibrosis hepática HCC.",
+                        t("my_studies.hcc_ai_description"),
                     },
                     {
                       name: "METAVIR-AI",
                       description:
-                        "Modelo basado en la escala METAVIR (F0 a F4) para análisis de fibrosis hepática.",
+                        t("my_studies.metavir_ai_description"),
                     },
                   ].map((model) => (
                     <button
@@ -1266,14 +1244,14 @@ const EstudioDetalle = () => {
                 {selectedClassificationModel === "METAVIR-AI" && (
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Submodelo de METAVIR-AI
+                      {t("my_studies.metavir_submodels")}
                     </label>
                     <select
                       value={selectedSubModel}
                       onChange={(e) => setSelectedSubModel(e.target.value)}
                       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     >
-                      <option value="">Selecciona un submodelo</option>
+                      <option value="">{t("my_studies.choose_submodel")}</option>
                       <option value="resnet">ResNet</option>
                       <option value="VGG16">VGG16</option>
                     </select>
@@ -1284,7 +1262,7 @@ const EstudioDetalle = () => {
               {/* Modelo de Segmentación */}
               <div className="mb-6">
                 <label className="block text-lg font-semibold text-gray-800 mb-2">
-                  Modelo de Segmentación
+                  {t("my_studies.segmentation_models")}
                 </label>
                 <div className="flex gap-4">
                   {["SegmentadorHepático-AI"].map((model) => (
@@ -1312,7 +1290,7 @@ const EstudioDetalle = () => {
                       {/* Submodelo de Segmentación */}
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Submodelo de Segmentación
+                          {t("my_studies.segmentation_submodels")}
                         </label>
                         <select
                           value={selectedSegmentationSubModel}
@@ -1321,7 +1299,7 @@ const EstudioDetalle = () => {
                           }
                           className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         >
-                          <option value="">Selecciona un submodelo</option>
+                          <option value="">{t("my_studies.choose_submodel")}</option>
                           <option value="YOLOv8">YOLOv8</option>
                           <option value="YOLOv11">YOLOv11</option>
                         </select>
@@ -1333,7 +1311,7 @@ const EstudioDetalle = () => {
                           htmlFor="confidenceThreshold"
                           className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                          Umbral mínimo de confianza (%)
+                          {t("my_studies.minimum_threshold")} (%)
                         </label>
                         <input
                           id="confidenceThreshold"
@@ -1350,8 +1328,7 @@ const EstudioDetalle = () => {
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                         <p className="text-xs text-gray-500 mt-1">
-                          Solo se mostrarán segmentaciones con confianza igual o
-                          superior.
+                          {t("my_studies.threshold_explanation")}
                         </p>
                       </div>
                     </div>
@@ -1372,8 +1349,7 @@ const EstudioDetalle = () => {
                     htmlFor="usarExplicacionIA"
                     className="text-sm text-gray-700"
                   >
-                    Generar una explicación médica automática basada en los
-                    resultados
+                    {t("my_studies.generate_ai_explanation")}
                   </label>
                 </div>
               </div>
@@ -1387,7 +1363,7 @@ const EstudioDetalle = () => {
                     !selectedClassificationModel || !selectedSegmentationModel
                   }
                 >
-                  Iniciar Predicción
+                  {t("my_studies.start_prediction")}
                 </button>
               </div>
             </div>
@@ -1396,21 +1372,20 @@ const EstudioDetalle = () => {
           <div className="flex-1 p-8">
             {segmentation && prediction ? (
               <div className="result-display p-6 rounded-lg border-2 border-dashed">
-
                 {/* Modelos utilizados */}
                 <div className="mt-8 bg-gray-100 border-l-4 border-blue-500 p-4 rounded-lg shadow-sm dark:bg-gray-900">
                   <h4 className="text-lg font-semibold text-blue-700 mb-2 dark:text-blue-300">
-                    Parámetros Utilizados
+                    {t("my_studies.used_parameters")}
                   </h4>
                   <ul className="text-sm text-gray-700 leading-6 dark:text-gray-200">
                     <li>
-                      <strong>Modelo de Clasificación:</strong>{" "}
+                      <strong>{t("my_studies.classification_models")}:</strong>{" "}
                       {selectedClassificationModel}
                       {selectedClassificationModel === "METAVIR-AI" &&
                         selectedSubModel && <span> ({selectedSubModel})</span>}
                     </li>
                     <li>
-                      <strong>Modelo de Segmentación:</strong>{" "}
+                      <strong>{t("my_studies.segmentation_models")}:</strong>{" "}
                       {selectedSegmentationModel}
                       {selectedSegmentationModel === "SegmentadorHepático-AI" &&
                         selectedSegmentationSubModel && (
@@ -1418,7 +1393,7 @@ const EstudioDetalle = () => {
                         )}
                     </li>
                     <li>
-                      <strong>Confianza mínima:</strong>{" "}
+                      <strong>{t("my_studies.minimum_threshold")}:</strong>{" "}
                       {Math.round(confidenceThreshold * 100)}%
                     </li>
                   </ul>
@@ -1426,7 +1401,7 @@ const EstudioDetalle = () => {
 
                 {/* Imagen Segmentada */}
                 <h3 className="text-xl mt-10 font-semibold text-black dark:text-white">
-                  Imagen Segmentada:
+                  {t("editor.segmented_image")}:
                 </h3>
 
                 <div className="flex justify-end mb-2">
@@ -1449,43 +1424,65 @@ const EstudioDetalle = () => {
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
                       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 w-full max-w-md relative">
                         <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
-                          Leyenda de Etiquetas
+                          {t("my_studies.tags_list")}
                         </h3>
                         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                          <li><strong>HCC</strong>: Carcinoma hepatocelular</li>
-                          <li><strong>HV</strong>: Vena hepática</li>
-                          <li><strong>IVC</strong>: Vena cava inferior</li>
-                          <li><strong>K</strong>: Riñón</li>
-                          <li><strong>K-C</strong>: Corteza renal</li>
-                          <li><strong>K-M</strong>: Médula renal</li>
-                          <li><strong>TRANS</strong>: Corte transversal</li>
-                          <li><strong>LVR</strong>: Hígado</li>
-                          <li><strong>PV</strong>: Vena porta</li>
-                          <li><strong>SAG</strong>: Corte sagital</li>
-                          <li><strong>SAG K</strong>: Corte sagital renal</li>
-                          <li><strong>LT SAG</strong>: Lóbulo izquierdo (sagital)</li>
-                          <li><strong>RT TRANS</strong>: Lóbulo derecho (transversal)</li>
-                          <li><strong>BND</strong>: Banda de fibrosis</li>
-                          <li><strong>VSL</strong>: Vasos sanguíneos</li>
+                          <li>
+                            <strong>HCC</strong>: {t("my_studies.segmented_structures.HCC")}
+                          </li>
+                          <li>
+                            <strong>HV</strong>:{t("my_studies.segmented_structures.HV")}
+                          </li>
+                          <li>
+                            <strong>IVC</strong>: {t("my_studies.segmented_structures.IVC")}
+                          </li>
+                          <li>
+                            <strong>K</strong>: {t("my_studies.segmented_structures.K")}
+                          </li>
+                          <li>
+                            <strong>K-C</strong>: {t("my_studies.segmented_structures.K-C")}
+                          </li>
+                          <li>
+                            <strong>K-M</strong>: {t("my_studies.segmented_structures.K-M")}
+                          </li>
+                          <li>
+                            <strong>TRANS</strong>: {t("my_studies.segmented_structures.TRANS")}
+                          </li>
+                          <li>
+                            <strong>LVR</strong>: {t("my_studies.segmented_structures.LVR")}
+                          </li>
+                          <li>
+                            <strong>PV</strong>: {t("my_studies.segmented_structures.PV")}
+                          </li>
+                          <li>
+                            <strong>SAG</strong>: {t("my_studies.segmented_structures.SAG")}
+                          </li>
+                          <li>
+                            <strong>SAG K</strong>: {t("my_studies.segmented_structures.SAG K")}
+                          </li>
+                          <li>
+                            <strong>LT SAG</strong>: {t("my_studies.segmented_structures.LT SAG")}
+                          </li>
+                          <li>
+                            <strong>RT TRANS</strong>: {t("my_studies.segmented_structures.RT TRANS")}
+                          </li>
+
                         </ul>
                         <button
                           onClick={() => setShowLegendModal(false)}
                           className="mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition"
                         >
-                          Cerrar
+                          {t("actions.close")}
                         </button>
                       </div>
                     </div>
                   )}
-
                 </div>
 
                 {/* Clasificación Predicha */}
-                <h3 className="mt-8 text-xl font-semibold text-white">
-                  
-                </h3>
+                <h3 className="mt-8 text-xl font-semibold text-white"></h3>
                 <p className="text-2xl font-bold text-blue-500">
-                  Clase Predicha:{" "}
+                  {t("my_studies.predicted_class")}:{" "}
                   {selectedClassificationModel === "METAVIR-AI"
                     ? `F${prediction.predicted_class}`
                     : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][
@@ -1494,7 +1491,7 @@ const EstudioDetalle = () => {
                 </p>
 
                 <p className="mt-4 text-lg text-black dark:text-white">
-                  Probabilidades de cada clase:
+                  {t("my_studies.class_probabilities")}:
                 </p>
                 <ul className="list-disc ml-6 text-black text-sm dark:text-white">
                   {prediction.probabilities.map((prob, index) => {
@@ -1514,7 +1511,6 @@ const EstudioDetalle = () => {
 
                 {/* Gráfico de Probabilidades */}
                 <div className="mt-6">
-
                   <div className="mt-4">
                     <BarChart
                       probabilities={prediction.probabilities}
@@ -1528,6 +1524,7 @@ const EstudioDetalle = () => {
                               "Hepatocarcinoma",
                             ]
                       }
+                      theme={localStorage.getItem("theme") || "light"}
                     />
                   </div>
                 </div>
@@ -1537,7 +1534,7 @@ const EstudioDetalle = () => {
                   className="predict-button mt-4 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg shadow-md hover:bg-yellow-400 transition duration-300"
                   onClick={() => setShowModal(true)}
                 >
-                  Ver Explicación de los Resultados
+                  {t("my_studies.see_explanation")}
                 </button>
 
                 {showModal && (
@@ -1552,7 +1549,7 @@ const EstudioDetalle = () => {
                       </button>
 
                       <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
-                        Explicación Médica
+                        {t("my_studies.medical_explanation")}
                       </h2>
 
                       <div
@@ -1586,10 +1583,10 @@ const EstudioDetalle = () => {
                   ></path>
                 </svg>
                 <h3 className="text-xl font-semibold text-yellow-700">
-                  Procesando imagen con IA...
+                  {t("my_studies.processing_image")}
                 </h3>
                 <p className="text-sm text-yellow-600 mt-2">
-                  Esto puede tardar unos segundos. Por favor, espera.
+                  {t("my_studies.may_take_time")}
                 </p>
               </div>
             ) : null}
