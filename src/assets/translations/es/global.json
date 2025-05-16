@@ -211,7 +211,51 @@
       "clinical_description": "Descripción clínica",
       "no_date": "Sin fecha",
       "delete_title": "¿Eliminar este estudio?",
-      "delete_warning": "Esta acción no se puede deshacer."
+      "delete_warning": "Esta acción no se puede deshacer.",
+      
+      "id_study": "ID del estudio",
+      "doctor_name": "Médico",
+      "upload_image": "Subiendo imagen...",
+      "drag_or_drop": "Arrastra o haz clic para subir",
+      "start_analysis": "Iniciar Análisis",
+      "choose_parameters": "Elige los parámetros del análisis",
+      "classification_models": "Modelo de Clasificación",
+      "hcc_ai_description": "Modelo entrenado específicamente para clasificar etapas de fibrosis hepática HCC.",
+      "metavir_ai_description": "Modelo basado en la escala METAVIR (F0 a F4) para análisis de fibrosis hepática.",
+      "metavir_submodels": "Submodelo de METAVIR-AI",
+      "choose_submodel": "Selecciona un submodelo",
+      "segmentation_models": "Modelo de Segmentación",
+      "segmentation_submodels": "Submodelo de Segmentación",
+      "yolob8": "YOLOv8",
+      "yolov11": "YOLOv11",
+      "minimum_threshold": "Umbral mínimo de confianza",
+      "threshold_explanation": "Solo se mostrarán segmentaciones con confianza igual osuperior.",
+      "generate_ai_explanation": "Generar una explicación médica automática basada en losresultados",
+      "start_prediction": "Iniciar Predicción",
+      "used_parameters": "Parámetros Utilizados",
+      "tags_list": "Leyenda de Etiquetas",
+      "segmented_structures": {
+          "HCC": "Carcinoma hepatocelular",
+          "HV": "Vena hepática",
+          "IVC": "Vena cava inferior",
+          "K": "Riñón",
+          "K-C": "Corteza renal",
+          "K-M": "Médula renal",
+          "TRANS": "Corte transversal",
+          "LVR": "Hígado",
+          "PV": "Vena porta",
+          "SAG": "Corte sagital",
+          "SAG K": "Corte sagital renal",
+          "LT SAG": "Lóbulo izquierdo (sagital)",
+          "RT TRANS": "Lóbulo derecho (transversal)"
+      },
+      "predicted_class": "Clase Predicha",
+      "class_probabilities": "Probabilidades de cada clase",
+      "see_explanation":"Ver Explicación de los Resultados",
+      "medical_explanation": "Explicación Médica realizada por la IA",
+      "processing_image": "Procesando imagen con IA...",
+      "may_take_time": "Esto puede tardar unos segundos. Por favor, espera."
+
     },
   
   "pagination": {
@@ -272,8 +316,27 @@
       "edit_data": "Modificar Datos",
       "change_password": "Modificar Contraseña",
       "delete_account": "Eliminar Cuenta",
-      "delete_warning": "¡Esta acción eliminará tu cuenta permanentemente!"
-    },
+      "delete_warning": "¡Esta acción eliminará tu cuenta permanentemente!",
+      "change_passwd": "¿Deseas cambiar tu contraseña?",
+      "sending": "Enviando...",
+      "send": "Enviar recuperación de contraseña",
+      "success": "Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.",
+      "error": "Ocurrió un error al enviar el correo de recuperación. Inténtalo nuevamente.",
+      "error_no_user": "No hay un correo asociado a este usuario.",
+      "error_no_auth": "No hay un usuario autenticado.",
+      "delete_acount_warning": "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+      "delete_success": "Cuenta eliminada con éxito.",
+      "reauth_required": "Se requiere volver a iniciar sesión antes de eliminar la cuenta.",
+      "reauth_prompt": "Para eliminar tu cuenta, necesitas iniciar sesión nuevamente.",
+      "prompt_email": "Introduce tu correo:",
+      "prompt_password": "Introduce tu contraseña:",
+      "reauth_error": "Error al iniciar sesión nuevamente. Intenta nuevamente.",
+      "delete_error": "Ocurrió un error al eliminar la cuenta. Inténtalo nuevamente.",
+      "confirm_label": "Escribe",
+      "confirm_word": "borrar",
+      "confirm_error": "Por favor, escribe correctamente para confirmar.",
+      "deleting": "Eliminando..."
+    }, 
     "profile": {
       "username": "Nombre de Usuario",
       "first_name": "Nombre",
@@ -296,7 +359,9 @@
       "accessibility": "Accesibilidad",
       "active": "Activado",
       "desactive": "Desactivado",
-      "reset": "Restaurar Preferencias"
+      "reset": "Restaurar Preferencias",
+      "dark" : "Oscuro",
+      "light": "Claro"
     },
     "help": {
       "system_status": "Estado del Sistema:",
@@ -316,9 +381,45 @@
 
       
     },
+
+
+
+
     "common": {
-      "save_changes": "Guardar Cambios"
+      "save_changes": "Guardar Cambios",
+      "change_passwd": "Formulario para cambiar la contraseña:"
     }
-  }
+  },
+
+    "login":{
+      "login_text": "Iniciar Sesión",
+      "welcome_text": "¡Hola de nuevo! Introduce tus datos para entrar.",
+      "email_placeholder": "Email",
+      "passwd_placeholder": "Contraseña",
+      "forgot_passwd": "¿Olvidaste tu contraseña?",
+      "no_account": "¿No tienes cuenta?",
+      "register": "Regístrate",
+      "error_send_mail": "Enviar correo de recuperación",
+      "cancel_remake": "Cancelar recuperación"
+
+    },
+
+    "signup": {
+      "title": "Registrarse",
+      "subtitle": "¡Bienvenido! Introduce tus datos para registrarte.",
+      "username": "Nombre de Usuario",
+      "firstname": "Nombre",
+      "lastname": "Apellidos",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirm_password": "Repetir Contraseña",
+      "access_code": "Código de acceso",
+      "phone": "Teléfono",
+      "button": "Registrarse",
+      "or": "O",
+      "have_account": "¿Ya tienes cuenta?",
+      "login_link": "Inicia Sesión"
+    }
+
 
 }

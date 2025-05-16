@@ -5,7 +5,6 @@ function usePreventZoom(
   keyboardCheck: boolean = true,
 ) {
   useEffect(() => {
-    // Definición del evento de teclado
     const handleKeydown = (e: KeyboardEvent) => {
       if (
         keyboardCheck &&
@@ -21,23 +20,20 @@ function usePreventZoom(
       }
     };
 
-    // Definición del evento de rueda del ratón
     const handleWheel = (e: WheelEvent) => {
       if (scrollCheck && e.ctrlKey) {
         e.preventDefault();
       }
     };
 
-    // Añadir los event listeners
     document.addEventListener("keydown", handleKeydown);
     document.addEventListener("wheel", handleWheel, { passive: false });
 
-    // Cleanup: remover los event listeners al desmontar el componente
     return () => {
       document.removeEventListener("keydown", handleKeydown);
       document.removeEventListener("wheel", handleWheel);
     };
-  }, [scrollCheck, keyboardCheck]); // Dependencias
+  }, [scrollCheck, keyboardCheck]);
 }
 
 export default usePreventZoom;

@@ -36,7 +36,7 @@ const EditorCanvas = React.forwardRef<HTMLCanvasElement, EditorCanvasProps>(
         ) {
           const activeObject = canvas.getActiveObject();
           if (activeObject) {
-            const step = 10; // Move step size
+            const step = 10;
             switch (e.key) {
               case "ArrowUp":
                 activeObject.top = (activeObject.top as number) - step;

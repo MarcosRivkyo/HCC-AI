@@ -16,7 +16,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   userData,
   user,
 }) => {
-  const { t , i18n } = useTranslation("global");
+  const { t, i18n } = useTranslation("global");
 
   if (!userData) {
     return <div>Loading...</div>; // O un mensaje de error si no se recibe userData
@@ -49,7 +49,8 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
       </p>
       <p className="mt-2 text-gray-400 text-sm">
         {" "}
-        ☎️ {t("profile.phoneNumber")}: {userData?.phone || "Teléfono no disponible"}
+        ☎️ {t("profile.phoneNumber")}:{" "}
+        {userData?.phone || "Teléfono no disponible"}
       </p>
     </Modal>
   );

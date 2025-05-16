@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // Para redirigir al usuario
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ChangePasswordForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { t, i18n } = useTranslation("global");
   const navigate = useNavigate();
 
   const handlePasswordReset = async () => {
@@ -13,44 +15,37 @@ const ChangePasswordForm: React.FC = () => {
     const user = auth.currentUser;
 
     if (user) {
-      const userEmail = user.email; // Obtenemos el correo del usuario
-
+      const userEmail = user.email;
       if (userEmail) {
         try {
           setLoading(true);
-          // Enviar el correo de recuperación de contraseña
           await sendPasswordResetEmail(auth, userEmail);
           setLoading(false);
-          setSuccessMessage(
-            "Se ha enviado un correo de recuperación. Revisa tu bandeja de entrada.",
-          );
+          setSuccessMessage(t("settings.account.success"));
         } catch (err: any) {
           setLoading(false);
-          setError(
-            "Ocurrió un error al enviar el correo de recuperación. Inténtalo nuevamente.",
-          );
+          setError(t("settings.account.error"));
         }
       } else {
-        setError("No hay un correo asociado a este usuario.");
+        setError(t("settings.account.error_no_user"));
       }
     } else {
-      setError("No hay un usuario autenticado.");
+      setError(t("settings.account.error_no_auth"));
     }
   };
 
   return (
     <div className="pl-4">
-      {/* Mostrar mensaje de éxito o error */}
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      <p>Formulario para cambiar la contraseña:</p>
+      <p>{t("settings.account.change_passwd")}</p>
       <button
         onClick={handlePasswordReset}
         disabled={loading}
         className="bg-blue-500 text-white p-2 rounded-lg mt-4"
       >
-        {loading ? "Enviando..." : "Enviar recuperación de contraseña"}
+        {loading ? t("settings.account.sending") : t("settings.account.send")}
       </button>
     </div>
   );

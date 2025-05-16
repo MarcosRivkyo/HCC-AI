@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import { app } from "../../config/firebase";
+import { app } from "../../config/firebase.ts";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import logo_user from "../../assets/images/logo_user.png";
 import Logout from "../Auth/Logout.tsx";
@@ -98,7 +98,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   const [activePath, setActivePath] = useState<string>(
     window.location.pathname,
   );
-  const { t, i18n } = useTranslation("global"); 
+  const { t, i18n } = useTranslation("global");
 
   useEffect(() => {
     const auth = getAuth();
@@ -109,21 +109,17 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
     console.log("Traducción de navbar.settings:", t("navbar.settings"));
     console.log("Traducción de navbar.view_profile:", t("navbar.view_profile"));
     console.log("Traducción de navbar.analyze:", t("navbar.analyze"));
-
   }, []);
 
   useEffect(() => {
-      const handleLangChange = () => {
-        setActivePath((p) => p); 
-      };
-      i18n.on("languageChanged", handleLangChange);
-      return () => {
-        i18n.off("languageChanged", handleLangChange);
-      };
+    const handleLangChange = () => {
+      setActivePath((p) => p);
+    };
+    i18n.on("languageChanged", handleLangChange);
+    return () => {
+      i18n.off("languageChanged", handleLangChange);
+    };
   }, [i18n]);
-
-
-
 
   return (
     <nav className="bg-black p-4 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">

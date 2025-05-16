@@ -5,12 +5,12 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 
-import { db } from "../../config/firebase"; // Asegúrate de tener configurado tu firebase correctamente
+import { db } from "../../config/firebase.ts"; // Asegúrate de tener configurado tu firebase correctamente
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import Logout from "../../components/Auth/Logout.tsx";
+import Logout from "../Auth/Logout.tsx";
 
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 

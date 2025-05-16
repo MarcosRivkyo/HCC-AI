@@ -16,7 +16,9 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      const isPublicRoute = ["/", "/login", "/signup"].includes(location.pathname);
+      const isPublicRoute = ["/", "/login", "/signup"].includes(
+        location.pathname,
+      );
 
       if (!currentUser || !currentUser.emailVerified) {
         if (!isPublicRoute) {
@@ -36,10 +38,8 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
     return () => unsubscribe();
   }, [auth, location.pathname, navigate]);
 
-  // Mientras carga, puedes mostrar un loader o nada
   if (loading) return null;
 
-  // Si no hay usuario y no es ruta pública, bloquea el renderizado
   const isPublicRoute = ["/", "/login", "/signup"].includes(location.pathname);
   if (!user && !isPublicRoute) return null;
 

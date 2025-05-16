@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { getAuth, deleteUser, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // Para redirigir al usuario
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const DeleteAccountButton: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [email, setEmail] = useState<string>(""); // El correo del usuario
-  const [password, setPassword] = useState<string>(""); // La contraseña del usuario
-  const [confirmationText, setConfirmationText] = useState<string>(""); // Texto de confirmación
+  const [confirmationText, setConfirmationText] = useState<string>("");
+  const { t } = useTranslation("global");
   const navigate = useNavigate();
 
   const handleDeleteAccount = async () => {
@@ -15,34 +15,30 @@ const DeleteAccountButton: React.FC = () => {
     const user = auth.currentUser;
 
     if (user) {
-      // Mostrar mensaje de confirmación antes de proceder
       const isConfirmed = window.confirm(
-        "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.",
+        t("settings.account.delete_acount_warning"),
       );
 
       if (isConfirmed) {
         try {
           setLoading(true);
-          await deleteUser(user); // Intentar eliminar la cuenta de Firebase
+          await deleteUser(user);
           setLoading(false);
-          alert("Cuenta eliminada con éxito.");
-          // Opcional: Redirigir al usuario a la página de inicio
-          navigate("/login"); // Redirige al usuario a la página de inicio de sesión
+          alert(t("settings.account.delete_success"));
+          navigate("/login");
         } catch (err: any) {
           setLoading(false);
           if (err.code === "auth/requires-recent-login") {
-            setError(
-              "Se requiere volver a iniciar sesión antes de eliminar la cuenta.",
-            );
+            setError(t("settings.account.reauth_required"));
 
-            // Redirigir al usuario al inicio de sesión para autenticarse de nuevo
             const confirmed = window.confirm(
-              "Para eliminar tu cuenta, necesitas iniciar sesión nuevamente.",
+              t("settings.account.reauth_prompt"),
             );
             if (confirmed) {
-              // Solicitamos el correo y la contraseña del usuario
-              const userEmail = prompt("Introduce tu correo:");
-              const userPassword = prompt("Introduce tu contraseña:");
+              const userEmail = prompt(t("settings.account.prompt_email"));
+              const userPassword = prompt(
+                t("settings.account.prompt_password"),
+              );
 
               if (userEmail && userPassword) {
                 try {
@@ -50,35 +46,31 @@ const DeleteAccountButton: React.FC = () => {
                     auth,
                     userEmail,
                     userPassword,
-                  ); // Iniciar sesión de nuevo
-                  await deleteUser(user); // Intentar eliminar la cuenta después de iniciar sesión
-                  alert("Cuenta eliminada con éxito.");
-                  navigate("/login"); // Redirigir al usuario a la página de inicio de sesión
-                } catch (error) {
-                  setError(
-                    "Error al iniciar sesión nuevamente. Intenta nuevamente.",
                   );
+                  await deleteUser(auth.currentUser!);
+                  alert(t("settings.account.delete_success"));
+                  navigate("/login");
+                } catch (error) {
+                  setError(t("settings.account.reauth_error"));
                 }
               }
             }
           } else {
-            setError(
-              "Ocurrió un error al eliminar la cuenta. Inténtalo nuevamente.",
-            );
+            setError(t("settings.account.delete_error"));
           }
         }
       }
     } else {
-      setError("No hay un usuario autenticado.");
+      setError(t("settings.account.error_no_auth"));
     }
   };
 
   return (
     <div>
-      {/* Campo para escribir 'borrar' */}
       <div className="mb-4">
         <label className="block text-red-500 mb-2">
-          Escribe <strong>borrar</strong> para confirmar la eliminación:
+          {t("settings.account.confirm_label")}{" "}
+          <strong>{t("settings.account.confirm_word")}</strong>
         </label>
         <input
           type="text"
@@ -88,24 +80,30 @@ const DeleteAccountButton: React.FC = () => {
         />
       </div>
 
-      {/* Botón de eliminación solo habilitado si se escribe 'borrar' */}
       <button
         onClick={handleDeleteAccount}
-        disabled={loading || confirmationText.toLowerCase() !== "borrar"}
+        disabled={
+          loading ||
+          confirmationText.toLowerCase() !==
+            t("settings.account.confirm_word").toLowerCase()
+        }
         className="bg-red-500 text-white p-2 rounded-lg w-full"
       >
-        {loading ? "Eliminando..." : "Eliminar mi cuenta"}
+        {loading
+          ? t("settings.account.deleting")
+          : t("settings.account.delete_account")}
       </button>
 
-      {/* Mostrar error si existe */}
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
-      {/* Mensaje si no se escribe 'borrar' */}
-      {confirmationText && confirmationText.toLowerCase() !== "borrar" && (
-        <p className="text-red-500 mt-2">
-          Por favor, escribe <strong>borrar</strong> para confirmar.
-        </p>
-      )}
+      {confirmationText &&
+        confirmationText.toLowerCase() !==
+          t("settings.account.confirm_word").toLowerCase() && (
+          <p className="text-red-500 mt-2">
+            {t("settings.account.confirm_error")}{" "}
+            <strong>{t("settings.account.confirm_word")}</strong>.
+          </p>
+        )}
     </div>
   );
 };

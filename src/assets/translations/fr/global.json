@@ -184,6 +184,21 @@
         "page": "Page",
         "of": "de"
         },
+        
+    "editor": {
+      "title": "Éditeur d'image",
+      "upload_image": "Téléverser une image",
+      "drop_image": "Déposez l’image ici",
+      "analyze_image": "Analyser l’image",
+      "segmented_image": "Image segmentée",
+
+      "image_analysis_results": "Résultats de l’analyse d’image",
+      "no_image_uploaded": "Aucune image téléversée.",
+      "image_uploaded": "Image téléversée avec succès.",
+      "image_analysis_in_progress": "Analyse de l’image en cours...",
+      "image_analysis_completed": "Analyse de l’image terminée.",
+      "image_analysis_failed": "Échec de l’analyse de l’image."
+    },
 
     "my_studies": {
       "title": "Ses Études",
@@ -201,7 +216,51 @@
       "clinical_description": "Description clinique",
       "no_date": "Pas de date",
       "delete_title": "Supprimer cette étude ?",
-      "delete_warning": "Cette action est irréversible."
+      "delete_warning": "Cette action est irréversible.",
+
+      "id_study": "ID de l'étude",
+      "doctor_name": "Médecin",
+      "upload_image": "Téléchargement de l'image...",
+      "drag_or_drop": "Glissez ou cliquez pour télécharger",
+      "start_analysis": "Démarrer l'analyse",
+      "choose_parameters": "Choisissez les paramètres d'analyse",
+      "classification_models": "Modèle de classification",
+      "hcc_ai_description": "Modèle spécialement entraîné pour classer les stades de fibrose hépatique HCC.",
+      "metavir_ai_description": "Modèle basé sur l'échelle METAVIR (F0 à F4) pour l'analyse de la fibrose hépatique.",
+      "metavir_submodels": "Sous-modèle METAVIR-AI",
+      "choose_submodel": "Sélectionner un sous-modèle",
+      "segmentation_models": "Modèle de segmentation",
+      "segmentation_submodels": "Sous-modèle de segmentation",
+      "yolob8": "YOLOv8",
+      "yolov11": "YOLOv11",
+      "minimum_threshold": "Seuil de confiance minimal",
+      "threshold_explanation": "Seules les segmentations avec une confiance égale ou supérieure seront affichées.",
+      "generate_ai_explanation": "Générer une explication médicale automatique basée sur les résultats",
+      "start_prediction": "Lancer la prédiction",
+      "used_parameters": "Paramètres utilisés",
+      "tags_list": "Légende des étiquettes",
+      "segmented_structures": {
+        "HCC": "Carcinome hépatocellulaire",
+        "HV": "Veine hépatique",
+        "IVC": "Veine cave inférieure",
+        "K": "Rein",
+        "K-C": "Cortex rénal",
+        "K-M": "Médullaire rénale",
+        "TRANS": "Coupe transversale",
+        "LVR": "Foie",
+        "PV": "Veine porte",
+        "SAG": "Coupe sagittale",
+        "SAG K": "Coupe sagittale rénale",
+        "LT SAG": "Lobe gauche (sagittal)",
+        "RT TRANS": "Lobe droit (transversal)"
+      },
+      "predicted_class": "Classe prédite",
+      "class_probabilities": "Probabilités de chaque classe",
+      "see_explanation": "Voir l'explication des résultats",
+      "medical_explanation": "Explication médicale générée par l'IA",
+      "processing_image": "Traitement de l'image avec l'IA...",
+      "may_take_time": "Cela peut prendre quelques secondes. Veuillez patienter."
+
     },        
   "pagination": {
     "page": "Page",
@@ -251,7 +310,28 @@
       "edit_data": "Modifier les données",
       "change_password": "Modifier le mot de passe",
       "delete_account": "Supprimer le compte",
-      "delete_warning": "Cette action supprimera définitivement votre compte !"
+      "delete_warning": "Cette action supprimera définitivement votre compte !",
+      "change_passwd": "Souhaitez-vous changer votre mot de passe ?",
+      "sending": "Envoi en cours...",
+      "send": "Envoyer la récupération du mot de passe",
+      "success": "Un e-mail de récupération a été envoyé. Vérifiez votre boîte de réception.",
+      "error": "Une erreur s'est produite lors de l'envoi de l'e-mail de récupération. Veuillez réessayer.",
+      "error_no_user": "Aucun e-mail n'est associé à cet utilisateur.",
+      "error_no_auth": "Aucun utilisateur authentifié.",
+      "delete_acount_warning": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+      "delete_success": "Compte supprimé avec succès.",
+      "reauth_required": "Vous devez vous reconnecter avant de supprimer votre compte.",
+      "reauth_prompt": "Pour supprimer votre compte, vous devez vous reconnecter.",
+      "prompt_email": "Entrez votre email :",
+      "prompt_password": "Entrez votre mot de passe :",
+      "reauth_error": "Échec de la reconnexion. Veuillez réessayer.",
+      "delete_error": "Une erreur est survenue lors de la suppression du compte. Veuillez réessayer.",
+      "confirm_label": "Tapez",
+      "confirm_word": "supprimer",
+      "confirm_error": "Veuillez taper correctement pour confirmer.",
+      "deleting": "Suppression..."
+
+
     },
     "profile": {
       "username": "Nom d'utilisateur",
@@ -275,7 +355,10 @@
       "accessibility": "Accessibilité",
       "active": "Activé",
       "desactive": "Désactivé",
-      "reset": "Réinitialiser les préférences"
+      "reset": "Réinitialiser les préférences",
+      "dark": "Sombre",
+      "light": "Clair"
+ 
     },
     "help": {
       "system_status": "État du système :",
@@ -295,5 +378,38 @@
     "common": {
       "save_changes": "Enregistrer les modifications"
     }
+  },
+
+  "login": {
+    "login_text": "Connexion",
+    "welcome_text": "Bon retour ! Entrez vos identifiants pour vous connecter.",
+    "email_placeholder": "Email",
+    "passwd_placeholder": "Mot de passe",
+    "forgot_passwd": "Mot de passe oublié ?",
+    "no_account": "Vous n'avez pas de compte ?",
+    "register": "Inscrivez-vous",
+    "error_send_mail": "Envoyer l'e-mail de récupération",
+    "cancel_remake": "Annuler la récupération"
+  },
+
+  "signup": {
+    "title": "S'inscrire",
+    "subtitle": "Bienvenue ! Entrez vos informations pour vous inscrire.",
+    "username": "Nom d'utilisateur",
+    "firstname": "Prénom",
+    "lastname": "Nom de famille",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "access_code": "Code d'accès",
+    "phone": "Téléphone",
+    "button": "S'inscrire",
+    "or": "OU",
+    "have_account": "Vous avez déjà un compte ?",
+    "login_link": "Se connecter"
   }
+
+
+
+
 }

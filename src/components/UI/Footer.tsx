@@ -9,7 +9,6 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-black text-white py-8 mt-20">
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-        {/* Logo y descripción */}
         <div className="mb-6 md:mb-0 text-center md:text-left">
           <img
             src={logoHCC_AI}
@@ -21,7 +20,6 @@ const Footer: React.FC = () => {
           </p>
         </div>
 
-        {/* Enlaces rápidos */}
         <div className="flex space-x-6 text-sm">
           <a href="#home" className="hover:text-gray-300">
             {t("navbar.home")}
@@ -40,7 +38,6 @@ const Footer: React.FC = () => {
           </a>
         </div>
 
-        {/* Redes sociales */}
         <div className="flex space-x-4 mt-6 md:mt-0">
           <a
             href="https://facebook.com"
@@ -73,7 +70,6 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      {/* Derechos de autor */}
       <div className="text-center text-gray-500 text-sm mt-6 border-t border-gray-700 pt-4">
         © {new Date().getFullYear()} {t("footer.copyright")}
       </div>

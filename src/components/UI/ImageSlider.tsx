@@ -12,11 +12,11 @@ const ImageSlider: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false); // Inicia el efecto de salida
+      setFade(false);
 
       setTimeout(() => {
         setCurrentImage((prev) => (prev + 1) % images.length);
-        setFade(true); // Activa el efecto de entrada
+        setFade(true);
       }, 400);
     }, 6000);
 

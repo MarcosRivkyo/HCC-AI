@@ -11,19 +11,18 @@ const ImageSlider2: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFade(false); // Inicia el efecto de salida
+      setFade(false);
       setTimeout(() => {
-        setCurrentImage((prev) => (prev + 1) % images.length); // Cambia a la siguiente imagen
-        setFade(true); // Activa el efecto de entrada
-      }, 800); // Duración del efecto de salida
-    }, 6000); // Cambio automático cada 8 segundos
+        setCurrentImage((prev) => (prev + 1) % images.length);
+        setFade(true);
+      }, 800);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="relative w-full h-screen flex items-center justify-center">
-      {/* Imagen con efecto de transición */}
       <img
         src={images[currentImage]}
         alt="Imagen Cambiante"
@@ -32,7 +31,6 @@ const ImageSlider2: React.FC = () => {
         }`}
       />
 
-      {/* Indicadores */}
       <div className="absolute bottom-6 flex space-x-2">
         {images.map((_, index) => (
           <div

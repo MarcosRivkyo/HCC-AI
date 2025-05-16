@@ -21,18 +21,29 @@ ChartJS.register(
 
 interface BarChartProps {
   probabilities: number[];
-  labels: string[]; // <- Aceptar etiquetas dinámicas
+  labels: string[];
+  theme: string;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ probabilities, labels }) => {
+const BarChart: React.FC<BarChartProps> = ({
+  probabilities,
+  labels,
+  theme,
+}) => {
+  const isDark = theme === "dark";
+
   const data = {
-    labels: labels, // <- Usar directamente las etiquetas proporcionadas
+    labels: labels,
     datasets: [
       {
-        label: "Probabilidades",
+        label: "Probabilities",
         data: probabilities,
-        backgroundColor: "rgba(255, 159, 64, 0.6)",
-        borderColor: "rgba(255, 159, 64, 1)",
+        backgroundColor: isDark
+          ? "rgba(100, 181, 246, 0.6)"
+          : "rgba(255, 159, 64, 0.6)",
+        borderColor: isDark
+          ? "rgba(100, 181, 246, 1)"
+          : "rgba(255, 159, 64, 1)",
         borderWidth: 1,
       },
     ],
@@ -43,10 +54,39 @@ const BarChart: React.FC<BarChartProps> = ({ probabilities, labels }) => {
     plugins: {
       legend: {
         position: "top" as const,
+        labels: {
+          color: isDark ? "#ffffff" : "#000000",
+        },
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => `Probabilidad: ${context.raw.toFixed(4)}`,
+          label: (context: any) => `Probability: ${context.raw.toFixed(4)}`,
+        },
+        backgroundColor: isDark ? "#333" : "#fff",
+        titleColor: isDark ? "#fff" : "#000",
+        bodyColor: isDark ? "#fff" : "#000",
+      },
+      title: {
+        display: true,
+        text: "",
+        color: isDark ? "#ffffff" : "#000000",
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: isDark ? "#ffffff" : "#000000",
+        },
+        grid: {
+          color: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
+      },
+      y: {
+        ticks: {
+          color: isDark ? "#ffffff" : "#000000",
+        },
+        grid: {
+          color: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
         },
       },
     },

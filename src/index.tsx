@@ -23,8 +23,8 @@ import Signup from "./components/Auth/Signup.tsx";
 import AuthRoute from "./components/Auth/AuthRoute.tsx";
 import Assistant from "./components/Pages/Assistant.tsx";
 import PredictImage from "./components/Pages/PredictImage.tsx";
-import EstudioDetalle from "./components/Pages/EstudioDetalle.tsx";
-import MisEstudios from "./components/Pages/MisEstudios.tsx";
+import EstudioDetalle from "./components/Pages/DetailedStudy.tsx";
+import MisEstudios from "./components/Pages/MyStudies.tsx";
 import Models from "./components/Pages/Models.tsx";
 
 i18next
