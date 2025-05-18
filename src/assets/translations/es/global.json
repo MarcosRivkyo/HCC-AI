@@ -10,6 +10,7 @@
     "services": "SERVICIOS",
     "technologies": "TECNOLOGÍAS",
     "contact": "CONTACTO",
+    "files": "ARCHIVOS",
     "login": "Iniciar sesión",
     "register": "Registrarse",
     "access": "Acceder",
@@ -212,7 +213,8 @@
       "no_date": "Sin fecha",
       "delete_title": "¿Eliminar este estudio?",
       "delete_warning": "Esta acción no se puede deshacer.",
-      
+      "filter_mine": "Propios",
+      "filter_shared": "Compartidos",
       "id_study": "ID del estudio",
       "doctor_name": "Médico",
       "upload_image": "Subiendo imagen...",

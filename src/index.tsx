@@ -26,6 +26,7 @@ import PredictImage from "./components/Pages/PredictImage.tsx";
 import EstudioDetalle from "./components/Pages/DetailedStudy.tsx";
 import MisEstudios from "./components/Pages/MyStudies.tsx";
 import Models from "./components/Pages/Models.tsx";
+import FilesPage from "./components/Pages/FilesPage.tsx";
 
 i18next
   .use(initReactI18next)
@@ -74,6 +75,7 @@ root.render(
           <Route path="/predict" element={<AuthRoute><PredictImage /></AuthRoute>} />
           <Route path="/my-studies" element={<AuthRoute><MisEstudios /></AuthRoute>} />
           <Route path="/models" element={<AuthRoute><Models /></AuthRoute>} />
+          <Route path="/files" element={<AuthRoute><FilesPage/></AuthRoute>}/>
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/" />} />

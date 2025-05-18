@@ -69,7 +69,8 @@ function Signup() {
     "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2Fdefault_logo_user.png?alt=media&token=499a8fd4-85dc-49be-8d4a-a469aea1d1f7";
 
   const signUpWithEmail = async () => {
-    const validCodes = ["HCC2025_CODE_1"];
+    
+    const validCodes = import.meta.env.VITE_ACCESS_CODE;
 
     if (!validCodes.includes(accessCode.trim())) {
       setError("El código de acceso es inválido.");
