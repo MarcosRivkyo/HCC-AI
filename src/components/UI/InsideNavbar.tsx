@@ -128,6 +128,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           { path: "/dashboard", label: t("navbar.home") },
           { path: "/my-studies", label: t("navbar.my_studies") },
           { path: "/models", label: t("navbar.models") },
+          { path: "/files", label: t("navbar.files") },
         ].map((item, index) => (
           <li key={item.path} className={index === 0 ? "ml-8" : ""}>
             <button
@@ -146,21 +147,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           </li>
         ))}
 
-        <li>
-          <button
-            onClick={() => {
-              onAssistantClick();
-              setActivePath("/assistant");
-            }}
-            className={`py-2 ${
-              activePath === "/assistant"
-                ? "text-red-500 font-bold"
-                : "hover:text-gray-300"
-            }`}
-          >
-            {t("navbar.assistant")}
-          </button>
-        </li>
+
 
         <li>
           <button

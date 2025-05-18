@@ -24,6 +24,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SettingsModal from "../UI/SettingsModal.tsx";
 import { useTranslation } from "react-i18next";
+import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 interface Estudio {
   id: string;
@@ -49,6 +50,7 @@ const MisEstudios: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
+  const [vista, setVista] = useState<"mios" | "compartidos" | "todos">("mios");
 
   const [estadoFiltro, setEstadoFiltro] = useState("");
   const [ordenFecha, setOrdenFecha] = useState<"asc" | "desc">("desc");
@@ -106,24 +108,42 @@ const MisEstudios: React.FC = () => {
   useEffect(() => {
     const fetchEstudios = async () => {
       if (!user) return;
+
       try {
         const q = query(
           collection(db, "hcc_ai_studies"),
-          where("doctorId", "==", user.uid),
-          orderBy("studieDate", "desc"),
+          orderBy("studieDate", "desc") // ya no filtramos por doctorId directamente
         );
-        const querySnapshot = await getDocs(q);
-        const estudiosDelUsuario = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Estudio[];
-        setEstudios(estudiosDelUsuario);
+
+        const snapshot = await getDocs(q);
+
+        const estudiosFiltrados = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter((estudio: any) => {
+            if (vista === "mios") {
+              return estudio.doctorId === user.uid;
+            } else if (vista === "compartidos") {
+              return Array.isArray(estudio.sharedWithDoctorIds) &&
+                estudio.sharedWithDoctorIds.includes(user.uid);
+            } else if (vista === "todos") {
+              return (
+                estudio.doctorId === user.uid ||
+                (Array.isArray(estudio.sharedWithDoctorIds) &&
+                  estudio.sharedWithDoctorIds.includes(user.uid))
+              );
+            }
+          });
+
+
+
+        setEstudios(estudiosFiltrados as Estudio[]);
       } catch (error) {
-        console.error("Error al obtener los estudios:", error);
+        console.error("Error al obtener estudios:", error);
       }
     };
+
     fetchEstudios();
-  }, [user]);
+}, [user, vista]);
 
   const estudiosFiltrados = estudios
     .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
@@ -273,16 +293,42 @@ const MisEstudios: React.FC = () => {
         userData={userData}
       />
 
-      <div className="relative">
+      {/* Panel del asistente con botón dentro */}
+      <div className="relative z-50">
         <div
-          className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
+          className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
             showAssistant ? "translate-x-0" : "translate-x-full"
           }`}
-          style={{ zIndex: 1000 }}
         >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+              🧠 {t("assistant.title")}
+            </h2>
+            <button
+              onClick={() => setShowAssistant(false)}
+              className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+              title="Cerrar"
+            >
+              <XMarkIcon className="w-5 h-5" />
+
+            </button>
+          </div>
           <Assistant />
         </div>
+
+        {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+        {!showAssistant && (
+          <button
+            onClick={() => setShowAssistant(true)}
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+            title="Abrir asistente"
+          >
+            <ChatBubbleLeftIcon className="w-6 h-6" />
+
+          </button>
+        )}
       </div>
+
 
       <main className="flex-grow container mx-auto px-4 py-20">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mt-8 mb-8 text-center">
@@ -290,9 +336,14 @@ const MisEstudios: React.FC = () => {
         </h1>
 
         <div className="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow p-4 mt-6 mb-8 flex flex-col md:flex-row md:items-end gap-4 justify-between">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow w-full md:w-auto">
+          <button
+            onClick={() => setMostrarFormulario(true)}
+            className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white dark:text-white px-4 py-2 rounded-lg shadow w-full md:w-auto transition duration-200"
+          >
             {t("my_studies.create_study")}
           </button>
+
+
           <input
             type="text"
             value={busqueda}
@@ -300,6 +351,18 @@ const MisEstudios: React.FC = () => {
             placeholder={t("my_studies.search_by_name")}
             className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2 w-full md:w-1/4"
           />
+          <select
+            value={vista}
+            onChange={(e) =>
+              setVista(e.target.value as "mios" | "compartidos" | "todos")
+            }
+            className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md px-3 py-2"
+          >
+            <option value="todos">{t("my_studies.filter_all")}</option>
+            <option value="mios">{t("my_studies.filter_mine")}</option>
+            <option value="compartidos">{t("my_studies.filter_shared")}</option>
+          </select>
+
 
           <select
             value={estadoFiltro}
@@ -350,9 +413,9 @@ const MisEstudios: React.FC = () => {
                     />
                   </div>
                 ) : (
-                  <div className="h-48 w-full bg-gray-300 dark:bg-gray-800" />
+                  <div className="h-48 w-full bg-gray-400 dark:bg-gray-800" />
                 )}
-                <div className="p-5 bg-gray-400 dark:bg-gray-900">
+                <div className="p-5 bg-gray-000 dark:bg-gray-900">
                   <h2
                     onClick={() => verEstudioDetalle(estudio.id)}
                     className="text-lg font-bold text-blue-800 dark:text-blue-400 cursor-pointer hover:underline truncate"
@@ -379,6 +442,21 @@ const MisEstudios: React.FC = () => {
                         : "my_studies.status_in_progress",
                     )}
                   </span>
+
+                  {estudio.doctorId !== user.uid && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 shadow-sm">
+                      <svg
+                        className="w-3.5 h-3.5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M13 7a3 3 0 10-2.83-2H9a3 3 0 00-5.83.87A2 2 0 002 7a2 2 0 001 1.73V10a2 2 0 001.12 1.78A5.97 5.97 0 007 13a5.97 5.97 0 002.88-.72A2 2 0 0011 10V8.73A2 2 0 0012 7h1z" />
+                      </svg>
+                      Compartido
+                    </span>
+                  )}
+
+
                   <div className="flex justify-end gap-3 mt-4">
                     <button
                       onClick={() => descargarPDF(estudio.pdfReportUrl)}
@@ -460,8 +538,8 @@ const MisEstudios: React.FC = () => {
 
       {mostrarFormulario && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
               {t("my_studies.new_study")}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -471,7 +549,7 @@ const MisEstudios: React.FC = () => {
                 value={formData.studieName}
                 onChange={handleChange}
                 placeholder={t("my_studies.study_name")}
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
                 required
               />
               <input
@@ -479,7 +557,7 @@ const MisEstudios: React.FC = () => {
                 name="studieDate"
                 value={formData.studieDate}
                 onChange={handleChange}
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
                 required
               />
               <input
@@ -488,7 +566,7 @@ const MisEstudios: React.FC = () => {
                 value={formData.patientName}
                 onChange={handleChange}
                 placeholder={t("my_studies.patient_name")}
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
               />
               <input
                 type="text"
@@ -496,19 +574,20 @@ const MisEstudios: React.FC = () => {
                 value={formData.clinicalDescription}
                 onChange={handleChange}
                 placeholder={t("my_studies.clinical_description")}
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={cerrarFormulario}
-                  className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
                 >
                   {t("actions.cancel")}
                 </button>
+
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition"
                 >
                   {t("my_studies.create_study")}
                 </button>
@@ -517,6 +596,7 @@ const MisEstudios: React.FC = () => {
           </div>
         </div>
       )}
+
 
       {confirmarEliminacion && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

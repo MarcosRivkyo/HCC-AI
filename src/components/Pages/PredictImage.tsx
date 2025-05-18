@@ -22,6 +22,7 @@ import ProfileModal from "../UI/ProfileModal.tsx";
 import Assistant from "./Assistant.tsx";
 import SettingsModal from "../UI/SettingsModal";
 import { useTranslation } from "react-i18next";
+import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -221,16 +222,41 @@ const PredictImage: React.FC = () => {
         userData={userData}
       />
 
-      {/* Asistente flotante */}
-      <div className="relative">
+      {/* Panel del asistente con botón dentro */}
+      <div className="relative z-50">
         <div
-          className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
+          className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
             showAssistant ? "translate-x-0" : "translate-x-full"
           }`}
-          style={{ zIndex: 1000 }}
         >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+              🧠 {t("assistant.title")}
+            </h2>
+
+            <button
+              onClick={() => setShowAssistant(false)}
+              className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+              title="Cerrar"
+            >
+              <XMarkIcon className="w-5 h-5" />
+
+            </button>
+          </div>
           <Assistant />
         </div>
+
+        {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+        {!showAssistant && (
+          <button
+            onClick={() => setShowAssistant(true)}
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+            title="Abrir asistente"
+          >
+            <ChatBubbleLeftIcon className="w-6 h-6" />
+
+          </button>
+        )}
       </div>
 
       <main className="pt-24 px-6 flex-grow">

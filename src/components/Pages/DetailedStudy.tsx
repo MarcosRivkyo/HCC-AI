@@ -8,6 +8,7 @@ import {
   deleteDoc,
   addDoc,
   collection,
+  getDocs,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app, storage } from "../../config/firebase.ts";
@@ -25,18 +26,21 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BarChart from "../UI/BarChart.tsx";
 import { marked } from "marked";
+import { arrayUnion } from "firebase/firestore"; 
 
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 
 import ProfileModal from "../UI/ProfileModal.tsx";
+import SettingsModal from "../UI/SettingsModal.tsx";
+
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import Assistant from "./Assistant.tsx";
 import { FaEllipsisV, FaDownload, FaTrashAlt } from "react-icons/fa";
-import SettingsModal from "../UI/SettingsModal.tsx";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
 import { useTranslation } from "react-i18next";
+import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -116,6 +120,11 @@ const EstudioDetalle = () => {
   const [progress, setProgress] = useState<number>(0); // To show the countdown for tab change
   const [showModal, setShowModal] = useState<boolean>(false); // To manage modal visibility
   const [usarExplicacionIA, setUsarExplicacionIA] = useState(true);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailToSend, setEmailToSend] = useState("");
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [doctorsList, setDoctorsList] = useState<any[]>([]);
+  const [selectedDoctorId, setSelectedDoctorId] = useState("");
 
   const [fileName, setFileName] = useState<string>(""); // si quieres usarlo como estado
 
@@ -240,6 +249,34 @@ const EstudioDetalle = () => {
 
     fetchPredictionData();
   }, [estudio]);
+
+
+  useEffect(() => {
+  const fetchDoctors = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
+      const allUsers = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      const filtered = allUsers.filter(
+        (u) => u.id !== user?.uid 
+      );
+      setDoctorsList(filtered);
+    } catch (error) {
+      console.error("Error al obtener la lista de doctores:", error);
+    }
+  };
+
+  if (user) {
+    fetchDoctors();
+  }
+}, [user]);
+
+
+
+
 
   const getImageAsBase64 = (imageUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -482,40 +519,44 @@ const EstudioDetalle = () => {
     }
   };
 
-  const enviarPDFporCorreo = async () => {
+  const enviarPDFporCorreo = () => {
     if (!estudio?.pdfReportUrl) {
       alert("Primero debes generar el informe PDF.");
       return;
     }
-
-    const destinatario = prompt(
-      "Introduce el correo electrónico del destinatario:",
-    );
-    if (!destinatario || !destinatario.includes("@")) {
-      alert("Correo no válido.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
-        {
-          name: userData?.firstName || user.displayName || "Médico HCC-AI",
-          email: destinatario,
-          message: `Te comparto el informe clínico del estudio "${estudio.studieName}". Puedes descargarlo aquí:\n\n${estudio.pdfReportUrl}`,
-        },
-      );
-
-      if (response.status === 200) {
-        toast.success("Informe enviado correctamente.");
-      } else {
-        toast.error("No se pudo enviar el correo.");
-      }
-    } catch (error) {
-      console.error("Error al enviar informe por correo:", error);
-      toast.error("Ocurrió un error al enviar el correo.");
-    }
+    setShowEmailModal(true);
   };
+
+
+const handleSendEmail = async () => {
+  if (!emailToSend || !emailToSend.includes("@")) {
+    toast.error("Correo electrónico inválido.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+      {
+        name: userData?.firstName || user.displayName || "Médico HCC-AI",
+        email: emailToSend,
+        message: `Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}`,
+      }
+    );
+
+    if (response.status === 200) {
+      toast.success("Informe enviado correctamente.");
+      setShowEmailModal(false);
+      setEmailToSend("");
+    } else {
+      toast.error("No se pudo enviar el correo.");
+    }
+  } catch (error) {
+    console.error("Error al enviar informe por correo:", error);
+    toast.error("Ocurrió un error al enviar el correo.");
+  }
+};
+
 
   const handleSelectClassificationModel = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -901,7 +942,7 @@ const EstudioDetalle = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
-      <ToastContainer
+        <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -911,7 +952,13 @@ const EstudioDetalle = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-      />
+        theme={theme === "dark" ? "dark" : "light"}
+        toastClassName={() =>
+            `rounded-lg border border-black shadow-md px-4 py-3 text-sm ${
+            theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"
+            }`
+        }
+        />
 
       {/* Botón para mostrar el panel lateral izquierdo */}
       {!mostrarEstudiosRecientes && (
@@ -972,16 +1019,41 @@ const EstudioDetalle = () => {
 
       <div className="flex justify-center items-center min-h-[calc(100vh-100px)] px-4 py-10 mt-20">
         <div className="w-full max-w-5xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 space-y-8">
-          <div className="relative">
-            {/* Asistente flotante */}
+
+          {/* Panel del asistente con botón dentro */}
+          <div className="relative z-50">
             <div
-              className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
+              className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
                 showAssistant ? "translate-x-0" : "translate-x-full"
               }`}
-              style={{ zIndex: 1000 }}
             >
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+                  🧠 {t("assistant.title")}
+                </h2>
+                <button
+                  onClick={() => setShowAssistant(false)}
+                  className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+                  title="Cerrar"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+
+                </button>
+              </div>
               <Assistant />
             </div>
+
+            {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+            {!showAssistant && (
+              <button
+                onClick={() => setShowAssistant(true)}
+                className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+                title="Abrir asistente"
+              >
+                <ChatBubbleLeftIcon className="w-6 h-6" />
+
+              </button>
+            )}
           </div>
 
           {/* FILA 1 */}
@@ -1060,7 +1132,7 @@ const EstudioDetalle = () => {
                     handleDrop(e);
                   }
                 }}
-                className="w-64 h-64 border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 dark:bg-black overflow-hidden flex items-center justify-center"
+                className="w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] border-2 border-dashed border-gray-400 rounded-xl relative bg-gray-50 dark:bg-black overflow-hidden flex items-center justify-center"
               >
                 <label className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center z-10">
                   {subiendoImagen ? (
@@ -1124,36 +1196,39 @@ const EstudioDetalle = () => {
 
               {/* Menu de acciones */}
               <div className="relative">
-                <Menu
-                  as="div"
-                  className="w-48 origin-top-left focus:outline-none z-10 "
-                >
+                <Menu as="div" className="w-10 origin-top-left focus:outline-none z-10">
                   <div>
-                    <Menu.Button className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 dark:bg-blavk">
-                      <EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+                    <Menu.Button className="flex items-center justify-center p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                      <EllipsisVerticalIcon className="h-6 w-6 text-black dark:text-white" />
                     </Menu.Button>
                   </div>
-                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none z-10">
+
+                  <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (
                           <button
                             onClick={descargarPDF}
                             className={`${
-                              active ? "bg-gray-100" : ""
-                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                              active
+                                ? "bg-gray-100 dark:bg-gray-700"
+                                : "bg-transparent"
+                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
                           >
                             Descargar Informe
                           </button>
                         )}
                       </Menu.Item>
+
                       <Menu.Item>
                         {({ active }) => (
                           <button
                             onClick={enviarPDFporCorreo}
                             className={`${
-                              active ? "bg-gray-100" : ""
-                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                              active
+                                ? "bg-gray-100 dark:bg-gray-700"
+                                : "bg-transparent"
+                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
                           >
                             Enviar informe por correo
                           </button>
@@ -1163,10 +1238,30 @@ const EstudioDetalle = () => {
                       <Menu.Item>
                         {({ active }) => (
                           <button
+                            onClick={() => setShowShareModal(true)}
+                            className={`${
+                              active
+                                ? "bg-gray-100 dark:bg-gray-700"
+                                : "bg-transparent"
+                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
+                          >
+                            Compartir estudio con doctor
+                          </button>
+                        )}
+                      </Menu.Item>
+       
+
+                      <div className="border-t border-gray-200 dark:border-gray-600 my-1" />
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
                             onClick={handleEliminarEstudio}
                             className={`${
-                              active ? "bg-red-100 text-red-700" : ""
-                            } w-full text-left px-4 py-2 text-sm`}
+                              active
+                                ? "bg-red-100 dark:bg-red-800"
+                                : "bg-transparent"
+                            } w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400`}
                           >
                             Eliminar Estudio
                           </button>
@@ -1176,6 +1271,7 @@ const EstudioDetalle = () => {
                   </Menu.Items>
                 </Menu>
               </div>
+
             </div>
           </div>
 
@@ -1204,7 +1300,7 @@ const EstudioDetalle = () => {
 
               {/* Modelo de Clasificación */}
               <div className="mb-6">
-                <label className="block text-lg font-semibold text-gray-800 mb-2">
+                <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
                   {t("my_studies.classification_models")}
                 </label>
                 <div className="flex gap-4">
@@ -1243,13 +1339,13 @@ const EstudioDetalle = () => {
                 {/* Submodelo desplegable para METAVIR-AI */}
                 {selectedClassificationModel === "METAVIR-AI" && (
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                       {t("my_studies.metavir_submodels")}
                     </label>
                     <select
                       value={selectedSubModel}
                       onChange={(e) => setSelectedSubModel(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="block w-full px-3 py-2 border dark:text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     >
                       <option value="">{t("my_studies.choose_submodel")}</option>
                       <option value="resnet">ResNet</option>
@@ -1261,7 +1357,7 @@ const EstudioDetalle = () => {
 
               {/* Modelo de Segmentación */}
               <div className="mb-6">
-                <label className="block text-lg font-semibold text-gray-800 mb-2">
+                <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
                   {t("my_studies.segmentation_models")}
                 </label>
                 <div className="flex gap-4">
@@ -1289,7 +1385,7 @@ const EstudioDetalle = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Submodelo de Segmentación */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                           {t("my_studies.segmentation_submodels")}
                         </label>
                         <select
@@ -1297,7 +1393,7 @@ const EstudioDetalle = () => {
                           onChange={(e) =>
                             setSelectedSegmentationSubModel(e.target.value)
                           }
-                          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="block dark:text-black w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         >
                           <option value="">{t("my_studies.choose_submodel")}</option>
                           <option value="YOLOv8">YOLOv8</option>
@@ -1309,7 +1405,7 @@ const EstudioDetalle = () => {
                       <div>
                         <label
                           htmlFor="confidenceThreshold"
-                          className="block text-sm font-medium text-gray-700 mb-1"
+                          className="block text-sm font-medium text-gray-700 mb-1 dark:text-white" 
                         >
                           {t("my_studies.minimum_threshold")} (%)
                         </label>
@@ -1325,9 +1421,9 @@ const EstudioDetalle = () => {
                               parseFloat(e.target.value) / 100,
                             )
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
                           {t("my_studies.threshold_explanation")}
                         </p>
                       </div>
@@ -1347,7 +1443,7 @@ const EstudioDetalle = () => {
                   />
                   <label
                     htmlFor="usarExplicacionIA"
-                    className="text-sm text-gray-700"
+                    className="text-sm text-gray-700 dark:text-white"
                   >
                     {t("my_studies.generate_ai_explanation")}
                   </label>
@@ -1593,6 +1689,98 @@ const EstudioDetalle = () => {
           </div>
         </div>
       </div>
+      {showEmailModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md relative">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+              Enviar informe por correo
+            </h2>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Correo del destinatario:
+            </label>
+            <input
+              type="email"
+              value={emailToSend}
+              onChange={(e) => setEmailToSend(e.target.value)}
+              placeholder="ejemplo@correo.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-900 dark:text-white"
+            />
+
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setShowEmailModal(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSendEmail}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md relative">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+              Compartir estudio con otro doctor
+            </h2>
+
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              Selecciona un doctor:
+            </label>
+
+            <select
+              value={selectedDoctorId}
+              onChange={(e) => setSelectedDoctorId(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-900 dark:text-white"
+            >
+              <option value="">-- Seleccionar --</option>
+              {doctorsList.map((doctor) => (
+                <option key={doctor.id} value={doctor.id}>
+                  {doctor.firstName} {doctor.lastName} ({doctor.email})
+                </option>
+              ))}
+            </select>
+
+            <div className="flex justify-end mt-4 space-x-2">
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={async () => {
+                  if (!selectedDoctorId || !id) return;
+
+                  try {
+                    const estudioRef = doc(db, "hcc_ai_studies", id);
+                    await updateDoc(estudioRef, {
+                      sharedWithDoctorIds: arrayUnion(selectedDoctorId), 
+                    });
+                    toast.success("Estudio compartido correctamente");
+                    setShowShareModal(false);
+                  } catch (error) {
+                    console.error("Error al compartir estudio:", error);
+                    toast.error("Error al compartir el estudio");
+                  }
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+              >
+                Compartir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
       {/* Footer */}
       <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI

@@ -12,6 +12,7 @@
     "contact": "CONTACT",
     "login": "Login",
     "register": "Register",
+    "files": "FILES",
     "access": "Access",
     "logout": "Logout",
     "my_studies": "MY STUDIES",
@@ -276,7 +277,7 @@
   },
 
   "assistant": {
-    "title": "Asistente HCC-AI",
+    "title": "HCC-AI Assistant",
     "send_query": "Ask your question...",
     "send_button": "Ask"
   },  

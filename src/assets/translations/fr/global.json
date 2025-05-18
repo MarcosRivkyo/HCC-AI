@@ -14,6 +14,7 @@
     "login": "Se connecter",
     "register": "S'inscrire",
     "access": "Accéder",
+    "files": "FICHIERS",
     "my_studies": "MES ÉTUDES",
     "models": "MODÈLES",
     "assistant": "ASSISTANT",
@@ -268,7 +269,7 @@
   },
 
   "assistant": {
-    "title": "Assistant HCC-AI",
+    "title": "HCC-AI Assistant",
     "send_query": "Posez votre question...",
     "send_button": "Demander"
   },  

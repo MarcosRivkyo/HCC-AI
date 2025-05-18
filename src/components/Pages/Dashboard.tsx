@@ -23,6 +23,7 @@ import ChangePasswordForm from "../UI/ChangePasswordForm.tsx";
 import ModelosDisponibles from "../UI/AvailableModels.tsx";
 import ImageCarrousel from "../UI/ImageCarrousel.tsx";
 import { FaFilePdf } from "react-icons/fa";
+import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import settingsIcon from "../../assets/images/settings_icon.png";
@@ -433,32 +434,41 @@ const Dashboard = () => {
         <div
           className={`flex pt-10 pb-10  px-6 h-full bg-gray-50 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
         >
-          <div className="relative">
-            {}
-            <div
-              className={`fixed top-20 bottom-1 right-0 w-1/4 bg-gray-800 text-white p-4 transition-transform transform ${
-                showAssistant ? "translate-x-0" : "translate-x-full"
-              }`}
-              style={{ zIndex: 1000 }}
-            >
-              <Assistant />
-            </div>
+        {/* Panel del asistente con botón dentro */}
+        <div className="relative z-50">
+          <div
+            className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
+              showAssistant ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+                  🧠 {t("assistant.title")}
+                </h2>
+              <button
+                onClick={() => setShowAssistant(false)}
+                className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+                title="Cerrar"
+              >
+                <XMarkIcon className="w-5 h-5" />
 
-            {}
-            <button
-              onClick={() => setShowAssistant(!showAssistant)}
-              className={`fixed right-0 top-1/2 transform -translate-y-1/2 p-3 rounded-full bg-blue-500 text-white shadow-lg transition-all duration-300 ${
-                showAssistant ? "rotate-180" : ""
-              }`}
-              style={{ zIndex: 1001 }}
-            >
-              {showAssistant ? (
-                <FiArrowLeft size={24} />
-              ) : (
-                <FiArrowRight size={24} />
-              )}
-            </button>
+              </button>
+            </div>
+            <Assistant />
           </div>
+
+          {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+          {!showAssistant && (
+            <button
+              onClick={() => setShowAssistant(true)}
+              className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+              title="Abrir asistente"
+            >
+              <ChatBubbleLeftIcon className="w-6 h-6" />
+
+            </button>
+          )}
+        </div>
           <div className="w-1/2 h-full bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700 mr-6 flex flex-col">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               {t("dashboard.recent_studies")}
