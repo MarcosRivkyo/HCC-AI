@@ -89,7 +89,6 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   userData,
   onProfileClick,
   onSettingsClick,
-  onAssistantClick,
 }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
