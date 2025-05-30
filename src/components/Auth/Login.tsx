@@ -27,7 +27,7 @@ const Login = () => {
   const [showResetInput, setShowResetInput] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
-  const { t , i18n } = useTranslation("global");
+  const { t, i18n } = useTranslation("global");
 
   const signInWithEmail = async () => {
     setAuthing(true);

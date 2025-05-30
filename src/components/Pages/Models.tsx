@@ -152,7 +152,9 @@ const Models = () => {
                     </p>
                     <p>
                       <strong>ID:</strong>{" "}
-                      <span className="text-gray-500 dark:text-gray-400">{model.modelId}</span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        {model.modelId}
+                      </span>
                     </p>
                   </div>
                   <div className="text-right">
@@ -349,41 +351,39 @@ const Models = () => {
         userData={userData}
       />
 
-{/* Panel del asistente con botón dentro */}
-<div className="relative z-50">
-  <div
-    className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
-      showAssistant ? "translate-x-0" : "translate-x-full"
-    }`}
-  >
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-xl font-bold p-4 border-b border-gray-700">
-        🧠 {t("assistant.title")}
-      </h2>
-      <button
-        onClick={() => setShowAssistant(false)}
-        className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
-        title="Cerrar"
-      >
-        <XMarkIcon className="w-5 h-5" />
+      {/* Panel del asistente con botón dentro */}
+      <div className="relative z-50">
+        <div
+          className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
+            showAssistant ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold p-4 border-b border-gray-700">
+              🧠 {t("assistant.title")}
+            </h2>
+            <button
+              onClick={() => setShowAssistant(false)}
+              className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+              title="Cerrar"
+            >
+              <XMarkIcon className="w-5 h-5" />
+            </button>
+          </div>
+          <Assistant />
+        </div>
 
-      </button>
-    </div>
-    <Assistant />
-  </div>
-
-  {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
-  {!showAssistant && (
-    <button
-      onClick={() => setShowAssistant(true)}
-      className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
-      title="Abrir asistente"
-    >
-      <ChatBubbleLeftIcon className="w-6 h-6" />
-
-    </button>
-  )}
-</div>
+        {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+        {!showAssistant && (
+          <button
+            onClick={() => setShowAssistant(true)}
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+            title="Abrir asistente"
+          >
+            <ChatBubbleLeftIcon className="w-6 h-6" />
+          </button>
+        )}
+      </div>
 
       <main className="flex-grow container mx-auto px-4 py-20">
         <h1 className="text-4xl mt-8 font-bold text-center text-gray-800 dark:text-white mb-16 flex items-center justify-center gap-2">

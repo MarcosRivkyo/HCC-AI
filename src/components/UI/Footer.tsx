@@ -1,4 +1,4 @@
-import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaLinkedin, FaEnvelope, FaGithub } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
@@ -40,32 +40,31 @@ const Footer: React.FC = () => {
 
         <div className="flex space-x-4 mt-6 md:mt-0">
           <a
-            href="https://facebook.com"
-            target="_blank"
+            href="mailto:marcos.rivkyo@gmail.com"
             className="text-gray-400 hover:text-white"
+            title="Correo: marcos.rivkyo@usal.es"
           >
-            <FaFacebook size={20} />
+            <FaEnvelope size={20} />
           </a>
+
           <a
-            href="https://twitter.com"
+            href="https://www.linkedin.com/in/marcos-rivas-kyoguro-7ab518248"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-gray-400 hover:text-white"
-          >
-            <FaTwitter size={20} />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            className="text-gray-400 hover:text-white"
-          >
-            <FaInstagram size={20} />
-          </a>
-          <a
-            href="https://linkedin.com"
-            target="_blank"
-            className="text-gray-400 hover:text-white"
+            title="LinkedIn"
           >
             <FaLinkedin size={20} />
+          </a>
+
+          <a
+            href="https://github.com/MarcosRivkyo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white"
+            title="GitHub"
+          >
+            <FaGithub size={20} />
           </a>
         </div>
       </div>

@@ -18,10 +18,11 @@
     "my_studies": "MES ÉTUDES",
     "models": "MODÈLES",
     "assistant": "ASSISTANT",
-    "analyze": "ANALYSER",
+    "editor": "ÉDITEUR",
     "view_profile": "Voir le profil",
     "settings": "Paramètres",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "calendar": "CALENDRIER"
   },
 
   "main": {
@@ -190,7 +191,7 @@
       "title": "Éditeur d'image",
       "upload_image": "Téléverser une image",
       "drop_image": "Déposez l’image ici",
-      "analyze_image": "Analyser l’image",
+      "anonymize_image": "Anonymiser l'échographie",
       "segmented_image": "Image segmentée",
 
       "image_analysis_results": "Résultats de l’analyse d’image",

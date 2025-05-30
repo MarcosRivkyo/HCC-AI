@@ -18,10 +18,11 @@
     "logout": "Abmelden",
     "my_studies": "MEINE STUDIEN",
     "models": "MODELLE",
-    "analyze": "ANALYSIEREN",
+    "editor": "EDITOR",
     "view_profile": "Profil anzeigen",
     "assistant": "ASSISTENT",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "calendar": "KALENDER"
   },
 
 
@@ -278,7 +279,7 @@
         "title": "Bildeditor",
         "upload_image": "Bild hochladen",
         "drop_image": "Bild hier ablegen",
-        "analyze_image": "Bild analysieren",
+        "anonymize_image": "Anonymisieren der Ultraschalluntersuchung",
         "segmented_image": "Segmentiertes Bild",
 
         "image_analysis_results": "Analyseergebnisse des Bildes",

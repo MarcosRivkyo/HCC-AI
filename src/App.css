@@ -227,3 +227,20 @@ body.dark-theme {
   background-color: #111;
   color: #ccc;
 }
+
+
+.animate-spin-slow {
+  animation: spin 2s linear infinite;
+}
+
+.react-calendar__tile.highlight-reminder {
+  background: #facc15; /* amarillo */
+  border-radius: 0.5rem;
+}
+
+.react-calendar__tile.highlight-complete {
+  background: #4ade80; /* verde */
+  border-radius: 0.5rem;
+  color: white;
+}
+
