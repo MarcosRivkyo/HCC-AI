@@ -23,6 +23,7 @@ import Assistant from "./Assistant.tsx";
 import SettingsModal from "../UI/SettingsModal";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -41,6 +42,11 @@ const PredictImage: React.FC = () => {
   const [segmentation, setSegmentation] = useState<SegmentationResponse | null>(
     null,
   );
+  const [anonymizedImageUrl, setAnonymizedImageUrl] = useState<string | null>(
+    null,
+  );
+  const [showAnonChoice, setShowAnonChoice] = useState(false);
+
   const [progress, setProgress] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -49,6 +55,8 @@ const PredictImage: React.FC = () => {
   const [showAssistant, setShowAssistant] = useState(false);
   const { t, i18n } = useTranslation("global");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "es",
@@ -68,6 +76,10 @@ const PredictImage: React.FC = () => {
 
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -90,7 +102,7 @@ const PredictImage: React.FC = () => {
     if (!canvasRef.current) return;
 
     const fabricCanvas = new Canvas(canvasRef.current, {
-      backgroundColor: "white",
+      backgroundColor: "rgb(0, 0, 0, 0.9)",
     });
     fabricCanvas.setDimensions({ width: 500, height: 500 });
 
@@ -98,6 +110,22 @@ const PredictImage: React.FC = () => {
     brush.color = "black";
     brush.width = 5;
     fabricCanvas.freeDrawingBrush = brush;
+
+    fabric.Image.fromURL(logoHCC_AI, { crossOrigin: "anonymous" }).then(
+      (img: fabric.Image) => {
+        img.set({
+          left: 250,
+          top: 250,
+          originX: "center",
+          originY: "center",
+          opacity: 0.1,
+          selectable: false,
+          evented: false,
+        });
+        fabricCanvas.backgroundImage = img;
+        fabricCanvas.renderAll();
+      },
+    );
 
     setCanvas(fabricCanvas);
 
@@ -112,6 +140,7 @@ const PredictImage: React.FC = () => {
         const imgSrc = image ? URL.createObjectURL(image) : imageUrl;
         if (!imgSrc || !canvas) return;
 
+        // Cargar imagen en canvas
         const imageObj = await fabric.Image.fromURL(imgSrc, {
           crossOrigin: "anonymous",
         });
@@ -135,6 +164,15 @@ const PredictImage: React.FC = () => {
         canvas.centerObject(imageObj);
         canvas.setActiveObject(imageObj);
         toast.success("Imagen cargada correctamente");
+
+        // Si solo tenemos una imageUrl (no un File), la convertimos y la guardamos como File
+        if (!image && imageUrl) {
+          const res = await fetch(imageUrl);
+          const blob = await res.blob();
+          const filename = "imagen_url.jpg";
+          const file = new File([blob], filename, { type: blob.type });
+          setImage(file);
+        }
       } catch (error) {
         console.error("Error loading image:", error);
       }
@@ -163,35 +201,56 @@ const PredictImage: React.FC = () => {
 
     const formData = new FormData();
     formData.append("file", image);
-    formData.append("model_name", model);
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-      const predictionResponse = await axios.post<PredictionResponse>(
-        `${backendUrl}/predict-classification/`,
-        formData,
-      );
-      setPrediction(predictionResponse.data);
-      setProgress(100);
-      setTimeout(() => setProgress(5), 3000);
-
-      const segmentationResponse = await axios.post(
-        `${backendUrl}/segment/`,
+      const response = await axios.post(
+        `${backendUrl}/anonymize-ultrasound/`,
         formData,
         { responseType: "blob" },
       );
 
-      const imgUrl = URL.createObjectURL(segmentationResponse.data);
-      setSegmentation({ segmented_image_url: imgUrl });
+      const blob = new Blob([response.data], { type: "image/jpeg" });
+      const url = URL.createObjectURL(blob);
+
+      setAnonymizedImageUrl(url);
+      setShowAnonChoice(true); // mostrar el modal de elección
+
+      toast.success("Imagen anonimizada correctamente.");
     } catch (error) {
-      console.error("Error al procesar la imagen:", error);
-      alert("Ocurrió un error al procesar la imagen.");
+      console.error("Error al anonimizar la imagen:", error);
+      toast.error("Ocurrió un error al anonimizar la imagen.");
     }
   };
 
+  const resetCanvas = () => {
+    if (!canvas) return;
+
+    canvas.clear();
+
+    fabric.Image.fromURL(logoHCC_AI, { crossOrigin: "anonymous" }).then(
+      (img: fabric.Image) => {
+        img.set({
+          left: 250,
+          top: 250,
+          originX: "center",
+          originY: "center",
+          opacity: 0.1,
+          selectable: false,
+          evented: false,
+        });
+        canvas.backgroundImage = img;
+        canvas.renderAll();
+      },
+    );
+
+    setImage(null); // también reseteamos la imagen
+    toast.info("Canvas reiniciado.");
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-black">
+    <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-950 dark:text-white">
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
 
       <NavbarSecond
@@ -240,7 +299,6 @@ const PredictImage: React.FC = () => {
               title="Cerrar"
             >
               <XMarkIcon className="w-5 h-5" />
-
             </button>
           </div>
           <Assistant />
@@ -254,13 +312,12 @@ const PredictImage: React.FC = () => {
             title="Abrir asistente"
           >
             <ChatBubbleLeftIcon className="w-6 h-6" />
-
           </button>
         )}
       </div>
 
-      <main className="pt-24 px-6 flex-grow">
-        <div className="flex flex-col lg:flex-row justify-center gap-36 text-white">
+      <main className="pt-24 px-6 flex-grow bg-white dark:bg-gray-950 transition-colors duration-500">
+        <div className="flex flex-col lg:flex-row items-start justify-center gap-6 text-black dark:text-white bg-gray-400 dark:bg-gray-800 p-6 rounded-xl shadow-md mx-auto w-fit">
           {/* Contenedor izquierdo: Toolbox + Canvas + Controles */}
           <div className="flex flex-row items-start gap-6">
             {/* Toolbox a la izquierda */}
@@ -277,7 +334,7 @@ const PredictImage: React.FC = () => {
                 <div
                   onDrop={handleDrop}
                   onDragOver={(e) => e.preventDefault()}
-                  className="py-4 px-6 bg-gray-800 rounded-md border-2 border-dashed border-gray-600 hover:bg-gray-700 transition duration-300"
+                  className="py-4 px-6 bg-gray-300 dark:bg-gray-800 rounded-md border-2 border-dashed border-gray-600  transition duration-300"
                 >
                   <p>{t("editor.drop_image")}</p>
                   <input
@@ -297,114 +354,74 @@ const PredictImage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Modelo */}
-              <select
-                value={model}
-                onChange={handleModelChange}
-                className="py-2 px-4 bg-gray-800 rounded-md mt-2"
-              >
-                <option value="resnet">ResNet</option>
-                <option value="VGG16">VGG</option>
-                <option value="VGG19">VGG19</option>
-              </select>
-
               <button
                 className="mt-2 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
                 onClick={handleSubmit}
               >
-                {t("editor.analyze_image")}
+                {t("editor.anonymize_image")}
               </button>
             </div>
           </div>
-
-          {/* Resultados */}
-          <div className="flex-1 bg-gray-800 p-4 rounded-lg shadow-xl max-w-[800px]">
-            {segmentation && prediction ? (
-              <div className="p-4 rounded-lg border-2 border-dashed border-yellow-500 bg-black">
-                <h3 className="text-lg font-semibold">
-                  {t("editor.segmented_image")}:
-                </h3>
-                <img
-                  src={segmentation.segmented_image_url}
-                  alt="Segmentación"
-                  className="max-w-[500px] w-full mt-4 rounded-lg shadow-md"
-                />
-
-                <h3 className="mt-6 text-lg font-semibold">Clasificación:</h3>
-                <p className="text-xl font-bold text-blue-500">
-                  Clase Predicha: F{prediction.predicted_class}
-                </p>
-                <ul className="list-disc ml-5 mt-2 text-white">
-                  {prediction.probabilities.map((prob, index) => (
-                    <li key={index}>
-                      F{index}: {prob.toFixed(4)}
-                    </li>
-                  ))}
-                </ul>
-
-                <button
-                  className="mt-4 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400"
-                  onClick={() => setShowModal(true)}
-                >
-                  Ver Explicación de los Resultados
-                </button>
-
-                {showModal && (
-                  <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75">
-                    <div className="bg-gray-900 rounded-lg p-6 w-11/12 max-w-3xl text-white">
-                      {prediction.predicted_class === 0 && (
-                        <>
-                          <h4 className="font-semibold">F0 - No Fibrosis:</h4>
-                          <p>Tejido hepático sano.</p>
-                        </>
-                      )}
-                      {prediction.predicted_class === 1 && (
-                        <>
-                          <h4 className="font-semibold">
-                            F1 - Fibrosis Portal:
-                          </h4>
-                          <p>Fibrosis en áreas portales.</p>
-                        </>
-                      )}
-                      {prediction.predicted_class === 2 && (
-                        <>
-                          <h4 className="font-semibold">
-                            F2 - Fibrosis Periportal:
-                          </h4>
-                          <p>Fibrosis en bordes de las áreas portales.</p>
-                        </>
-                      )}
-                      {prediction.predicted_class === 3 && (
-                        <>
-                          <h4 className="font-semibold">
-                            F3 - Fibrosis Septal:
-                          </h4>
-                          <p>Bandas de tejido cicatricial.</p>
-                        </>
-                      )}
-                      {prediction.predicted_class === 4 && (
-                        <>
-                          <h4 className="font-semibold">F4 - Cirrosis:</h4>
-                          <p>Fibrosis avanzada con daño hepático.</p>
-                        </>
-                      )}
-                      <button
-                        className="mt-4 py-2 px-6 bg-red-500 text-white font-bold rounded-lg hover:bg-red-400"
-                        onClick={() => setShowModal(false)}
-                      >
-                        Cerrar
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-gray-400">
-                Esperando segmentación y clasificación...
-              </p>
-            )}
-          </div>
         </div>
+
+        {showAnonChoice && anonymizedImageUrl && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg p-6 shadow-xl w-96 space-y-6">
+              <h3 className="text-lg font-semibold">¿Qué deseas hacer?</h3>
+              <p className="text-sm opacity-80">
+                La imagen ha sido anonimizada con éxito.
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => {
+                    setShowAnonChoice(false);
+                    const a = document.createElement("a");
+                    a.href = anonymizedImageUrl;
+                    a.download = "ecografia_anonimizada.jpg";
+                    a.click();
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                >
+                  Descargar
+                </button>
+                <button
+                  onClick={async () => {
+                    setShowAnonChoice(false);
+                    if (!canvas) return;
+
+                    const img = await fabric.Image.fromURL(anonymizedImageUrl, {
+                      crossOrigin: "anonymous",
+                    });
+
+                    const scale = Math.min(500 / img.width!, 500 / img.height!);
+                    img.scale(scale);
+                    img.set({
+                      left: 100,
+                      top: 100,
+                      selectable: false,
+                      lockMovementX: true,
+                      lockMovementY: true,
+                      hasControls: false,
+                      lockRotation: true,
+                      lockScalingX: true,
+                      lockScalingY: true,
+                    });
+
+                    canvas.clear();
+                    canvas.add(img);
+                    canvas.centerObject(img);
+                    canvas.setActiveObject(img);
+
+                    toast.success("Imagen cargada para edición.");
+                  }}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-4 py-2 rounded-md"
+                >
+                  Editar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-inner">

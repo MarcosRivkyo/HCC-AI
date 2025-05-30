@@ -112,7 +112,7 @@ const MisEstudios: React.FC = () => {
       try {
         const q = query(
           collection(db, "hcc_ai_studies"),
-          orderBy("studieDate", "desc") // ya no filtramos por doctorId directamente
+          orderBy("studieDate", "desc"), // ya no filtramos por doctorId directamente
         );
 
         const snapshot = await getDocs(q);
@@ -123,8 +123,10 @@ const MisEstudios: React.FC = () => {
             if (vista === "mios") {
               return estudio.doctorId === user.uid;
             } else if (vista === "compartidos") {
-              return Array.isArray(estudio.sharedWithDoctorIds) &&
-                estudio.sharedWithDoctorIds.includes(user.uid);
+              return (
+                Array.isArray(estudio.sharedWithDoctorIds) &&
+                estudio.sharedWithDoctorIds.includes(user.uid)
+              );
             } else if (vista === "todos") {
               return (
                 estudio.doctorId === user.uid ||
@@ -134,8 +136,6 @@ const MisEstudios: React.FC = () => {
             }
           });
 
-
-
         setEstudios(estudiosFiltrados as Estudio[]);
       } catch (error) {
         console.error("Error al obtener estudios:", error);
@@ -143,7 +143,7 @@ const MisEstudios: React.FC = () => {
     };
 
     fetchEstudios();
-}, [user, vista]);
+  }, [user, vista]);
 
   const estudiosFiltrados = estudios
     .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
@@ -310,7 +310,6 @@ const MisEstudios: React.FC = () => {
               title="Cerrar"
             >
               <XMarkIcon className="w-5 h-5" />
-
             </button>
           </div>
           <Assistant />
@@ -324,11 +323,9 @@ const MisEstudios: React.FC = () => {
             title="Abrir asistente"
           >
             <ChatBubbleLeftIcon className="w-6 h-6" />
-
           </button>
         )}
       </div>
-
 
       <main className="flex-grow container mx-auto px-4 py-20">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mt-8 mb-8 text-center">
@@ -342,7 +339,6 @@ const MisEstudios: React.FC = () => {
           >
             {t("my_studies.create_study")}
           </button>
-
 
           <input
             type="text"
@@ -362,7 +358,6 @@ const MisEstudios: React.FC = () => {
             <option value="mios">{t("my_studies.filter_mine")}</option>
             <option value="compartidos">{t("my_studies.filter_shared")}</option>
           </select>
-
 
           <select
             value={estadoFiltro}
@@ -455,7 +450,6 @@ const MisEstudios: React.FC = () => {
                       Compartido
                     </span>
                   )}
-
 
                   <div className="flex justify-end gap-3 mt-4">
                     <button
@@ -596,7 +590,6 @@ const MisEstudios: React.FC = () => {
           </div>
         </div>
       )}
-
 
       {confirmarEliminacion && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

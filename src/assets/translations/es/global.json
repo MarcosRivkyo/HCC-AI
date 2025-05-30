@@ -17,10 +17,11 @@
     "logout": "Cerrar sesión",
     "my_studies": "MIS ESTUDIOS",
     "models": "MODELOS",
-    "analyze": "ANALIZAR",
+    "editor": "EDITOR",
     "view_profile": "Ver Perfil",
     "assistant": "ASISTENTE",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "calendar": "CALENDARIO"
   },
 
 
@@ -275,7 +276,7 @@
     "title": "Editor de Imágenes",
     "upload_image": "Subir Imagen",
     "drop_image": "Suelta una imagen aquí",
-    "analyze_image": "Analizar Imagen",
+    "anonymize_image": "Anonimizar Ecografía",
     "segmented_image": "Imagen Segmentada",
     
     "image_analysis_results": "Resultados del Análisis de la Imagen",

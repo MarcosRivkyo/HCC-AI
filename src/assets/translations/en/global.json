@@ -18,9 +18,10 @@
     "my_studies": "MY STUDIES",
     "models": "MODELS",
     "assistant": "ASSISTANT",
-    "analyze": "ANALYZE",
+    "editor": "EDITOR",
     "view_profile": "View Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "calendar": "CALENDAR"
   },
 
   "main": {
@@ -194,7 +195,7 @@
     "title": "Image Editor",
     "upload_image": "Upload Image",
     "drop_image": "Drop image here",
-    "analyze_image": "Analyze Image",
+    "anonymize_image": "Anonymize Ultrasound",
     "segmented_image": "Segmented Image",
 
     "image_analysis_results": "Image Analysis Results",

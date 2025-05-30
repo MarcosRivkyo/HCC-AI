@@ -26,7 +26,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BarChart from "../UI/BarChart.tsx";
 import { marked } from "marked";
-import { arrayUnion } from "firebase/firestore"; 
+import { arrayUnion } from "firebase/firestore";
 
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 
@@ -84,7 +84,7 @@ const EstudioDetalle = () => {
 
   const [estudio, setEstudio] = useState<Estudio | null>(null);
   const [selectedSubModel, setSelectedSubModel] = useState("");
-  const { t , i18n } = useTranslation("global");
+  const { t, i18n } = useTranslation("global");
   const [loading, setLoading] = useState(true);
   const [subiendoImagen, setSubiendoImagen] = useState(false);
   const [predict, setPredict] = useState(false);
@@ -93,6 +93,8 @@ const EstudioDetalle = () => {
   const [imagenSeleccionada, setImagenSeleccionada] = useState<File | null>(
     null,
   );
+  const [showExplanationModal, setShowExplanationModal] = useState(false);
+
   const [imagenRedimensionada, setImagenRedimensionada] = useState<
     string | null
   >(null);
@@ -141,6 +143,22 @@ const EstudioDetalle = () => {
   );
   const [mostrarEstudiosRecientes, setMostrarEstudiosRecientes] =
     useState(false);
+
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState<
+    string | null
+  >(null);
+
+  // Use the existing handleEliminarEstudio for deletion
+  const eliminarEstudio = async (id: string) => {
+    try {
+      // Aquí va tu lógica real de eliminación en Firestore
+      await deleteDoc(doc(db, "hcc_ai_studies", id));
+      toast.success("Estudio eliminado");
+    } catch (err) {
+      toast.error("Error al eliminar el estudio");
+      console.error(err);
+    }
+  };
 
   const navigate = useNavigate();
   const db = getFirestore(app);
@@ -250,33 +268,26 @@ const EstudioDetalle = () => {
     fetchPredictionData();
   }, [estudio]);
 
-
   useEffect(() => {
-  const fetchDoctors = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
-      const allUsers = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const fetchDoctors = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
+        const allUsers = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      const filtered = allUsers.filter(
-        (u) => u.id !== user?.uid 
-      );
-      setDoctorsList(filtered);
-    } catch (error) {
-      console.error("Error al obtener la lista de doctores:", error);
+        const filtered = allUsers.filter((u) => u.id !== user?.uid);
+        setDoctorsList(filtered);
+      } catch (error) {
+        console.error("Error al obtener la lista de doctores:", error);
+      }
+    };
+
+    if (user) {
+      fetchDoctors();
     }
-  };
-
-  if (user) {
-    fetchDoctors();
-  }
-}, [user]);
-
-
-
-
+  }, [user]);
 
   const getImageAsBase64 = (imageUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -309,6 +320,81 @@ const EstudioDetalle = () => {
     window.open(estudio.pdfReportUrl, "_blank");
   };
 
+  const drawMarkdownParagraph = (
+    pdf: jsPDF,
+    text: string,
+    x: number,
+    yStart: number,
+    maxWidth: number,
+    lineHeight: number,
+  ) => {
+    const lines = text.split("\n");
+    let y = yStart;
+
+    lines.forEach((line) => {
+      if (line.startsWith("* ")) {
+        // Lista con viñeta
+        pdf.setFont("helvetica", "bold");
+        pdf.text("•", x, y);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(line.replace("* ", ""), x + 5, y);
+        y += lineHeight;
+      } else if (line.match(/^\*\*(.*?)\*\*/)) {
+        // Título o subtítulo
+        const cleaned = line.replace(/\*\*/g, "");
+        pdf.setFont("helvetica", "bold");
+        pdf.text(cleaned, x, y);
+        pdf.setFont("helvetica", "normal");
+        y += lineHeight;
+      } else {
+        // Texto normal
+        const wrapped = pdf.splitTextToSize(line, maxWidth);
+        wrapped.forEach((segment: string) => {
+          pdf.text(segment, x, y);
+          y += lineHeight;
+        });
+      }
+    });
+
+    return y;
+  };
+
+  const applyMarkdownLine = (
+    pdf: jsPDF,
+    line: string,
+    x: number,
+    y: number,
+  ) => {
+    const boldRegex = /\*\*(.*?)\*\*/g;
+    const italicRegex = /\*(.*?)\*/g;
+    let cursorX = x;
+
+    const renderStyled = (text: string, style: string) => {
+      if (style === "bold") pdf.setFont("helvetica", "bold");
+      else if (style === "italic") pdf.setFont("helvetica", "italic");
+      else pdf.setFont("helvetica", "normal");
+
+      pdf.text(text, cursorX, y);
+      const textWidth = pdf.getTextWidth(text);
+      cursorX += textWidth;
+    };
+
+    // Procesar negrita primero
+    const parts = line.split(boldRegex);
+    for (let i = 0; i < parts.length; i++) {
+      if (i % 2 === 0) {
+        // texto normal o con cursiva
+        const inner = parts[i].split(italicRegex);
+        for (let j = 0; j < inner.length; j++) {
+          if (j % 2 === 0) renderStyled(inner[j], "normal");
+          else renderStyled(inner[j], "italic");
+        }
+      } else {
+        renderStyled(parts[i], "bold");
+      }
+    }
+  };
+
   const generarPDF = async (
     predictionData: PredictionResponse,
     segmentationUrl: string,
@@ -323,11 +409,13 @@ const EstudioDetalle = () => {
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const margin = 20;
+    let y = 20;
 
-    // 1. LOGO + CABECERA
+    // LOGO Y CABECERA
     try {
       const logoBase64 = await getImageAsBase64(logoHCC_AI);
-      pdf.addImage(logoBase64, "PNG", (pageWidth - 40) / 2, 10, 40, 20);
+      pdf.addImage(logoBase64, "PNG", (pageWidth - 40) / 2, y, 40, 20);
+      y += 25;
     } catch {
       console.warn("No se pudo cargar el logo");
     }
@@ -335,119 +423,115 @@ const EstudioDetalle = () => {
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(16);
     pdf.setTextColor(30, 30, 30);
-    pdf.text("INFORME CLÍNICO - HCC-AI", pageWidth / 2, 35, {
+    pdf.text("INFORME CLÍNICO - HCC-AI", pageWidth / 2, y, { align: "center" });
+    y += 10;
+
+    pdf.setFontSize(13);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Estudio: ${estudio.studieName}`, pageWidth / 2, y, {
       align: "center",
     });
+    y += 15;
 
-    // 2. CONTENEDOR GENERAL
     const drawSectionBox = (yStart: number, height: number, label: string) => {
-      pdf.setDrawColor(180);
+      pdf.setDrawColor(200);
+      pdf.setLineWidth(0.3);
       pdf.rect(margin, yStart, pageWidth - 2 * margin, height);
-      pdf.setFontSize(12);
       pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.setTextColor(0);
       pdf.text(label.toUpperCase(), margin + 2, yStart + 6);
       return yStart + 12;
     };
 
-    let y = 45;
-
-    // 3. INFORMACIÓN GENERAL
-    y = drawSectionBox(y, 40, "Datos del Estudio");
-
+    // DATOS DEL ESTUDIO
+    y = drawSectionBox(y, 50, "Datos del Estudio");
     const generalInfo = [
-      ["Nombre del Estudio", estudio.studieName],
-      ["Estado", estudio.status],
+      ["ID del Estudio", id],
+      ["Estado", "Finalizado"],
       ["Fecha", estudio.studieDate.toDate().toLocaleString()],
       ["ID del Paciente", estudio.patientName],
+      ["ID del Doctor", estudio.doctorName],
     ];
-
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(11);
-    generalInfo.forEach(([label, val], idx) => {
-      pdf.text(`${label}:`, margin + 5, y + idx * 7);
-      pdf.text(`${val}`, margin + 65, y + idx * 7);
+    generalInfo.forEach(([label, val], i) => {
+      pdf.text(`${label}:`, margin + 5, y + i * 7);
+      pdf.text(`${val}`, margin + 65, y + i * 7);
     });
     y += generalInfo.length * 7 + 10;
 
-    // 4. DESCRIPCIÓN CLÍNICA
+    // DESCRIPCIÓN CLÍNICA
     if (estudio.clinicalDescription) {
       y = drawSectionBox(y, 40, "Descripción Clínica");
-      const descLines = pdf.splitTextToSize(
+      const lines = pdf.splitTextToSize(
         estudio.clinicalDescription,
         pageWidth - 2 * margin - 10,
       );
-      pdf.setFont("helvetica", "normal");
       pdf.setFontSize(11);
-      pdf.text(descLines, margin + 5, y);
-      y += descLines.length * 6 + 10;
+      pdf.text(lines, margin + 5, y);
+      y += lines.length * 6 + 10;
     }
 
-    // 5. IMÁGENES: ECOGRAFÍA + SEGMENTACIÓN
-    if (estudio.imagenUrl || segmentation?.segmented_image_url) {
-      y = drawSectionBox(y, 80, "Imágenes del Estudio");
-
-      const imgSize = 67.7; // 256px ≈ 67.7mm
+    // IMÁGENES
+    if (estudio.imagenUrl || segmentationUrl) {
+      const imgSize = 67.7;
       const spacing = 10;
+      const blockHeight = imgSize + 35; // altura extendida para títulos separados
+      y = drawSectionBox(y, blockHeight, "Imágenes del Estudio");
+
       const x1 = (pageWidth - imgSize * 2 - spacing) / 2;
       const x2 = x1 + imgSize + spacing;
-      const yImg = y;
 
+      const yTitles = y + 10; // espacio visual entre "Imágenes del Estudio" y títulos de imagen
+      const yImg = yTitles + 6;
+
+      // Subtítulos centrados sobre las imágenes
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
       pdf.setTextColor(33);
-      pdf.text("Ecografía", x1 + imgSize / 2, yImg - 3, { align: "center" });
-      pdf.text("Segmentación IA", x2 + imgSize / 2, yImg - 3, {
+      pdf.text("Ecografía Original", x1 + imgSize / 2, yTitles, {
+        align: "center",
+      });
+      pdf.text("Ecografía Segmentada con IA", x2 + imgSize / 2, yTitles, {
         align: "center",
       });
 
-      try {
-        if (estudio.imagenUrl) {
-          const base64 = await getImageAsBase64(estudio.imagenUrl);
-          pdf.addImage(base64, "PNG", x1, yImg, imgSize, imgSize);
+      // Cargar imágenes
+      const tryAddImage = async (url: string, x: number, yImg: number) => {
+        try {
+          const base64 = await getImageAsBase64(url);
+          pdf.addImage(base64, "PNG", x, yImg, imgSize, imgSize);
+        } catch {
+          pdf.setFont("helvetica", "italic");
+          pdf.setFontSize(10);
+          pdf.setTextColor(200, 0, 0);
+          pdf.text(
+            "Error al cargar imagen",
+            x + imgSize / 2,
+            yImg + imgSize / 2,
+            { align: "center" },
+          );
         }
-      } catch {
-        pdf.setFont("helvetica", "italic");
-        pdf.setTextColor(200, 0, 0);
-        pdf.text("Error al cargar", x1 + imgSize / 2, yImg + imgSize / 2, {
-          align: "center",
-        });
-      }
+      };
 
-      try {
-        if (segmentationUrl) {
-          const base64 = await getImageAsBase64(segmentationUrl);
-          pdf.addImage(base64, "PNG", x2, yImg, imgSize, imgSize);
-        }
-      } catch {
-        pdf.setFont("helvetica", "italic");
-        pdf.setTextColor(200, 0, 0);
-        pdf.text("Error al cargar", x2 + imgSize / 2, yImg + imgSize / 2, {
-          align: "center",
-        });
-      }
+      await tryAddImage(estudio.imagenUrl ?? "", x1, yImg);
+      await tryAddImage(segmentationUrl, x2, yImg);
 
-      y += imgSize + 20;
+      y += blockHeight + 10;
     }
 
-    // 7. RESULTADO IA
+    // 7. ANÁLISIS IA — SIEMPRE EN UNA NUEVA PÁGINA
     if (predictionData?.predicted_class) {
-      const explicacionTextoPlano =
-        explicacionGenerada || "Sin explicación disponible.";
+      // Crear nueva página para el análisis
+      pdf.addPage();
+      let y = 20;
+      let startY = y;
+      const textWidth = pageWidth - 2 * margin;
+      const lineHeight = 5; // más compacto
+      const fontSize = 9;
 
-      // Altura dinámica según el contenido
-      const explicacionLines = pdf.splitTextToSize(
-        explicacionTextoPlano,
-        pageWidth - 2 * margin - 10,
-      );
-
-      const blockHeight = Math.max(35, explicacionLines.length * 6 + 10);
-
-      y = drawSectionBox(y, blockHeight, "Análisis de IA");
-
-      pdf.setFont("helvetica", "normal");
-      pdf.setTextColor(50);
-
-      // Muestra el código de clase
+      // Preparar clase predicha
       const claseMapeada =
         selectedClassificationModel === "HCC-AI"
           ? ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][
@@ -455,67 +539,90 @@ const EstudioDetalle = () => {
             ]
           : `F${predictionData.predicted_class}`;
 
-      pdf.text(`Clase predicha: ${claseMapeada}`, margin + 5, y);
-      // Explicación IA
-      pdf.setFontSize(11);
+      const contenido = `**Clase predicha:** ${claseMapeada}\n\n${explicacionGenerada}`;
 
-      const lineHeight = 6;
-      let currentY = y + 8;
+      // Dividir en líneas
+      const explicacionLines = pdf.splitTextToSize(contenido, textWidth);
 
-      pdf.setFontSize(11);
+      let currentLine = 0;
+      let pageStartY = y;
 
-      for (const line of explicacionLines) {
-        if (currentY > 280) {
-          // límite inferior de la página
+      while (currentLine < explicacionLines.length) {
+        if (y + lineHeight > 285) {
+          // dibujar recuadro antes de pasar página
+          pdf.setDrawColor(180);
+          pdf.rect(margin, pageStartY, textWidth, y - pageStartY + 5);
+
           pdf.addPage();
-          currentY = 20;
+          y = 20;
+          pageStartY = y;
         }
-        pdf.text(line, margin + 5, currentY);
-        currentY += lineHeight;
+
+        if (y === pageStartY) {
+          pdf.setFont("helvetica", "bold");
+          pdf.setFontSize(12);
+          pdf.text("ANÁLISIS DE IA", margin + 2, y + 6);
+          y += 10;
+        }
+
+        // Dibujar línea
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(fontSize);
+        applyMarkdownLine(pdf, explicacionLines[currentLine], margin + 5, y);
+        y += lineHeight;
+        currentLine++;
       }
-      y = currentY + 10;
+
+      // Dibujar recuadro final
+      pdf.setDrawColor(180);
+      pdf.rect(margin, pageStartY, textWidth, y - pageStartY + 5);
     }
 
-    // 8. FOOTER
+    // FOOTER
     const pageCount = pdf.getNumberOfPages();
     const fecha = new Date().toLocaleString();
+
     for (let i = 1; i <= pageCount; i++) {
       pdf.setPage(i);
       pdf.setFontSize(9);
       pdf.setTextColor(100);
+
+      // Texto de pie de página
       pdf.text(`Página ${i} de ${pageCount}`, pageWidth - margin - 30, 290);
       pdf.text(`Generado: ${fecha}`, margin, 290);
+
+      // Logo pequeño centrado
+      const logoWidth = 12;
+      const logoHeight = 6;
+      const centerX = (pageWidth - logoWidth) / 2;
+      const logoY = 286; // un poco por encima del borde inferior
+
+      try {
+        const logoBase64 = await getImageAsBase64(logoHCC_AI);
+        pdf.addImage(logoBase64, "PNG", centerX, logoY, logoWidth, logoHeight);
+      } catch {
+        console.warn("No se pudo renderizar el logo en el footer");
+      }
     }
 
-    // 9. GUARDAR
-    //doc.save(`Informe_Estudio_${estudio.studieName}.pdf`);
-
+    // SUBIR A FIREBASE
     const pdfBlob = pdf.output("blob");
-    const userId = user.uid;
     const folderPath =
-      userData.documentFolder || `HCC-AI/users/${userId}/documents`;
+      userData.documentFolder || `HCC-AI/users/${user.uid}/documents`;
     const pdfFileName = `informe_${id}.pdf`;
     const pdfRef = ref(storage, `${folderPath}/${pdfFileName}`);
 
     try {
       await uploadBytesResumable(pdfRef, pdfBlob);
       const downloadURL = await getDownloadURL(pdfRef);
-
       if (id) {
         const docRef = doc(db, "hcc_ai_studies", id);
-        await updateDoc(docRef, {
-          pdfReportUrl: downloadURL,
-        });
-
-        setEstudio((prev) => ({
-          ...prev!,
-          pdfReportUrl: downloadURL,
-        }));
+        await updateDoc(docRef, { pdfReportUrl: downloadURL });
+        setEstudio((prev) => ({ ...prev!, pdfReportUrl: downloadURL }));
       }
-
       console.log("PDF subido y URL guardada correctamente:", downloadURL);
-    } catch (error) {
-      console.error("Error al subir el PDF a Storage:", error);
+    } catch (err) {
+      console.error("Error al subir el PDF:", err);
     }
   };
 
@@ -527,36 +634,34 @@ const EstudioDetalle = () => {
     setShowEmailModal(true);
   };
 
-
-const handleSendEmail = async () => {
-  if (!emailToSend || !emailToSend.includes("@")) {
-    toast.error("Correo electrónico inválido.");
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/send-report`,
-      {
-        name: userData?.firstName || user.displayName || "Médico HCC-AI",
-        email: emailToSend,
-        message: `Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}`,
-      }
-    );
-
-    if (response.status === 200) {
-      toast.success("Informe enviado correctamente.");
-      setShowEmailModal(false);
-      setEmailToSend("");
-    } else {
-      toast.error("No se pudo enviar el correo.");
+  const handleSendEmail = async () => {
+    if (!emailToSend || !emailToSend.includes("@")) {
+      toast.error("Correo electrónico inválido.");
+      return;
     }
-  } catch (error) {
-    console.error("Error al enviar informe por correo:", error);
-    toast.error("Ocurrió un error al enviar el correo.");
-  }
-};
 
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+        {
+          name: userData?.firstName || user.displayName || "Médico HCC-AI",
+          email: emailToSend,
+          message: `Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}`,
+        },
+      );
+
+      if (response.status === 200) {
+        toast.success("Informe enviado correctamente.");
+        setShowEmailModal(false);
+        setEmailToSend("");
+      } else {
+        toast.error("No se pudo enviar el correo.");
+      }
+    } catch (error) {
+      console.error("Error al enviar informe por correo:", error);
+      toast.error("Ocurrió un error al enviar el correo.");
+    }
+  };
 
   const handleSelectClassificationModel = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -942,7 +1047,7 @@ const handleSendEmail = async () => {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
-        <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -954,11 +1059,13 @@ const handleSendEmail = async () => {
         pauseOnHover
         theme={theme === "dark" ? "dark" : "light"}
         toastClassName={() =>
-            `rounded-lg border border-black shadow-md px-4 py-3 text-sm ${
-            theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-            }`
+          `rounded-lg border border-black shadow-md px-4 py-3 text-sm ${
+            theme === "dark"
+              ? "bg-gray-800 text-white"
+              : "bg-white text-gray-800"
+          }`
         }
-        />
+      />
 
       {/* Botón para mostrar el panel lateral izquierdo */}
       {!mostrarEstudiosRecientes && (
@@ -1019,7 +1126,6 @@ const handleSendEmail = async () => {
 
       <div className="flex justify-center items-center min-h-[calc(100vh-100px)] px-4 py-10 mt-20">
         <div className="w-full max-w-5xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 space-y-8">
-
           {/* Panel del asistente con botón dentro */}
           <div className="relative z-50">
             <div
@@ -1037,7 +1143,6 @@ const handleSendEmail = async () => {
                   title="Cerrar"
                 >
                   <XMarkIcon className="w-5 h-5" />
-
                 </button>
               </div>
               <Assistant />
@@ -1051,7 +1156,6 @@ const handleSendEmail = async () => {
                 title="Abrir asistente"
               >
                 <ChatBubbleLeftIcon className="w-6 h-6" />
-
               </button>
             )}
           </div>
@@ -1060,63 +1164,60 @@ const handleSendEmail = async () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
             {/* Columna izquierda: datos */}
             <div className="bg-white rounded-xl p-6 space-y-4 dark:bg-gray-800">
-              
-                  <div className="flex items-center justify-between mb-2">
-                    <div>
-                      <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
-                        {estudio?.studieName}
-                      </h1>
-                      <p className="text-sm text-gray-500 dark:text-white">
-                        {t("my_studies.id_study")}: {id}
-                      </p>
-                    </div>
-                      <p
-                        className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
-                          estudio?.status === "Finalizado"
-                            ? "bg-green-100 text-green-800"
-                            : estudio?.status === "En Progreso"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-gray-200 text-gray-700"
-                        }`}
-                      >
-                        {estudio?.status === "Finalizado"
-                          ? t("my_studies.status_done")
-                          : estudio?.status === "En Progreso"
-                          ? t("my_studies.status_in_progress")
-                          : estudio?.status}
-                      </p>
-
-                  </div>
-
-                  <p className="text-sm text-gray-400 mb-1">
-                    {estudio?.studieDate?.toDate().toLocaleString(i18n.language, {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
+                    {estudio?.studieName}
+                  </h1>
+                  <p className="text-sm text-gray-500 dark:text-white">
+                    {t("my_studies.id_study")}: {id}
                   </p>
+                </div>
+                <p
+                  className={`inline-block px-3 py-1 text-sm font-medium rounded-full ${
+                    estudio?.status === "Finalizado"
+                      ? "bg-green-100 text-green-800"
+                      : estudio?.status === "En Progreso"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-gray-200 text-gray-700"
+                  }`}
+                >
+                  {estudio?.status === "Finalizado"
+                    ? t("my_studies.status_done")
+                    : estudio?.status === "En Progreso"
+                      ? t("my_studies.status_in_progress")
+                      : estudio?.status}
+                </p>
+              </div>
 
+              <p className="text-sm text-gray-400 mb-1">
+                {estudio?.studieDate?.toDate().toLocaleString(i18n.language, {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
 
-                  <p className="text-gray-700 mb-1 dark:text-white">
-                    <strong>{t("my_studies.doctor_name")}:</strong>{" "}
-                    {estudio?.doctorName ?? "Desconocido"}
-                  </p>
+              <p className="text-gray-700 mb-1 dark:text-white">
+                <strong>{t("my_studies.doctor_name")}:</strong>{" "}
+                {estudio?.doctorName ?? "Desconocido"}
+              </p>
 
-                  <p className="text-gray-700 mb-4 dark:text-white">
-                    <strong>{t("my_studies.patient_name")}:</strong> {estudio?.patientName}
-                  </p>
+              <p className="text-gray-700 mb-4 dark:text-white">
+                <strong>{t("my_studies.patient_name")}:</strong>{" "}
+                {estudio?.patientName}
+              </p>
 
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
-                      {t("my_studies.clinical_description")}
-                    </h2>
-                    <p className="text-gray-600 dark:text-white">
-                      {estudio?.clinicalDescription}
-                    </p>
-                  </div>
-    
+              <div>
+                <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
+                  {t("my_studies.clinical_description")}
+                </h2>
+                <p className="text-gray-600 dark:text-white">
+                  {estudio?.clinicalDescription}
+                </p>
+              </div>
             </div>
 
             <div className="flex justify-between items-start w-full">
@@ -1195,83 +1296,69 @@ const handleSendEmail = async () => {
               </div>
 
               {/* Menu de acciones */}
-              <div className="relative">
-                <Menu as="div" className="w-10 origin-top-left focus:outline-none z-10">
-                  <div>
-                    <Menu.Button className="flex items-center justify-center p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                      <EllipsisVerticalIcon className="h-6 w-6 text-black dark:text-white" />
-                    </Menu.Button>
-                  </div>
+              <div className="flex flex-col space-y-2 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg shadow-md w-auto">
+                {/* Descargar */}
+                <button
+                  onClick={descargarPDF}
+                  title="Descargar informe"
+                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                >
+                  <FaDownload className="text-gray-700 dark:text-white" />
+                </button>
 
-                  <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-                    <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={descargarPDF}
-                            className={`${
-                              active
-                                ? "bg-gray-100 dark:bg-gray-700"
-                                : "bg-transparent"
-                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
-                          >
-                            Descargar Informe
-                          </button>
-                        )}
-                      </Menu.Item>
+                {/* Enviar por correo */}
+                <button
+                  onClick={enviarPDFporCorreo}
+                  title="Enviar por correo"
+                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-700 dark:text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16.5 3h-9A2.5 2.5 0 005 5.5v13A2.5 2.5 0 007.5 21h9a2.5 2.5 0 002.5-2.5v-13A2.5 2.5 0 0016.5 3zM7 7l5 3.5L17 7"
+                    />
+                  </svg>
+                </button>
 
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={enviarPDFporCorreo}
-                            className={`${
-                              active
-                                ? "bg-gray-100 dark:bg-gray-700"
-                                : "bg-transparent"
-                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
-                          >
-                            Enviar informe por correo
-                          </button>
-                        )}
-                      </Menu.Item>
+                {/* Compartir */}
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  title="Compartir estudio"
+                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-700 dark:text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 8a3 3 0 100-6 3 3 0 000 6zM9 20a3 3 0 100-6 3 3 0 000 6zM20.24 14.83A4.992 4.992 0 0018 15h-1.26A6.978 6.978 0 0012 17c-1.47 0-2.83-.44-3.96-1.17l-.22.22a2.992 2.992 0 01-4.24 0 3.002 3.002 0 010-4.24 2.992 2.992 0 014.24 0l.22.22A6.978 6.978 0 0012 11c1.47 0 2.83.44 3.96 1.17L18 10h1.26a4.992 4.992 0 001.98-.39z"
+                    />
+                  </svg>
+                </button>
 
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={() => setShowShareModal(true)}
-                            className={`${
-                              active
-                                ? "bg-gray-100 dark:bg-gray-700"
-                                : "bg-transparent"
-                            } w-full text-left px-4 py-2 text-sm text-gray-800 dark:text-gray-100`}
-                          >
-                            Compartir estudio con doctor
-                          </button>
-                        )}
-                      </Menu.Item>
-       
-
-                      <div className="border-t border-gray-200 dark:border-gray-600 my-1" />
-
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={handleEliminarEstudio}
-                            className={`${
-                              active
-                                ? "bg-red-100 dark:bg-red-800"
-                                : "bg-transparent"
-                            } w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400`}
-                          >
-                            Eliminar Estudio
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </div>
-                  </Menu.Items>
-                </Menu>
+                {/* Eliminar */}
+                <button
+                  onClick={() => setConfirmarEliminacion(id ?? null)}
+                  title="Eliminar estudio"
+                  className="w-10 h-10 flex items-center justify-center rounded-md bg-red-600 hover:bg-red-700 transition"
+                >
+                  <FaTrashAlt className="text-white" />
+                </button>
               </div>
-
             </div>
           </div>
 
@@ -1307,13 +1394,11 @@ const handleSendEmail = async () => {
                   {[
                     {
                       name: "HCC-AI",
-                      description:
-                        t("my_studies.hcc_ai_description"),
+                      description: t("my_studies.hcc_ai_description"),
                     },
                     {
                       name: "METAVIR-AI",
-                      description:
-                        t("my_studies.metavir_ai_description"),
+                      description: t("my_studies.metavir_ai_description"),
                     },
                   ].map((model) => (
                     <button
@@ -1347,7 +1432,9 @@ const handleSendEmail = async () => {
                       onChange={(e) => setSelectedSubModel(e.target.value)}
                       className="block w-full px-3 py-2 border dark:text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     >
-                      <option value="">{t("my_studies.choose_submodel")}</option>
+                      <option value="">
+                        {t("my_studies.choose_submodel")}
+                      </option>
                       <option value="resnet">ResNet</option>
                       <option value="VGG16">VGG16</option>
                     </select>
@@ -1395,7 +1482,9 @@ const handleSendEmail = async () => {
                           }
                           className="block dark:text-black w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         >
-                          <option value="">{t("my_studies.choose_submodel")}</option>
+                          <option value="">
+                            {t("my_studies.choose_submodel")}
+                          </option>
                           <option value="YOLOv8">YOLOv8</option>
                           <option value="YOLOv11">YOLOv11</option>
                         </select>
@@ -1405,7 +1494,7 @@ const handleSendEmail = async () => {
                       <div>
                         <label
                           htmlFor="confidenceThreshold"
-                          className="block text-sm font-medium text-gray-700 mb-1 dark:text-white" 
+                          className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
                         >
                           {t("my_studies.minimum_threshold")} (%)
                         </label>
@@ -1524,45 +1613,57 @@ const handleSendEmail = async () => {
                         </h3>
                         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                           <li>
-                            <strong>HCC</strong>: {t("my_studies.segmented_structures.HCC")}
+                            <strong>HCC</strong>:{" "}
+                            {t("my_studies.segmented_structures.HCC")}
                           </li>
                           <li>
-                            <strong>HV</strong>:{t("my_studies.segmented_structures.HV")}
+                            <strong>HV</strong>:
+                            {t("my_studies.segmented_structures.HV")}
                           </li>
                           <li>
-                            <strong>IVC</strong>: {t("my_studies.segmented_structures.IVC")}
+                            <strong>IVC</strong>:{" "}
+                            {t("my_studies.segmented_structures.IVC")}
                           </li>
                           <li>
-                            <strong>K</strong>: {t("my_studies.segmented_structures.K")}
+                            <strong>K</strong>:{" "}
+                            {t("my_studies.segmented_structures.K")}
                           </li>
                           <li>
-                            <strong>K-C</strong>: {t("my_studies.segmented_structures.K-C")}
+                            <strong>K-C</strong>:{" "}
+                            {t("my_studies.segmented_structures.K-C")}
                           </li>
                           <li>
-                            <strong>K-M</strong>: {t("my_studies.segmented_structures.K-M")}
+                            <strong>K-M</strong>:{" "}
+                            {t("my_studies.segmented_structures.K-M")}
                           </li>
                           <li>
-                            <strong>TRANS</strong>: {t("my_studies.segmented_structures.TRANS")}
+                            <strong>TRANS</strong>:{" "}
+                            {t("my_studies.segmented_structures.TRANS")}
                           </li>
                           <li>
-                            <strong>LVR</strong>: {t("my_studies.segmented_structures.LVR")}
+                            <strong>LVR</strong>:{" "}
+                            {t("my_studies.segmented_structures.LVR")}
                           </li>
                           <li>
-                            <strong>PV</strong>: {t("my_studies.segmented_structures.PV")}
+                            <strong>PV</strong>:{" "}
+                            {t("my_studies.segmented_structures.PV")}
                           </li>
                           <li>
-                            <strong>SAG</strong>: {t("my_studies.segmented_structures.SAG")}
+                            <strong>SAG</strong>:{" "}
+                            {t("my_studies.segmented_structures.SAG")}
                           </li>
                           <li>
-                            <strong>SAG K</strong>: {t("my_studies.segmented_structures.SAG K")}
+                            <strong>SAG K</strong>:{" "}
+                            {t("my_studies.segmented_structures.SAG K")}
                           </li>
                           <li>
-                            <strong>LT SAG</strong>: {t("my_studies.segmented_structures.LT SAG")}
+                            <strong>LT SAG</strong>:{" "}
+                            {t("my_studies.segmented_structures.LT SAG")}
                           </li>
                           <li>
-                            <strong>RT TRANS</strong>: {t("my_studies.segmented_structures.RT TRANS")}
+                            <strong>RT TRANS</strong>:{" "}
+                            {t("my_studies.segmented_structures.RT TRANS")}
                           </li>
-
                         </ul>
                         <button
                           onClick={() => setShowLegendModal(false)}
@@ -1577,33 +1678,154 @@ const handleSendEmail = async () => {
 
                 {/* Clasificación Predicha */}
                 <h3 className="mt-8 text-xl font-semibold text-white"></h3>
-                <p className="text-2xl font-bold text-blue-500">
-                  {t("my_studies.predicted_class")}:{" "}
-                  {selectedClassificationModel === "METAVIR-AI"
-                    ? `F${prediction.predicted_class}`
-                    : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][
-                        prediction.predicted_class
-                      ]}
-                </p>
+                <div className="flex justify-center items-center gap-2 mt-8">
+                  <p className="text-2xl font-bold text-blue-500">
+                    {t("my_studies.predicted_class")}:{" "}
+                    {selectedClassificationModel === "METAVIR-AI"
+                      ? `F${prediction.predicted_class}`
+                      : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][
+                          prediction.predicted_class
+                        ]}
+                  </p>
+                  <button
+                    onClick={() => setShowExplanationModal(true)}
+                    title="Ver explicación"
+                    className="w-7 h-7 bg-blue-600 text-white rounded-full text-sm flex items-center justify-center hover:bg-blue-700"
+                  >
+                    ?
+                  </button>
+                </div>
+                {showExplanationModal && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-xl relative space-y-4">
+                      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-4">
+                        Probabilidades de cada clase:
+                      </h2>
+
+                      {(selectedClassificationModel === "HCC-AI"
+                        ? ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"]
+                        : ["F0", "F1", "F2", "F3", "F4"]
+                      ).map((label, index) => {
+                        const prob = prediction.probabilities[index] || 0;
+                        const percentage = (prob * 100).toFixed(2);
+
+                        // Mismos colores para ambos modelos
+                        const colorPalette = [
+                          {
+                            border: "border-green-600",
+                            icon: "🟢",
+                            text: "text-green-700",
+                            stroke: "stroke-green-600",
+                          },
+                          {
+                            border: "border-yellow-400",
+                            icon: "🟡",
+                            text: "text-yellow-600",
+                            stroke: "stroke-yellow-400",
+                          },
+                          {
+                            border: "border-orange-500",
+                            icon: "🟠",
+                            text: "text-orange-600",
+                            stroke: "stroke-orange-500",
+                          },
+                          {
+                            border: "border-red-600",
+                            icon: "🔴",
+                            text: "text-red-600",
+                            stroke: "stroke-red-600",
+                          },
+                          {
+                            border: "border-red-800",
+                            icon: "🔴",
+                            text: "text-red-800",
+                            stroke: "stroke-red-800",
+                          },
+                        ];
+
+                        const explicaciones =
+                          selectedClassificationModel === "HCC-AI"
+                            ? [
+                                "El hígado tiene una apariencia normal sin signos de daño estructural ni acumulación de grasa. Función hepática conservada. Riesgo bajo.",
+                                "Se observa acumulación de grasa en el hígado (hígado graso), común en personas con obesidad, diabetes o consumo elevado de alcohol. Aunque puede ser reversible, puede evolucionar si no se trata. Riesgo medio.",
+                                "El hígado muestra cicatrices y nódulos regenerativos debido a daño crónico. Esto limita su función y puede conllevar complicaciones como hipertensión portal o insuficiencia hepática. Riesgo alto.",
+                                "Se detecta una masa compatible con un tumor maligno primario del hígado. Puede haber sospecha fuerte de hepatocarcinoma (HCC). Requiere evaluación inmediata por un especialista. Riesgo muy alto.",
+                              ]
+                            : [
+                                "No hay signos de fibrosis. El tejido hepático se conserva íntegro. Riesgo bajo.",
+                                "Fibrosis leve en áreas portales, sin afectación de la arquitectura hepática general. Puede ser reversible. Riesgo bajo-medio.",
+                                "Fibrosis moderada con tabiques entre áreas portales. Señal de progresión. Puede evolucionar si no se trata. Riesgo medio.",
+                                "Fibrosis avanzada con puentes fibrosos extensos. El hígado comienza a perder funcionalidad. Riesgo alto.",
+                                "Cirrosis: distorsión severa del tejido hepático y pérdida significativa de la función. Puede conllevar a HCC o insuficiencia hepática. Riesgo muy alto.",
+                              ];
+
+                        const color = colorPalette[index];
+
+                        return (
+                          <div
+                            key={index}
+                            className={`flex items-center gap-4 border-l-8 ${color.border} bg-white dark:bg-gray-800 rounded-lg shadow p-4`}
+                          >
+                            {/* Porcentaje circular */}
+                            <div className="relative w-24 h-24 flex items-center justify-center">
+                              <svg className="absolute w-full h-full transform -rotate-90">
+                                <circle
+                                  className="text-gray-300"
+                                  strokeWidth="6"
+                                  stroke="currentColor"
+                                  fill="transparent"
+                                  r="40"
+                                  cx="48"
+                                  cy="48"
+                                />
+                                <circle
+                                  className={`${color.stroke} transition-all duration-1000 ease-out`}
+                                  strokeWidth="6"
+                                  strokeDasharray="251.2"
+                                  strokeDashoffset={251.2 * (1 - prob)}
+                                  strokeLinecap="round"
+                                  stroke="currentColor"
+                                  fill="transparent"
+                                  r="40"
+                                  cx="48"
+                                  cy="48"
+                                />
+                              </svg>
+                              <span className="relative z-10 text-base font-bold text-gray-800 dark:text-white">
+                                {percentage}%
+                              </span>
+                            </div>
+
+                            {/* Info */}
+                            <div className="flex-1 space-y-1">
+                              <p
+                                className={`font-semibold ${color.text} text-lg`}
+                              >
+                                {color.icon} {label}
+                              </p>
+                              <p className="text-sm text-gray-700 dark:text-gray-300">
+                                {explicaciones[index]}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div className="flex justify-end pt-2">
+                        <button
+                          onClick={() => setShowExplanationModal(false)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium shadow"
+                        >
+                          Cerrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <p className="mt-4 text-lg text-black dark:text-white">
                   {t("my_studies.class_probabilities")}:
                 </p>
-                <ul className="list-disc ml-6 text-black text-sm dark:text-white">
-                  {prediction.probabilities.map((prob, index) => {
-                    const label =
-                      selectedClassificationModel === "METAVIR-AI"
-                        ? `F${index}`
-                        : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][
-                            index
-                          ];
-                    return (
-                      <li key={index}>
-                        {label}: {prob.toFixed(4)}
-                      </li>
-                    );
-                  })}
-                </ul>
 
                 {/* Gráfico de Probabilidades */}
                 <div className="mt-6">
@@ -1625,34 +1847,16 @@ const handleSendEmail = async () => {
                   </div>
                 </div>
 
-                {/* Botón para abrir la explicación en modal */}
-                <button
-                  className="predict-button mt-4 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg shadow-md hover:bg-yellow-400 transition duration-300"
-                  onClick={() => setShowModal(true)}
-                >
-                  {t("my_studies.see_explanation")}
-                </button>
+                {explicacionGenerada && (
+                  <div className="mt-10 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6 shadow-md">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+                      {t("my_studies.medical_explanation")}
+                    </h2>
 
-                {showModal && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto p-6 relative">
-                      <button
-                        onClick={() => setShowModal(false)}
-                        className="absolute top-3 right-3 text-gray-600 hover:text-red-600 text-lg font-bold"
-                        title="Cerrar"
-                      >
-                        ✕
-                      </button>
-
-                      <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
-                        {t("my_studies.medical_explanation")}
-                      </h2>
-
-                      <div
-                        className="prose prose-slate prose-sm md:prose-base max-w-none text-justify"
-                        dangerouslySetInnerHTML={{ __html: htmlExplicacion }}
-                      />
-                    </div>
+                    <div
+                      className="prose dark:prose-invert max-w-none text-justify text-sm sm:text-base leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: htmlExplicacion }}
+                    />
                   </div>
                 )}
               </div>
@@ -1762,7 +1966,7 @@ const handleSendEmail = async () => {
                   try {
                     const estudioRef = doc(db, "hcc_ai_studies", id);
                     await updateDoc(estudioRef, {
-                      sharedWithDoctorIds: arrayUnion(selectedDoctorId), 
+                      sharedWithDoctorIds: arrayUnion(selectedDoctorId),
                     });
                     toast.success("Estudio compartido correctamente");
                     setShowShareModal(false);
@@ -1780,6 +1984,35 @@ const handleSendEmail = async () => {
         </div>
       )}
 
+      {confirmarEliminacion && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full">
+            <h2 className="text-lg font-bold text-gray-800 mb-4">
+              {t("my_studies.delete_title")}
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              {t("my_studies.delete_warning")}
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => {
+                  eliminarEstudio(confirmarEliminacion);
+                  setConfirmarEliminacion(null);
+                }}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
+              >
+                {t("dashboard.delete")}
+              </button>
+              <button
+                onClick={() => setConfirmarEliminacion(null)}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+              >
+                {t("dashboard.cancel")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">

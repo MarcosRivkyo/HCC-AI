@@ -30,7 +30,7 @@ function Signup() {
   const auth = getAuth();
   const db = getFirestore();
   const navigate = useNavigate();
-  const { t , i18n } = useTranslation("global");
+  const { t, i18n } = useTranslation("global");
 
   const [authing, setAuthing] = useState(false);
   const [email, setEmail] = useState("");
@@ -69,7 +69,6 @@ function Signup() {
     "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2Fdefault_logo_user.png?alt=media&token=499a8fd4-85dc-49be-8d4a-a469aea1d1f7";
 
   const signUpWithEmail = async () => {
-    
     const validCodes = import.meta.env.VITE_ACCESS_CODE;
 
     if (!validCodes.includes(accessCode.trim())) {
@@ -159,10 +158,10 @@ function Signup() {
               className="w-80 rounded-md center mx-auto mb-10 cursor-pointer"
               onClick={() => navigate("/")}
             />
-            <h3 className="text-4xl font-bold mb-2 text-center">{t("signup.title")}</h3>
-            <p className="text-lg mb-4 text-center">
-              {t("signup.subtitle")}
-            </p>
+            <h3 className="text-4xl font-bold mb-2 text-center">
+              {t("signup.title")}
+            </h3>
+            <p className="text-lg mb-4 text-center">{t("signup.subtitle")}</p>
           </div>
 
           <input

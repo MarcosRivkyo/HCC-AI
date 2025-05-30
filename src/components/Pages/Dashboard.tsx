@@ -434,158 +434,55 @@ const Dashboard = () => {
         <div
           className={`flex pt-10 pb-10  px-6 h-full bg-gray-50 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
         >
-        {/* Panel del asistente con botón dentro */}
-        <div className="relative z-50">
-          <div
-            className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
-              showAssistant ? "translate-x-0" : "translate-x-full"
-            }`}
-          >
-            <div className="flex justify-between items-center mb-4">
+          {/* Panel del asistente con botón dentro */}
+          <div className="relative z-50">
+            <div
+              className={`fixed top-20 bottom-10 right-0 w-[30rem] bg-gray-800 text-white shadow-lg rounded-l-2xl p-4 transition-all duration-500 ease-in-out ${
+                showAssistant ? "translate-x-0" : "translate-x-full"
+              }`}
+            >
+              <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold p-4 border-b border-gray-700">
                   🧠 {t("assistant.title")}
                 </h2>
-              <button
-                onClick={() => setShowAssistant(false)}
-                className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
-                title="Cerrar"
-              >
-                <XMarkIcon className="w-5 h-5" />
-
-              </button>
+                <button
+                  onClick={() => setShowAssistant(false)}
+                  className="text-white bg-red-500 hover:bg-red-600 rounded-full p-1.5 shadow-md"
+                  title="Cerrar"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
+              </div>
+              <Assistant />
             </div>
-            <Assistant />
+
+            {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
+            {!showAssistant && (
+              <button
+                onClick={() => setShowAssistant(true)}
+                className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
+                title="Abrir asistente"
+              >
+                <ChatBubbleLeftIcon className="w-6 h-6" />
+              </button>
+            )}
           </div>
 
-          {/* Botón de abrir, que aparece cuando el asistente está cerrado */}
-          {!showAssistant && (
-            <button
-              onClick={() => setShowAssistant(true)}
-              className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg p-4 transition-all duration-300 ease-in-out"
-              title="Abrir asistente"
-            >
-              <ChatBubbleLeftIcon className="w-6 h-6" />
-
-            </button>
-          )}
-        </div>
-          <div className="w-1/2 h-full bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700 mr-6 flex flex-col">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-              {t("dashboard.recent_studies")}
-            </h2>
-
-            <main className="flex-1 overflow-auto">
-              {}
-              <EstudiosRecientes key={claveEstudios} />
-            </main>
-
-            <div className="mt-5">
-              <button
-                onClick={abrirFormulario}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg mb-4 mx-auto"
-              >
-                {t("dashboard.create_studie")}
-              </button>
-              {user && <UsefulLinks userId={user.uid} />}
-
-              {mostrarFormulario && (
-                <div
-                  className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center"
-                  style={{ zIndex: 1000 }}
-                >
-                  <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-1/3 border border-gray-300 dark:border-gray-700">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
-                      {t("dashboard.create_studie")}
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                      <div className="mb-4">
-                        <label
-                          className="block mb-2 text-gray-700 dark:text-gray-300"
-                          htmlFor="studieName"
-                        >
-                          {t("dashboard.study_name")}
-                        </label>
-                        <input
-                          id="studieName"
-                          name="studieName"
-                          type="text"
-                          value={formData.studieName}
-                          onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-                        />
-                      </div>
-
-                      <div className="mb-4">
-                        <label
-                          className="block mb-2 text-gray-700 dark:text-gray-300"
-                          htmlFor="studieDate"
-                        >
-                          {t("dashboard.study_date")}
-                        </label>
-                        <input
-                          id="studieDate"
-                          name="studieDate"
-                          type="date"
-                          value={formData.studieDate}
-                          onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-                        />
-                      </div>
-
-                      <div className="mb-4">
-                        <label
-                          className="block mb-2 text-gray-700 dark:text-gray-300"
-                          htmlFor="patientName"
-                        >
-                          {t("dashboard.patient_name")}
-                        </label>
-                        <input
-                          id="patientName"
-                          name="patientName"
-                          type="text"
-                          value={formData.patientName}
-                          onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-                        />
-                      </div>
-
-                      <div className="mb-4">
-                        <label
-                          className="block mb-2 text-gray-700 dark:text-gray-300"
-                          htmlFor="clinicalDescription"
-                        >
-                          {t("dashboard.clinical_description")}
-                        </label>
-                        <input
-                          id="clinicalDescription"
-                          name="clinicalDescription"
-                          type="text"
-                          value={formData.clinicalDescription}
-                          onChange={handleChange}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
-                        />
-                      </div>
-
-                      <div className="flex justify-end">
-                        <button
-                          type="button"
-                          onClick={cerrarFormulario}
-                          className="px-4 py-2 bg-red-500 text-white rounded-lg mr-2 hover:bg-red-600"
-                        >
-                          {t("actions.cancel")}
-                        </button>
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                        >
-                          {t("dashboard.create_studie")}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
+          <div className="w-1/2 h-full bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700 mr-6 flex flex-col space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                {t("dashboard.recent_studies")}
+              </h2>
+              <main className="flex-1 overflow-auto">
+                <EstudiosRecientes key={claveEstudios} />
+              </main>
             </div>
+
+            {user && (
+              <div className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md p-4">
+                <UsefulLinks userId={user.uid} />
+              </div>
+            )}
           </div>
 
           {}
