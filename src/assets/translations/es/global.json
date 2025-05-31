@@ -402,8 +402,8 @@
       "forgot_passwd": "¿Olvidaste tu contraseña?",
       "no_account": "¿No tienes cuenta?",
       "register": "Regístrate",
-      "error_send_mail": "Enviar correo de recuperación",
-      "cancel_remake": "Cancelar recuperación"
+      "error_send_email": "Enviar correo de recuperación",
+      "error_remake": "Cancelar recuperación"
 
     },
 

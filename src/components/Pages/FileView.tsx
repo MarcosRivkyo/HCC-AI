@@ -1,14 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import {
-  getStorage,
-  ref,
-  listAll,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
 import {
   FiChevronDown,
   FiChevronRight,
@@ -23,34 +13,19 @@ import "react-toastify/dist/ReactToastify.css";
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
-import Assistant from "./Assistant.tsx";
+import Assistant from "./AssistantView.tsx";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
 import logoHCC from "../../assets/images/logo_hcc_ai_bg.jpg";
-import { useNavigate } from "react-router-dom";
-
-interface FileItem {
-  name: string;
-  url: string;
-}
+import usePreventZoom from "../UI/usePreventZoom.tsx";
+import { useFilesViewModel } from "../../viewmodels/FileViewModel.ts";
 
 const FilesPage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [userData, setUserData] = useState<any>(null);
-  const [groupedFiles, setGroupedFiles] = useState<Record<string, FileItem[]>>(
-    {},
-  );
-  const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
-  const [fileToDelete, setFileToDelete] = useState<{
-    folderPath: string;
-    fileName: string;
-  } | null>(null);
   const [showAssistant, setShowAssistant] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [folderPages, setFolderPages] = useState<Record<string, number>>({});
-
+  
+  
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "es",
@@ -62,140 +37,39 @@ const FilesPage: React.FC = () => {
     localStorage.getItem("highContrast") === "true",
   );
   const { t, i18n } = useTranslation("global");
-  const auth = getAuth();
-  const db = getFirestore();
-  const storage = getStorage();
-  const navigate = useNavigate();
+
+
+  usePreventZoom(true, true);
+
+
+  const {
+    user,
+    userData,
+    groupedFiles,
+    openFolders,
+    fileToDelete,
+    folderPages,
+    loading,
+    setFileToDelete,
+    toggleFolder,
+    changePage,
+    handleUpload,
+    confirmarEliminarArchivo,
+    fetchAllFiles,
+    handleImageClick
+  } = useFilesViewModel();
+
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const userDocRef = doc(db, "hcc_ai_users", currentUser.uid);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          setUserData(userDoc.data());
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleImageClick = (url: string, event: React.MouseEvent) => {
-    event.stopPropagation();
-    navigate(`/editar-imagen?imageUrl=${encodeURIComponent(url)}`);
-  };
-
-  const fetchFilesFromFolder = async (folder: string): Promise<FileItem[]> => {
-    const folderRef = ref(storage, folder);
-    try {
-      const res = await listAll(folderRef);
-      const files = await Promise.all(
-        res.items.map(async (item) => {
-          const url = await getDownloadURL(item);
-          return { name: item.name, url };
-        }),
-      );
-      return files;
-    } catch (error) {
-      console.error("Error listando archivos en", folder, error);
-      return [];
-    }
-  };
-
-  const fetchAllFiles = async () => {
-    if (!userData) return;
-    setLoading(true);
-
-    try {
-      const fileGroups: Record<string, FileItem[]> = {};
-      const baseImageFolder = userData.imageFolder;
-      const documentFolder = userData.documentFolder;
-
-      const subfolders = ["ecografias", "masks"];
-      for (const sub of subfolders) {
-        const fullPath = `${baseImageFolder}${sub}/`;
-        const files = await fetchFilesFromFolder(fullPath);
-        fileGroups[sub] = files;
-      }
-
-      if (documentFolder) {
-        const docs = await fetchFilesFromFolder(documentFolder);
-        fileGroups["informes"] = docs;
-      }
-
-      setGroupedFiles(fileGroups);
-    } finally {
-      setLoading(false); // ← Termina loading
-    }
-  };
-
-  const changePage = (folderName: string, direction: "next" | "prev") => {
-    setFolderPages((prev) => {
-      const currentPage = prev[folderName] || 1;
-      const newPage = direction === "next" ? currentPage + 1 : currentPage - 1;
-      return {
-        ...prev,
-        [folderName]: Math.max(newPage, 1),
-      };
-    });
-  };
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
 
   useEffect(() => {
-    fetchAllFiles();
+    if (userData) {
+      fetchAllFiles();
+    }
   }, [userData]);
-
-  const toggleFolder = (folderName: string) => {
-    setOpenFolders((prev) => ({ ...prev, [folderName]: !prev[folderName] }));
-    setFolderPages((prev) => ({ ...prev, [folderName]: 1 }));
-  };
-
-  const handleUpload = (
-    folderPath: string,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file || !user) return;
-
-    const storageRef = ref(storage, `${folderPath}${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      null,
-      (error) => {
-        console.error("Upload error:", error);
-        toast.error("Error al subir archivo");
-      },
-      async () => {
-        const url = await getDownloadURL(uploadTask.snapshot.ref);
-        setGroupedFiles((prev) => ({
-          ...prev,
-          [folderPath]: [...(prev[folderPath] || []), { name: file.name, url }],
-        }));
-        await fetchAllFiles();
-        toast.success(`Archivo \"${file.name}\" subido con éxito`);
-      },
-    );
-  };
-
-  const confirmarEliminarArchivo = async () => {
-    if (!fileToDelete) return;
-
-    const { folderPath, fileName } = fileToDelete;
-    const fileRef = ref(storage, `${folderPath}${fileName}`);
-    try {
-      await deleteObject(fileRef);
-      await fetchAllFiles(); // ✅ Recarga segura desde Firebase
-      toast.success(`Archivo "${fileName}" eliminado con éxito`);
-    } catch (error) {
-      console.error("Error al eliminar archivo:", error);
-      toast.error("No se pudo eliminar el archivo");
-    } finally {
-      setFileToDelete(null);
-    }
-  };
-
+  
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
       <NavbarSecond
@@ -315,9 +189,11 @@ const FilesPage: React.FC = () => {
                                 folderName === "informes"
                                   ? userData?.documentFolder
                                   : `${userData?.imageFolder}${folderName}/`;
-                              handleUpload(path, e);
+                              const file = e.target.files?.[0];
+                              if (file && path) handleUpload(path, file);
                             }}
                           />
+
                         </label>
                         <button onClick={() => toggleFolder(folderName)}>
                           {isOpen ? (
@@ -395,9 +271,7 @@ const FilesPage: React.FC = () => {
                                       .toLowerCase()
                                       .endsWith(".pdf") && (
                                       <button
-                                        onClick={(e) =>
-                                          handleImageClick(file.url, e)
-                                        }
+                                        onClick={(e) => handleImageClick(file.url, e)}
                                         className="text-sm text-yellow-600 dark:text-yellow-400 flex items-center gap-1 hover:underline"
                                         title="Editar imagen"
                                       >
@@ -491,7 +365,7 @@ const FilesPage: React.FC = () => {
         }
       />
 
-      <footer className="w-full bg-gray-900 dark:bg-black text-white text-center py-4 shadow-lg rounded-t-lg">
+      <footer className="w-full bg-black dark:bg-black text-white text-center py-4 shadow-lg rounded-t-lg">
         © 2025 HCC-AI
       </footer>
     </div>

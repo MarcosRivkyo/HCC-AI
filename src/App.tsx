@@ -107,6 +107,13 @@ const ContactButton: React.FC = () => {
   );
 };
 
+export const scrollToSection = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
 const Home: React.FC = () => {
   const [showFirstTextEffect, setShowFirstTextEffect] = useState(false);
   const [showSecondTextEffect, setShowSecondTextEffect] = useState(false);

@@ -4,37 +4,42 @@ import "react-calendar/dist/Calendar.css";
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
-import Assistant from "./Assistant.tsx";
+import Assistant from "./AssistantView.tsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import "../../calendar-overrides.css";
+import usePreventZoom from "../UI/usePreventZoom.tsx";
+import { useCalendarViewModel } from "../../viewmodels/CalendarViewModel.ts";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc , getDoc, getFirestore } from "firebase/firestore";
+import { app, storage } from "../../config/firebase.ts";
 
-type Reminder = {
-  id: string;
-  date: string;
-  text: string;
-  done: boolean;
-  createdAt?: any;
-};
 
-const db = getFirestore();
-const auth = getAuth();
+const CalendarPageView: React.FC = () => {
+  const {
+    reminders,
+    user,
+    setUser,
+    selectedDate,
+    setSelectedDate,
+    newReminder,
+    setNewReminder,
+    addReminder,
+    deleteReminder,
+    toggleReminderDone,
+  } = useCalendarViewModel();
 
-const CalendarPage: React.FC = () => {
+
+  const [userData, setUserData] = useState<any>(null);
+
   const [value, setValue] = useState(new Date());
-  const [reminders, setReminders] = useState<Reminder[]>([]);
-
-  const [newReminder, setNewReminder] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [user, setUser] = useState<any>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
+
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "es",
@@ -45,73 +50,41 @@ const CalendarPage: React.FC = () => {
   const [highContrast, setHighContrast] = useState(
     localStorage.getItem("highContrast") === "true",
   );
-  const { t } = useTranslation("global");
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const { t, i18n } = useTranslation("global");
+
+  const db = getFirestore(app);
+  const auth = getAuth();
+
+  usePreventZoom(true, true);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    setUser(auth.currentUser);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        const userRemindersRef = collection(
-          db,
-          "hcc_ai_users",
-          currentUser.uid,
-          "reminders",
-        );
-        const snapshot = await getDocs(userRemindersRef);
-        const userReminders = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          done: doc.data().done ?? false,
-        })) as Reminder[];
-        setReminders(userReminders);
+        const userDocRef = doc(db, "hcc_ai_users", currentUser.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userDocData = userDoc.data();
+          setUserData(userDocData);
+        } else {
+          console.log("No se encontró el documento del usuario.");
+        }
       }
     });
+
+    const savedTheme = localStorage.getItem("theme");
+
     return () => unsubscribe();
-  }, []);
-
-  const addReminder = async () => {
-    if (!newReminder || !selectedDate || !user) return;
-
-    const reminder = {
-      date: selectedDate.toDateString(),
-      text: newReminder,
-      done: false,
-      createdAt: new Date(),
-    };
-
-    try {
-      const remindersRef = collection(
-        db,
-        "hcc_ai_users",
-        user.uid,
-        "reminders",
-      );
-      const docRef = await addDoc(remindersRef, reminder);
-
-      setReminders([...reminders, { ...reminder, id: docRef.id }]);
-      toast.success("Recordatorio añadido");
-      setNewReminder("");
-    } catch (error) {
-      console.error("Error guardando recordatorio:", error);
-      toast.error("No se pudo guardar el recordatorio");
-    }
-  };
-
-  const deleteReminder = async (reminderId: string) => {
-    if (!user) return;
-
-    try {
-      await deleteDoc(
-        doc(db, "hcc_ai_users", user.uid, "reminders", reminderId),
-      );
-      setReminders(reminders.filter((r) => r.id !== reminderId));
-      toast.success("Recordatorio eliminado");
-    } catch (error) {
-      console.error("Error eliminando recordatorio:", error);
-      toast.error("No se pudo eliminar el recordatorio");
-    }
-  };
+  }, [db]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
@@ -122,12 +95,14 @@ const CalendarPage: React.FC = () => {
         onAssistantClick={() => setShowAssistant(!showAssistant)}
       />
 
+
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
-        userData={{}}
+        userData={userData}
         user={user}
       />
+
       <SettingsModal
         open={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -139,8 +114,9 @@ const CalendarPage: React.FC = () => {
         setScale={setScale}
         highContrast={highContrast}
         setHighContrast={setHighContrast}
-        userData={{}}
+        userData={userData}
       />
+
 
       <div className="relative z-50">
         <div
@@ -221,7 +197,7 @@ const CalendarPage: React.FC = () => {
 
                 <button
                   onClick={addReminder}
-                  className="bg-yellow-500 text-black px-4 py-2 rounded-md font-bold hover:bg-yellow-400"
+                  className="bg-yellow-500 dark:bg-yellow-500 text-black dark:text-black px-4 py-2 rounded-md font-bold hover:bg-yellow-400"
                 >
                   Añadir
                 </button>
@@ -246,37 +222,13 @@ const CalendarPage: React.FC = () => {
                         id={`reminder-${reminder.id}`}
                         type="checkbox"
                         checked={reminder.done}
-                        onChange={async () => {
-                          const updatedReminders = reminders.map((r) =>
-                            r.id === reminder.id ? { ...r, done: !r.done } : r,
-                          );
-                          setReminders(updatedReminders);
-
-                          try {
-                            const reminderRef = doc(
-                              db,
-                              "hcc_ai_users",
-                              user.uid,
-                              "reminders",
-                              reminder.id,
-                            );
-                            await updateDoc(reminderRef, {
-                              done: !reminder.done,
-                            });
-                          } catch (error) {
-                            console.error(
-                              "Error actualizando recordatorio:",
-                              error,
-                            );
-                            toast.error("Error al actualizar el recordatorio");
-                          }
-                        }}
+                        onChange={() => toggleReminderDone(reminder.id)}
                         className="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-green-600 focus:ring-2 focus:ring-green-500 transition-all"
                         aria-label={`Marcar ${reminder.text} como ${reminder.done ? "pendiente" : "completado"}`}
                       />
                       <label
                         htmlFor={`reminder-${reminder.id}`}
-                        className={`cursor-pointer ${reminder.done ? "line-through opacity-50" : "text-gray-800 dark:text-gray-100"}`}
+                        className={`cursor-pointer ${reminder.done ? "line-through opacity-50 text-gray-800 dark:text-white" : "text-gray-800 dark:text-gray-100"}`}
                       >
                         {reminder.text}
                       </label>
@@ -325,7 +277,7 @@ const CalendarPage: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-inner">
+      <footer className="bg-black text-white text-center p-4 w-full mt-auto shadow-inner">
         © 2025 HCC-AI
       </footer>
 
@@ -338,4 +290,4 @@ const CalendarPage: React.FC = () => {
   );
 };
 
-export default CalendarPage;
+export default CalendarPageView;

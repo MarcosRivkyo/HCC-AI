@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { app } from "../../config/firebase";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
@@ -9,25 +6,20 @@ import { CubeTransparentIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import NavbarSecond from "../UI/InsideNavbar";
 import ProfileModal from "../UI/ProfileModal";
-import Assistant from "./Assistant";
+import Assistant from "./AssistantView";
 import SettingsModal from "../UI/SettingsModal";
+import usePreventZoom from "../UI/usePreventZoom";
+import { useModelsViewModel } from "../../viewmodels/AiModelsViewModel";
+import { ModelData } from "../../models/AiModels";
 
-type ModelData = {
-  modelId: string;
-  modelName: string;
-  modelType: string;
-  accuracy: number;
-  description: string;
-  trainDate: any;
-};
+
 
 const Models = () => {
-  const [models, setModels] = useState<ModelData[]>([]);
-  const [user, setUser] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [hoveredModelId, setHoveredModelId] = useState<string | null>(null);
+
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -43,52 +35,16 @@ const Models = () => {
 
   const { t, i18n } = useTranslation("global");
 
-  const db = getFirestore(app);
-  const auth = getAuth();
+
+  usePreventZoom(true, true);
+
+  const { models, user, userData } = useModelsViewModel();
+
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const userDocRef = collection(db, "hcc_ai_users");
-        const userDocs = await getDocs(userDocRef);
-        const userDoc = userDocs.docs.find((doc) => doc.id === currentUser.uid);
-        if (userDoc) setUserData(userDoc.data());
-      }
-    });
-    return () => unsubscribe();
-  }, [db]);
-  useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "hcc_ai_models"));
-        const data = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-          modelId: doc.id,
-        })) as ModelData[];
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
 
-        const geminiModel: ModelData = {
-          modelId: "gemini-1.5-pro",
-          modelName: "Gemini 1.5 Pro",
-          modelType: "Generative",
-          accuracy: NaN,
-          description:
-            i18n.language === "fr"
-              ? "Modèle génératif avancé de Google pour les tâches multimodales de traitement du langage naturel."
-              : i18n.language === "es"
-                ? "Modelo generativo avanzado de Google para tareas multimodales de lenguaje natural."
-                : "Google's advanced generative model for multimodal natural language tasks.",
-          trainDate: null,
-        };
-
-        setModels([...data, geminiModel]);
-      } catch (error) {
-        console.error("Error al obtener modelos:", error);
-      }
-    };
-
-    fetchModels();
-  }, [db, i18n.language]);
 
   const renderModelCards = (filteredModels: ModelData[]) =>
     filteredModels.length === 0 ? null : (
@@ -128,7 +84,7 @@ const Models = () => {
               </p>
 
               {isGemini ? (
-                <div className="text-sm text-gray-700 dark:text-gray-300 mt-4 space-y-1">
+                <div className="text-sm text-gray-700 dark:text-white mt-4 space-y-1">
                   <p>
                     <strong>{t("models.application")}:</strong>{" "}
                     {t("models.application_value")}
@@ -188,7 +144,7 @@ const Models = () => {
                     <p className="font-semibold mb-1">
                       {t("models.metavir_title")}:
                     </p>
-                    <ul className="text-xs text-gray-600 list-disc pl-4">
+                    <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc pl-4">
                       <li>
                         <strong>F0:</strong> {t("models.metavir.f0")}
                       </li>
@@ -210,7 +166,7 @@ const Models = () => {
                     <p className="font-semibold mb-1">
                       {t("models.submodels.title")}:
                     </p>
-                    <ul className="list-disc pl-5 text-xs text-gray-600">
+                    <ul className="list-disc pl-5 text-xs text-gray-600 dark:text-gray-100">
                       <li>
                         <strong>ResNet:</strong> {t("models.submodels.resnet")}
                       </li>
@@ -234,7 +190,7 @@ const Models = () => {
                     <p className="font-semibold mb-1">
                       {t("models.segmented_structures_title")}:
                     </p>
-                    <ul className="text-xs text-gray-600 list-disc pl-4 grid grid-cols-2 gap-y-1">
+                    <ul className="text-xs text-gray-600 dark:text-gray-100 list-disc pl-4 grid grid-cols-2 gap-y-1">
                       <li>
                         <strong>HCC:</strong>{" "}
                         {t("models.segmented_structures.HCC")}
@@ -292,7 +248,7 @@ const Models = () => {
                     <p className="font-semibold mb-1">
                       {t("models.used_submodels_title")}:
                     </p>
-                    <ul className="list-disc pl-5 text-xs text-gray-600">
+                    <ul className="list-disc pl-5 text-xs text-gray-600 dark:text-gray-100">
                       <li>
                         <strong>YOLOv8:</strong>{" "}
                         {t("models.used_submodels.YOLOv8")}
@@ -384,38 +340,38 @@ const Models = () => {
           </button>
         )}
       </div>
+      <div className="flex-grow overflow-auto">
+        <main className="flex-grow container mx-auto px-4 py-20">
+          <h1 className="text-4xl mt-8 font-bold text-center text-gray-800 dark:text-white mb-16 flex items-center justify-center gap-2">
+            <CubeTransparentIcon className="w-8 h-8 text-blue-500" />
+            {t("models.title")}
+          </h1>
 
-      <main className="flex-grow container mx-auto px-4 py-20">
-        <h1 className="text-4xl mt-8 font-bold text-center text-gray-800 dark:text-white mb-16 flex items-center justify-center gap-2">
-          <CubeTransparentIcon className="w-8 h-8 text-blue-500" />
-          {t("models.title")}
-        </h1>
+          <div className="flex flex-col lg:flex-row gap-10">
+            <section className="flex-1">
+              <h2 className="text-2xl font-semibold text-blue-600 mb-6 border-b border-blue-300 pb-2 text-center">
+                {t("models.classification")}
+              </h2>
+              {renderModelCards(classificationModels)}
+            </section>
 
-        <div className="flex flex-col lg:flex-row gap-10">
-          <section className="flex-1">
-            <h2 className="text-2xl font-semibold text-blue-600 mb-6 border-b border-blue-300 pb-2 text-center">
-              {t("models.classification")}
-            </h2>
-            {renderModelCards(classificationModels)}
-          </section>
+            <section className="flex-1">
+              <h2 className="text-2xl font-semibold text-purple-600 mb-6 border-b border-purple-300 pb-2 text-center">
+                {t("models.segmentation")}
+              </h2>
+              {renderModelCards(segmentationModels)}
+            </section>
 
-          <section className="flex-1">
-            <h2 className="text-2xl font-semibold text-purple-600 mb-6 border-b border-purple-300 pb-2 text-center">
-              {t("models.segmentation")}
-            </h2>
-            {renderModelCards(segmentationModels)}
-          </section>
-
-          <section className="flex-1">
-            <h2 className="text-2xl font-semibold text-pink-600 mb-6 border-b border-pink-300 pb-2 text-center">
-              {t("models.generative")}
-            </h2>
-            {renderModelCards(generativeModels)}
-          </section>
-        </div>
-      </main>
-
-      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+            <section className="flex-1">
+              <h2 className="text-2xl font-semibold text-pink-600 mb-6 border-b border-pink-300 pb-2 text-center">
+                {t("models.generative")}
+              </h2>
+              {renderModelCards(generativeModels)}
+            </section>
+          </div>
+        </main>
+      </div>
+      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI
       </footer>
     </div>

@@ -1,66 +1,27 @@
-// MisEstudios.tsx
-import React, { useState, useEffect } from "react";
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  orderBy,
-  getDocs,
-  deleteDoc,
-  doc,
-  addDoc,
-} from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Timestamp } from "firebase/firestore";
+// src/views/MisEstudios.tsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { app } from "../../config/firebase.ts";
-import { FaDownload, FaTrashAlt } from "react-icons/fa";
-import NavbarSecond from "../UI/InsideNavbar.tsx";
-import ProfileModal from "../UI/ProfileModal.tsx";
-import Assistant from "./Assistant.tsx";
-import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import SettingsModal from "../UI/SettingsModal.tsx";
 import { useTranslation } from "react-i18next";
+import { Slide, toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaDownload, FaTrashAlt } from "react-icons/fa";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
-interface Estudio {
-  id: string;
-  studieName: string;
-  status: string;
-  studieDate: any;
-  doctorName: string;
-  patientName: string;
-  clinicalDescription?: string;
-  imagenUrl?: string | null;
-  doctorId: string;
-  predictionId?: string;
-  pdfReportUrl?: string;
-}
+import NavbarSecond from "../UI/InsideNavbar";
+import ProfileModal from "../UI/ProfileModal";
+import Assistant from "./AssistantView";
+import SettingsModal from "../UI/SettingsModal";
+import usePreventZoom from "../UI/usePreventZoom";
+import { useMisEstudios } from "../../viewmodels/MyStudieViewModel";
 
 const MisEstudios: React.FC = () => {
-  const [estudios, setEstudios] = useState<Estudio[]>([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const [confirmarEliminacion, setConfirmarEliminacion] = useState<
-    string | null
-  >(null);
-  const [user, setUser] = useState<any>(null);
-  const [userData, setUserData] = useState<any>(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [showAssistant, setShowAssistant] = useState(false);
-  const [vista, setVista] = useState<"mios" | "compartidos" | "todos">("mios");
-
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState<string | null>(null);
   const [estadoFiltro, setEstadoFiltro] = useState("");
   const [ordenFecha, setOrdenFecha] = useState<"asc" | "desc">("desc");
   const [busqueda, setBusqueda] = useState("");
   const [fechaFiltro, setFechaFiltro] = useState("");
-  const { t, i18n } = useTranslation("global");
-
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const abrirFormulario = () => setMostrarFormulario(true);
-  const cerrarFormulario = () => setMostrarFormulario(false);
   const [formData, setFormData] = useState({
     studieName: "",
     status: "En Progreso",
@@ -70,80 +31,62 @@ const MisEstudios: React.FC = () => {
     doctorId: "",
     clinicalDescription: "",
   });
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "es",
-  );
-  const [scale, setScale] = useState<number>(
-    parseFloat(localStorage.getItem("uiScale") || "1"),
-  );
-  const [highContrast, setHighContrast] = useState(
-    localStorage.getItem("highContrast") === "true",
-  );
+  const [language, setLanguage] = useState(localStorage.getItem("language") || "es");
+  const [scale, setScale] = useState<number>(parseFloat(localStorage.getItem("uiScale") || "1"));
+  const [highContrast, setHighContrast] = useState(localStorage.getItem("highContrast") === "true");
 
-  const estudiosPorPagina = 6;
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+  const { estudios, user, userData, vista, setVista, crearEstudio, eliminarEstudioVM } = useMisEstudios();
+  const { t, i18n } = useTranslation("global");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        const userDoc = await getDocs(
-          query(
-            collection(db, "hcc_ai_users"),
-            where("__name__", "==", currentUser.uid),
-          ),
-        );
-        if (!userDoc.empty) {
-          setUserData(userDoc.docs[0].data());
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, [db]);
+  usePreventZoom(true, true);
 
-  useEffect(() => {
-    const fetchEstudios = async () => {
-      if (!user) return;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-      try {
-        const q = query(
-          collection(db, "hcc_ai_studies"),
-          orderBy("studieDate", "desc"), // ya no filtramos por doctorId directamente
-        );
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await crearEstudio(formData);
+      setMostrarFormulario(false);
+      setFormData({
+        studieName: "",
+        status: "En Progreso",
+        studieDate: "",
+        patientName: "",
+        doctorName: "",
+        doctorId: "",
+        clinicalDescription: "",
+      });
+      toast.success("Estudio creado con éxito");
+    } catch (err: any) {
+      toast.warning(err.message);
+    }
+  };
 
-        const snapshot = await getDocs(q);
+  const descargarPDF = (pdfReportUrl?: string) => {
+    if (!pdfReportUrl) {
+      toast.error(t("my_studies.no_pdf"));
+      return;
+    }
+    window.open(pdfReportUrl, "_blank");
+  };
 
-        const estudiosFiltrados = snapshot.docs
-          .map((doc) => ({ id: doc.id, ...doc.data() }))
-          .filter((estudio: any) => {
-            if (vista === "mios") {
-              return estudio.doctorId === user.uid;
-            } else if (vista === "compartidos") {
-              return (
-                Array.isArray(estudio.sharedWithDoctorIds) &&
-                estudio.sharedWithDoctorIds.includes(user.uid)
-              );
-            } else if (vista === "todos") {
-              return (
-                estudio.doctorId === user.uid ||
-                (Array.isArray(estudio.sharedWithDoctorIds) &&
-                  estudio.sharedWithDoctorIds.includes(user.uid))
-              );
-            }
-          });
-
-        setEstudios(estudiosFiltrados as Estudio[]);
-      } catch (error) {
-        console.error("Error al obtener estudios:", error);
-      }
-    };
-
-    fetchEstudios();
-  }, [user, vista]);
+  const eliminarEstudio = async (id: string) => {
+    try {
+      await eliminarEstudioVM(id);
+      setConfirmarEliminacion(null);
+      toast.success(t("my_studies.delete_success"));
+    } catch (error: any) {
+      toast.error(t("my_studies.delete_error") || "Error al eliminar el estudio");
+    }
+  };
 
   const estudiosFiltrados = estudios
     .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
@@ -159,111 +102,40 @@ const MisEstudios: React.FC = () => {
       return ordenFecha === "asc" ? fechaA - fechaB : fechaB - fechaA;
     });
 
+  const estudiosPorPagina = 6;
   const indiceInicio = (paginaActual - 1) * estudiosPorPagina;
-  const estudiosPaginados = estudiosFiltrados.slice(
-    indiceInicio,
-    indiceInicio + estudiosPorPagina,
-  );
+  const estudiosPaginados = estudiosFiltrados.slice(indiceInicio, indiceInicio + estudiosPorPagina);
 
   const verEstudioDetalle = (id: string) => navigate(`/estudio/${id}`);
 
-  const descargarPDF = (pdfReportUrl?: string) => {
-    if (!pdfReportUrl) {
-      toast.error(
-        "No se encontró el informe PDF. Asegúrate de haber generado el análisis primero.",
-      );
-      return;
-    }
-
-    window.open(pdfReportUrl, "_blank");
-  };
-
-  const eliminarEstudio = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "hcc_ai_studies", id));
-      setEstudios(estudios.filter((e) => e.id !== id));
-      setConfirmarEliminacion(null);
-    } catch (error) {
-      console.error("Error al eliminar el estudio:", error);
-    }
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!user) return;
-    try {
-      const existingQuery = query(
-        collection(db, "hcc_ai_studies"),
-        where("studieName", "==", formData.studieName),
-        where("doctorId", "==", user.uid),
-      );
-
-      const existingSnapshot = await getDocs(existingQuery);
-
-      if (!existingSnapshot.empty) {
-        toast.warning(
-          "Ya existe un estudio con ese nombre. Elige otro nombre.",
-        );
-        return;
-      }
-      const finalDate = new Date(formData.studieDate);
-      finalDate.setHours(12);
-      const studieDateTimestamp = Timestamp.fromDate(finalDate);
-
-      await addDoc(collection(db, "hcc_ai_studies"), {
-        ...formData,
-        studieDate: studieDateTimestamp,
-        doctorId: user.uid,
-        doctorName: userData?.firstName || user.displayName || user.email,
-      });
-
-      cerrarFormulario();
-      setFormData({
-        studieName: "",
-        status: "En Progreso",
-        studieDate: "",
-        patientName: "",
-        doctorName: "",
-        doctorId: "",
-        clinicalDescription: "",
-      });
-
-      const q = query(
-        collection(db, "hcc_ai_studies"),
-        where("doctorId", "==", user.uid),
-        orderBy("studieDate", "desc"),
-      );
-      const querySnapshot = await getDocs(q);
-      const nuevosEstudios = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Estudio[];
-      setEstudios(nuevosEstudios);
-    } catch (error) {
-      console.error("Error al crear el estudio:", error);
-    }
+  const cerrarFormulario = () => {
+    setMostrarFormulario(false);
+    setFormData({
+      studieName: "",
+      status: "En Progreso",
+      studieDate: "",
+      patientName: "",
+      doctorName: "",
+      doctorId: "",
+      clinicalDescription: "",
+    });
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+    />
+
 
       <NavbarSecond
         userData={userData}
@@ -605,20 +477,22 @@ const MisEstudios: React.FC = () => {
                 onClick={() => eliminarEstudio(confirmarEliminacion)}
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
               >
-                Eliminar
+                {t("actions.delete")}
               </button>
               <button
                 onClick={() => setConfirmarEliminacion(null)}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
               >
-                Cancelar
+                {t("actions.cancel")}
               </button>
             </div>
           </div>
         </div>
       )}
+      
 
-      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+
+      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI
       </footer>
     </div>

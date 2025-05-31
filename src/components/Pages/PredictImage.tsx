@@ -19,11 +19,12 @@ import {
 import { app } from "../../config/firebase.ts";
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
-import Assistant from "./Assistant.tsx";
+import Assistant from "./AssistantView.tsx";
 import SettingsModal from "../UI/SettingsModal";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import usePreventZoom from "../UI/usePreventZoom.tsx";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -64,6 +65,7 @@ const PredictImage: React.FC = () => {
   const [scale, setScale] = useState<number>(
     parseFloat(localStorage.getItem("uiScale") || "1"),
   );
+
   const [highContrast, setHighContrast] = useState(
     localStorage.getItem("highContrast") === "true",
   );
@@ -76,10 +78,11 @@ const PredictImage: React.FC = () => {
 
   const auth = getAuth(app);
   const db = getFirestore(app);
+  usePreventZoom(true, true);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -250,7 +253,7 @@ const PredictImage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-950 dark:text-white">
+    <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-600 dark:text-white">
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
 
       <NavbarSecond
@@ -316,7 +319,7 @@ const PredictImage: React.FC = () => {
         )}
       </div>
 
-      <main className="pt-24 px-6 flex-grow bg-white dark:bg-gray-950 transition-colors duration-500">
+      <main className="pt-24 px-6 flex-grow bg-white dark:bg-gray-900 transition-colors duration-500">
         <div className="flex flex-col lg:flex-row items-start justify-center gap-6 text-black dark:text-white bg-gray-400 dark:bg-gray-800 p-6 rounded-xl shadow-md mx-auto w-fit">
           {/* Contenedor izquierdo: Toolbox + Canvas + Controles */}
           <div className="flex flex-row items-start gap-6">
@@ -424,7 +427,7 @@ const PredictImage: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-gray-900 text-white text-center p-4 w-full mt-auto shadow-inner">
+      <footer className="bg-black text-white text-center p-4 w-full mt-auto shadow-inner">
         © 2025 HCC-AI
       </footer>
     </div>

@@ -115,6 +115,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   );
   const { t, i18n } = useTranslation("global");
   const [reminders, setReminders] = useState<Reminder[]>([]);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchReminders = async () => {
@@ -151,6 +152,24 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
     };
   }, [i18n]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   const navItems = [
     { path: "/dashboard", label: t("navbar.home"), icon: <FiHome /> },
     { path: "/my-studies", label: t("navbar.my_studies"), icon: <FiBook /> },
@@ -160,7 +179,19 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   ];
 
   return (
-    <nav className="bg-black p-4 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">
+    <nav className="bg-black p-4 text-white flex flex-wrap items-center justify-between gap-y-4 fixed w-full top-0 z-50 shadow-lg">
+      <div className="flex items-center flex-shrink-0">
+        <img
+          src={logoHCC_AI}
+          className="w-32 max-w-full rounded-md cursor-pointer"
+          alt="HCC-AI Logo"
+          onClick={() => {
+            navigate("/dashboard");
+            setActivePath("/dashboard");
+          }}
+        />
+      </div>
+
       <ul className="flex items-center text-sm space-x-8 sm:space-x-12 md:space-x-16">
         {navItems.map(({ path, label, icon }) => (
           <li key={path}>
@@ -199,19 +230,10 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
         </li>
       </ul>
 
-      <div className="absolute left-1/2 transform -translate-x-1/2">
-        <img
-          src={logoHCC_AI}
-          className="w-32 max-w-full rounded-md cursor-pointer"
-          alt="HCC-AI Logo"
-          onClick={() => {
-            navigate("/dashboard");
-            setActivePath("/dashboard");
-          }}
-        />
-      </div>
-
-      <div className="flex items-center gap-4 relative w-72 justify-end">
+      <div
+        className="flex items-center gap-4 relative w-72 justify-end"
+        ref={menuRef}
+      >
         <Clock reminders={reminders} />
 
         <div
@@ -219,7 +241,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           onClick={() => setIsOpen(!isOpen)}
         >
           <img
-            src={user?.photoURL || userData?.profilePicture || logo_user}
+            src={userData?.profilePicture || user?.photoURL || logo_user}
             alt="Perfil"
             className="w-10 h-10 rounded-full"
           />
