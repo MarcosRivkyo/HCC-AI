@@ -401,8 +401,8 @@
         "forgot_passwd": "Passwort vergessen?",
         "no_account": "Noch kein Konto?",
         "register": "Registrieren",
-        "error_send_mail": "Wiederherstellungs-E-Mail senden",
-        "cancel_remake": "Wiederherstellung abbrechen"
+        "error_send_email": "Wiederherstellungs-E-Mail senden",
+        "error_remake": "Wiederherstellung abbrechen"
     },
 
     "signup": {

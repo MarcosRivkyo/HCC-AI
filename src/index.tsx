@@ -21,13 +21,13 @@ import Dashboard from "./components/Pages/Dashboard.tsx";
 import Login from "./components/Auth/Login.tsx";
 import Signup from "./components/Auth/Signup.tsx";
 import AuthRoute from "./components/Auth/AuthRoute.tsx";
-import Assistant from "./components/Pages/Assistant.tsx";
+import Assistant from "./components/Pages/AssistantView.tsx";
 import PredictImage from "./components/Pages/PredictImage.tsx";
 import EstudioDetalle from "./components/Pages/DetailedStudy.tsx";
 import MisEstudios from "./components/Pages/MyStudies.tsx";
 import Models from "./components/Pages/Models.tsx";
-import FilesPage from "./components/Pages/FilesPage.tsx";
-import CalendarPage from "./components/Pages/CalendarPage.tsx";
+import FilesPage from "./components/Pages/FileView.tsx";
+import CalendarPage from "./components/Pages/CalendarView.tsx";
 
 i18next
   .use(initReactI18next)

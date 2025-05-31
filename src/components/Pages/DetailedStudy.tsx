@@ -32,10 +32,11 @@ import NavbarSecond from "../UI/InsideNavbar.tsx";
 
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
+import usePreventZoom from "../UI/usePreventZoom.tsx";
 
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-import Assistant from "./Assistant.tsx";
+import Assistant from "./AssistantView.tsx";
 import { FaEllipsisV, FaDownload, FaTrashAlt } from "react-icons/fa";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
@@ -163,7 +164,12 @@ const EstudioDetalle = () => {
   const navigate = useNavigate();
   const db = getFirestore(app);
   const auth = getAuth();
+  usePreventZoom(true, true);
 
+  useEffect(() => {
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
+  
   useEffect(() => {
     const auth = getAuth();
     setUser(auth.currentUser);
@@ -1081,7 +1087,7 @@ const EstudioDetalle = () => {
       {mostrarEstudiosRecientes && (
         <button
           onClick={() => setMostrarEstudiosRecientes(false)}
-          className="fixed top-1/2 left-64 transform -translate-y-1/2 z-50 bg-gray-600 text-white p-2 rounded-r-md hover:bg-gray-700 shadow"
+          className="fixed top-1/2 left-80 transform -translate-y-1/2 z-50 bg-gray-600 text-white p-2 rounded-r-md hover:bg-gray-700 shadow"
           title="Ocultar estudios recientes"
         >
           <FiArrowLeft />

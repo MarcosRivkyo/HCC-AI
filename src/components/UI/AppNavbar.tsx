@@ -1,19 +1,13 @@
 import { useNavigate } from "react-router-dom";
-
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 
-import { db } from "../../config/firebase.ts"; // Asegúrate de tener configurado tu firebase correctamente
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-import { updateProfile } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
+import { db } from "../../config/firebase.ts";
 import Logout from "../Auth/Logout.tsx";
 
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-
 import logo_user from "../../assets/images/logo_user.png";
 
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
@@ -33,7 +27,6 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      console.log("User:", currentUser);
       if (currentUser) {
         const userDocRef = doc(db, "hcc_ai_users", currentUser.uid);
         const userDoc = await getDoc(userDocRef);
@@ -42,17 +35,68 @@ const Navbar: React.FC = () => {
         }
       }
     });
-
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setSelectedSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.6, // al menos 60% visible para activarse
+      },
+    );
+
+    const sectionIds = ["home", "objectives", "services", "technology"];
+    sectionIds.forEach((id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Easing function for smooth scroll animation
+  function easeInOutCubic(t: number): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
   const scrollToSection = (id: string) => {
-    setSelectedSection(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setSelectedSection(id); // mantiene la selección al hacer clic
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const targetPosition =
+      target.getBoundingClientRect().top + window.pageYOffset;
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    const duration = 1000;
+    let start: number | null = null;
+
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      const ease = easeInOutCubic(Math.min(progress / duration, 1));
+      window.scrollTo(0, startPosition + distance * ease);
+
+      if (progress < duration) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    window.requestAnimationFrame(step);
   };
 
   return (
     <nav className="bg-black p-6 text-white flex justify-between items-center fixed w-full top-0 z-50 shadow-lg">
+      {/* Menú de secciones */}
       <ul className="flex space-x-4 text-sm">
         {[
           { id: "home", label: t("navbar.home") },
@@ -63,13 +107,19 @@ const Navbar: React.FC = () => {
           <li key={item.id}>
             <button
               onClick={() => scrollToSection(item.id)}
-              className={`ml-20 transition-all duration-200 ${selectedSection === item.id ? "text-red-400 font-bold" : "hover:text-gray-300"}`}
+              className={`ml-20 transition-all duration-200 ${
+                selectedSection === item.id
+                  ? "text-red-400 font-bold"
+                  : "hover:text-gray-300"
+              }`}
             >
               {item.label}
             </button>
           </li>
         ))}
       </ul>
+
+      {/* Logo central */}
       <div className="absolute left-1/2 transform -translate-x-1/2">
         <img
           src={logoHCC_AI}
@@ -79,6 +129,7 @@ const Navbar: React.FC = () => {
         />
       </div>
 
+      {/* Área de login/usuario */}
       <div className="ml-auto flex space-x-8">
         {user && user.emailVerified ? (
           <div className="relative w-64">
@@ -87,7 +138,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsOpen(!isOpen)}
             >
               <img
-                src={user?.photoURL || userData?.profilePicture || logo_user}
+                src={userData?.profilePicture || user?.photoURL || logo_user}
                 alt="Perfil"
                 className="w-10 h-10 rounded-full"
               />
@@ -107,41 +158,34 @@ const Navbar: React.FC = () => {
                 >
                   👤 {t("navbar.access")}
                 </button>
-
                 <Logout />
               </div>
             )}
           </div>
         ) : (
           <>
-            {/* Botón Login */}
+            {/* Login */}
             <div className="relative inline-flex group">
               <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:-duration-200 animate-tilt"></div>
               <a
                 href="#"
-                title="Login"
                 onClick={() => navigate("/login")}
                 className="relative inline-flex items-center justify-center px-6 py-2 text-md font-bold text-white transition-all duration-200 bg-gray-900 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-                role="button"
               >
-                <FaSignInAlt className="mr-2" />{" "}
-                {/* Icono para el botón Login */}
+                <FaSignInAlt className="mr-2" />
                 {t("navbar.login")}
               </a>
             </div>
 
-            {/* Botón Signup */}
+            {/* Signup */}
             <div className="relative inline-flex group">
               <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:-duration-200 animate-tilt"></div>
               <a
                 href="#"
-                title="Signup"
                 onClick={() => navigate("/signup")}
                 className="relative inline-flex items-center justify-center px-6 py-2 text-md font-bold text-white transition-all duration-200 bg-gray-900 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-                role="button"
               >
-                <FaUserPlus className="mr-2" />{" "}
-                {/* Icono para el botón Signup */}
+                <FaUserPlus className="mr-2" />
                 {t("navbar.register")}
               </a>
             </div>

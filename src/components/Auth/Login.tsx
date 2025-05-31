@@ -1,104 +1,44 @@
-import { useState } from "react";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-} from "firebase/auth";
-import { useNavigate, Link } from "react-router-dom";
-import { FirebaseError } from "firebase/app";
-
-import { auth } from "../../config/firebase";
+import { useLoginViewModel } from "../../viewmodels/useLoginViewModel";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ImageSlider from "../UI/ImageSlider";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
-import { useTranslation } from "react-i18next";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-  const auth = getAuth();
-  const navigate = useNavigate();
+  const {
+    authing,
+    email,
+    password,
+    resetEmail,
+    error,
+    successMessage,
+    showResetInput,
+    showPassword,
+    setEmail,
+    setPassword,
+    setResetEmail,
+    setShowResetInput,
+    setShowPassword,
+    signInWithEmail,
+    handlePasswordReset,
+  } = useLoginViewModel();
 
-  const [authing, setAuthing] = useState(false);
-  const [email, setEmail] = useState("");
-  const [resetEmail, setResetEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [showResetInput, setShowResetInput] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
-  const { t, i18n } = useTranslation("global");
-
-  const signInWithEmail = async () => {
-    setAuthing(true);
-    setError("");
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-
-        console.log("Usuario validado?:", user);
-
-        if (user.emailVerified === true) {
-          setTransitioning(true);
-          navigate("/dashboard");
-        } else {
-          await signOut(auth);
-          setError("Debes verificar tu correo antes de acceder.");
-        }
-
-        setAuthing(false);
-      })
-      .catch((error) => {
-        console.log("Error en la autenticación:", error);
-
-        if (error.code === "auth/invalid-credential") {
-          setError("Los datos introducidos no fueron correctos.");
-        } else {
-          setError(error.message);
-        }
-
-        setAuthing(false);
-      });
-  };
-
-  const handlePasswordReset = async () => {
-    if (!resetEmail) {
-      setError("Por favor, introduce tu email para restablecer la contraseña.");
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, resetEmail);
-      setSuccessMessage(
-        "Se ha enviado un correo para restablecer tu contraseña.",
-      );
-    } catch (error) {
-      if ((error as FirebaseError).code === "auth/user-not-found") {
-        setError("No hay una cuenta registrada con ese correo.");
-      } else {
-        setError((error as FirebaseError).message);
-      }
-    }
-  };
+  const { t } = useTranslation("global");
 
   return (
     <div className="w-full h-screen flex">
-      {/* Parte izquierda */}
       <div className="w-1/2 h-full flex flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
-
-      {/* Parte derecha */}
       <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
-          {/* Header */}
           <div className="w-full flex flex-col mb-10 text-white">
             <img
               src={logoHCC_AI}
               alt="Logo HCC-AI"
               className="w-80 rounded-md center mx-auto mb-10 cursor-pointer"
-              onClick={() => navigate("/")}
+              onClick={() => (window.location.href = "/")}
             />
             <h3 className="text-4xl font-bold mb-2 text-center">
               {t("login.login_text")}
@@ -108,7 +48,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Campos de entrada */}
           <div className="w-full flex flex-col mb-6">
             <input
               type="email"
@@ -117,7 +56,6 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-
             <div className="relative mb-4">
               <input
                 type={showPassword ? "text" : "password"}
@@ -136,7 +74,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Botón para iniciar sesión */}
           <div className="w-full flex flex-col mb-4">
             <button
               className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
@@ -147,7 +84,6 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Mensajes de error y éxito */}
           {error && (
             <div className="text-red-500 mb-4 text-center">{error}</div>
           )}
@@ -157,7 +93,6 @@ const Login = () => {
             </div>
           )}
 
-          {/* Recuperación de contraseña */}
           {!showResetInput ? (
             <div className="text-center">
               <button
@@ -195,13 +130,11 @@ const Login = () => {
             </div>
           )}
 
-          {/* Separador */}
           <div className="w-full flex items-center justify-center relative py-4">
             <div className="w-full h-[1px] bg-gray-500"></div>
             <p className="text-lg absolute text-gray-500 bg-black px-2">OR</p>
           </div>
 
-          {/* Enlace para registrarse */}
           <div className="w-full flex items-center justify-center mt-10">
             <p className="text-sm font-normal text-gray-400">
               {t("login.no_account")}

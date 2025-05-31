@@ -390,8 +390,8 @@
     "forgot_passwd": "Mot de passe oublié ?",
     "no_account": "Vous n'avez pas de compte ?",
     "register": "Inscrivez-vous",
-    "error_send_mail": "Envoyer l'e-mail de récupération",
-    "cancel_remake": "Annuler la récupération"
+    "error_send_email": "Envoyer l'e-mail de récupération",
+    "error_remake": "Annuler la récupération"
   },
 
   "signup": {

@@ -14,7 +14,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../config/firebase.ts";
 import { v4 as uuidv4 } from "uuid";
 import Logout from "../Auth/Logout.tsx";
-import Assistant from "./Assistant.tsx";
+import Assistant from "./AssistantView.tsx";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
 import Modal from "../UI/Modal.tsx";
 import DeleteAccountButton from "../UI/DeleteAccountButton.tsx";
@@ -48,9 +48,13 @@ const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
   const [showAssistant, setShowAssistant] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+
   const [activeSection, setActiveSection] = useState("Cuenta");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    return (localStorage.getItem("theme") as "light" | "dark") || "light";
+  });
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "es",
   );
@@ -115,8 +119,35 @@ const Dashboard = () => {
   usePreventZoom(true, true);
 
   useEffect(() => {
+    // Tema
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    // Escala
     document.documentElement.style.setProperty("zoom", scale.toString());
+    localStorage.setItem("uiScale", scale.toString());
   }, [scale]);
+
+  useEffect(() => {
+    // Idioma
+    localStorage.setItem("language", language);
+  }, [language]);
+
+  useEffect(() => {
+    // Contraste alto
+    if (highContrast) {
+      document.body.classList.add("high-contrast");
+    } else {
+      document.body.classList.remove("high-contrast");
+    }
+    localStorage.setItem("highContrast", String(highContrast));
+  }, [highContrast]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -149,11 +180,7 @@ const Dashboard = () => {
     }
   }, [highContrast]);
 
-  useEffect(() => {
-    if (userData) {
-      console.log("userData en el modal de perfil:", userData);
-    }
-  }, [userData]);
+
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -385,7 +412,7 @@ const Dashboard = () => {
 
   return (
     <div
-      className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-black"}`}
+      className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
     >
       <ToastContainer
         position="top-right"
@@ -429,10 +456,10 @@ const Dashboard = () => {
       />
 
       <div
-        className={`flex-1 flex-col h-screen pt-24 px-6 bg-gray-50 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"} `}
+        className={`flex-1 flex-col h-screen pt-24 px-6 bg-gray-300 text-black dark:bg-gray-800 dark:text-white`}
       >
         <div
-          className={`flex pt-10 pb-10  px-6 h-full bg-gray-50 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
+          className={`flex pt-10 pb-10  px-6 h-full bg-gray-300 text-black dark:bg-gray-800 dark:text-white`}
         >
           {/* Panel del asistente con botón dentro */}
           <div className="relative z-50">

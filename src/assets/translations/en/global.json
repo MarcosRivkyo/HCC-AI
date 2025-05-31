@@ -396,8 +396,8 @@
     "forgot_passwd": "Forgot your password?",
     "no_account": "Don't have an account?",
     "register": "Sign up",
-    "error_send_mail": "Send recovery email",
-    "cancel_remake": "Cancel recovery"
+    "error_send_email": "Send recovery email",
+    "error_remake": "Cancel recovery"
   },
 
   "signup": {

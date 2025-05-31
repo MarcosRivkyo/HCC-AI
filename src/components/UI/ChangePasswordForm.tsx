@@ -39,7 +39,9 @@ const ChangePasswordForm: React.FC = () => {
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      <p>{t("settings.account.change_passwd")}</p>
+      <p className="text-black dark:text-white">
+        {t("settings.account.change_passwd")}
+      </p>
       <button
         onClick={handlePasswordReset}
         disabled={loading}
