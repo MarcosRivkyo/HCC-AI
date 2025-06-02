@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getFirestore,
@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BarChart from "../UI/BarChart.tsx";
 import { marked } from "marked";
 import { arrayUnion } from "firebase/firestore";
+import html2canvas from "html2canvas";
 
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 
@@ -37,11 +38,12 @@ import usePreventZoom from "../UI/usePreventZoom.tsx";
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import Assistant from "./AssistantView.tsx";
-import { FaEllipsisV, FaDownload, FaTrashAlt } from "react-icons/fa";
+import { FaDownload, FaEnvelope, FaShareAlt, FaTrashAlt } from "react-icons/fa";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { FaEdit } from "react-icons/fa";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -95,6 +97,7 @@ const EstudioDetalle = () => {
     null,
   );
   const [showExplanationModal, setShowExplanationModal] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
 
   const [imagenRedimensionada, setImagenRedimensionada] = useState<
     string | null
@@ -131,6 +134,7 @@ const EstudioDetalle = () => {
 
   const [fileName, setFileName] = useState<string>(""); // si quieres usarlo como estado
 
+  const chartRef = useRef(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
@@ -640,34 +644,39 @@ const EstudioDetalle = () => {
     setShowEmailModal(true);
   };
 
-  const handleSendEmail = async () => {
-    if (!emailToSend || !emailToSend.includes("@")) {
-      toast.error("Correo electrónico inválido.");
-      return;
-    }
+const handleSendEmail = async () => {
+  if (!emailToSend || !emailToSend.includes("@")) {
+    toast.error("Correo electrónico inválido.");
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
-        {
-          name: userData?.firstName || user.displayName || "Médico HCC-AI",
-          email: emailToSend,
-          message: `Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}`,
-        },
-      );
+  setIsSendingEmail(true); 
 
-      if (response.status === 200) {
-        toast.success("Informe enviado correctamente.");
-        setShowEmailModal(false);
-        setEmailToSend("");
-      } else {
-        toast.error("No se pudo enviar el correo.");
-      }
-    } catch (error) {
-      console.error("Error al enviar informe por correo:", error);
-      toast.error("Ocurrió un error al enviar el correo.");
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+      {
+        name: userData?.firstName || user.displayName || "Médico HCC-AI",
+        email: emailToSend,
+        message: `"Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}"`,
+      },
+    );
+
+    if (response.status === 200) {
+      toast.success("Informe enviado correctamente.");
+      setShowEmailModal(false);
+      setEmailToSend("");
+    } else {
+      toast.error("No se pudo enviar el correo.");
     }
-  };
+  } catch (error) {
+    console.error("Error al enviar informe por correo:", error);
+    toast.error("Ocurrió un error al enviar el correo.");
+  } finally {
+    setIsSendingEmail(false); // 🔁 Restablecer botón
+  }
+};
+
 
   const handleSelectClassificationModel = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -691,21 +700,46 @@ const EstudioDetalle = () => {
     }));
   };
 
+
   const handleSaveChanges = async () => {
-    if (!id || !editedEstudio) return;
+    const nuevoNombre = editedEstudio?.studieName?.trim();
+
+    if (!nuevoNombre) {
+      toast.error("El nombre del estudio no puede estar vacío.");
+      return;
+    }
+
+    const estudiosSnapshot = await getDocs(collection(db, "hcc_ai_studies"));
+    const nombreDuplicado = estudiosSnapshot.docs.some((doc) => {
+      const data = doc.data();
+      return (
+        data.studieName?.toLowerCase() === nuevoNombre.toLowerCase() &&
+        doc.id !== id 
+      );
+    });
+
+    if (nombreDuplicado) {
+      toast.error("Ya existe un estudio con ese nombre. Por favor, elige otro.");
+      return;
+    }
 
     try {
-      const docRef = doc(db, "hcc_ai_studies", id);
-      await updateDoc(docRef, {
-        studieName: editedEstudio.studieName,
-        clinicalDescription: editedEstudio.clinicalDescription,
+      const estudioRef = doc(db, "hcc_ai_studies", id!);
+      await updateDoc(estudioRef, {
+        studieName: nuevoNombre,
+        patientName: editedEstudio?.patientName,
+        clinicalDescription: editedEstudio?.clinicalDescription,
       });
+
+      toast.success("Estudio actualizado correctamente.");
       setEstudio(editedEstudio);
       setEditing(false);
     } catch (error) {
-      console.error("Error al guardar cambios:", error);
+      console.error("Error al guardar estudio:", error);
+      toast.error("Hubo un error al guardar los cambios.");
     }
   };
+
 
   const handleCancelEdit = () => {
     setEditing(false);
@@ -1040,6 +1074,55 @@ const EstudioDetalle = () => {
     }
   };
 
+  const handleDownloadChart = async () => {
+    if (!chartRef.current) return;
+
+    const canvas = await html2canvas(chartRef.current);
+    const link = document.createElement("a");
+    link.download = `grafico_${selectedClassificationModel}_${new Date().toISOString().slice(0, 10)}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+  const handleShareStudy = async () => {
+    if (!selectedDoctorId || !id) return;
+
+    const doctor = doctorsList.find((d) => d.id === selectedDoctorId);
+    if (!doctor?.email) {
+      toast.error("No se encontró el correo del doctor.");
+      return;
+    }
+
+    try {
+      // 1. Compartir en Firestore
+      const estudioRef = doc(db, "hcc_ai_studies", id);
+      await updateDoc(estudioRef, {
+        sharedWithDoctorIds: arrayUnion(selectedDoctorId),
+      });
+
+      // 2. Enviar correo
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+        {
+          name: userData?.firstName || user.displayName || "Médico HCC-AI",
+          email: doctor.email,
+          message: `Estudio: "${estudio?.studieName ?? "sin nombre"}"`,
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Estudio compartido y correo enviado.");
+      } else {
+        toast.warning("Estudio compartido, pero el correo no pudo enviarse.");
+      }
+
+      setShowShareModal(false);
+    } catch (error) {
+      console.error("Error al compartir o enviar correo:", error);
+      toast.error("Error al compartir el estudio o enviar el correo.");
+    }
+  };
+
+
   if (loading)
     return (
       <p className="text-gray-500 text-lg text-center mt-12">
@@ -1053,25 +1136,7 @@ const EstudioDetalle = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={theme === "dark" ? "dark" : "light"}
-        toastClassName={() =>
-          `rounded-lg border border-black shadow-md px-4 py-3 text-sm ${
-            theme === "dark"
-              ? "bg-gray-800 text-white"
-              : "bg-white text-gray-800"
-          }`
-        }
-      />
+
 
       {/* Botón para mostrar el panel lateral izquierdo */}
       {!mostrarEstudiosRecientes && (
@@ -1168,14 +1233,30 @@ const EstudioDetalle = () => {
 
           {/* FILA 1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
-            {/* Columna izquierda: datos */}
-            <div className="bg-white rounded-xl p-6 space-y-4 dark:bg-gray-800">
+
+            <div className="relative bg-yellow-100 dark:bg-yellow-200 rounded-xl p-6 space-y-4 shadow-lg border-l-8 border-yellow-400 transform rotate-[-0.5deg]">
+
+              <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-red-500 rounded-full shadow-md z-10" />
+
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 w-full dark:text-white">
-                    {estudio?.studieName}
-                  </h1>
-                  <p className="text-sm text-gray-500 dark:text-white">
+
+
+                  {editing ? (
+                    <input
+                      type="text"
+                      name="studieName"
+                      value={editedEstudio?.studieName || ""}
+                      onChange={handleInputChange}
+                      className="text-2xl font-bold px-2 py-1 border rounded-md w-full dark:text-black"
+                    />
+                  ) : (
+                    <h1 className="text-3xl font-bold text-gray-900 w-full">
+                      {estudio?.studieName}
+                    </h1>
+                  )}
+
+                  <p className="text-sm text-gray-600">
                     {t("my_studies.id_study")}: {id}
                   </p>
                 </div>
@@ -1196,7 +1277,7 @@ const EstudioDetalle = () => {
                 </p>
               </div>
 
-              <p className="text-sm text-gray-400 mb-1">
+              <p className="text-sm text-gray-500">
                 {estudio?.studieDate?.toDate().toLocaleString(i18n.language, {
                   day: "numeric",
                   month: "long",
@@ -1206,25 +1287,68 @@ const EstudioDetalle = () => {
                 })}
               </p>
 
-              <p className="text-gray-700 mb-1 dark:text-white">
-                <strong>{t("my_studies.doctor_name")}:</strong>{" "}
-                {estudio?.doctorName ?? "Desconocido"}
+              <p className="text-gray-800">
+                <strong>{t("my_studies.doctor_name")}:</strong> {" "}
+                <span className="text-gray-700 text-lg">
+                  {estudio?.doctorName ?? "Desconocido"}
+                </span>                
               </p>
 
-              <p className="text-gray-700 mb-4 dark:text-white">
+              <p className="text-gray-800">
                 <strong>{t("my_studies.patient_name")}:</strong>{" "}
-                {estudio?.patientName}
+                {editing ? (
+                  <input
+                    type="text"
+                    name="patientName"
+                    value={editedEstudio?.patientName || ""}
+                    onChange={handleInputChange}
+                    className="text-gray-800 text-lg border rounded px-2 py-1 dark:text-black"
+                  />
+                ) : (
+                  <span className="text-gray-700 text-lg">
+                    {estudio?.patientName}
+                  </span>
+                )}
               </p>
 
               <div>
-                <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-white">
+                <h2 className="text-lg font-semibold text-gray-800 mb-1">
                   {t("my_studies.clinical_description")}
                 </h2>
-                <p className="text-gray-600 dark:text-white">
-                  {estudio?.clinicalDescription}
-                </p>
+                {editing ? (
+                  <textarea
+                    name="clinicalDescription"
+                    value={editedEstudio?.clinicalDescription || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-md dark:text-black"
+                    rows={4}
+                  />
+                ) : (
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {estudio?.clinicalDescription}
+                  </p>
+                )}
               </div>
+
+              {editing && (
+                <div className="flex gap-4 mt-4">
+                  <button
+                    onClick={handleSaveChanges}
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  >
+                    Guardar
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              )}
+
             </div>
+
 
             <div className="flex justify-between items-start w-full">
               {/* Columna con la imagen */}
@@ -1302,8 +1426,22 @@ const EstudioDetalle = () => {
               </div>
 
               {/* Menu de acciones */}
-              <div className="flex flex-col space-y-2 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg shadow-md w-auto">
-                {/* Descargar */}
+              <div className="flex flex-col space-y-2 bg-gray-900 dark:bg-gray-900 p-2 rounded-lg shadow-md w-auto">
+
+                {/* Editar */}
+                <button
+                  onClick={() => setEditing(!editing)}
+                  title="Editar estudio"
+                  className={`w-10 h-10 flex items-center justify-center rounded-md transition 
+                    ${editing 
+                      ? "bg-yellow-400 hover:bg-yellow-500" 
+                      : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
+                >
+                  <FaEdit className={editing ? "text-black" : "text-gray-700 dark:text-white"} />
+                </button>
+
+                {/* Descargar */}                                
                 <button
                   onClick={descargarPDF}
                   title="Descargar informe"
@@ -1318,20 +1456,7 @@ const EstudioDetalle = () => {
                   title="Enviar por correo"
                   className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-700 dark:text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16.5 3h-9A2.5 2.5 0 005 5.5v13A2.5 2.5 0 007.5 21h9a2.5 2.5 0 002.5-2.5v-13A2.5 2.5 0 0016.5 3zM7 7l5 3.5L17 7"
-                    />
-                  </svg>
+                  <FaEnvelope className="text-gray-700 dark:text-white" />
                 </button>
 
                 {/* Compartir */}
@@ -1340,21 +1465,9 @@ const EstudioDetalle = () => {
                   title="Compartir estudio"
                   className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-700 dark:text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 8a3 3 0 100-6 3 3 0 000 6zM9 20a3 3 0 100-6 3 3 0 000 6zM20.24 14.83A4.992 4.992 0 0018 15h-1.26A6.978 6.978 0 0012 17c-1.47 0-2.83-.44-3.96-1.17l-.22.22a2.992 2.992 0 01-4.24 0 3.002 3.002 0 010-4.24 2.992 2.992 0 014.24 0l.22.22A6.978 6.978 0 0012 11c1.47 0 2.83.44 3.96 1.17L18 10h1.26a4.992 4.992 0 001.98-.39z"
-                    />
-                  </svg>
+                  <FaShareAlt className="text-gray-700 dark:text-white" />
                 </button>
+
 
                 {/* Eliminar */}
                 <button
@@ -1701,11 +1814,48 @@ const EstudioDetalle = () => {
                     ?
                   </button>
                 </div>
+
                 {showExplanationModal && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-2xl relative space-y-6">
+                      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
+                        Gráfico de Probabilidades
+                      </h2>
+                    <div ref={chartRef}>
+                      <BarChart
+                        probabilities={prediction.probabilities}
+                        labels={
+                          selectedClassificationModel === "METAVIR-AI"
+                            ? ["F0", "F1", "F2", "F3", "F4"]
+                            : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"]
+                        }
+                        theme={localStorage.getItem("theme") || "light"}
+                      />
+                    </div>
+                      <div className="flex justify-between pt-2 gap-2">
+                        <button
+                          onClick={handleDownloadChart}
+                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium shadow"
+                        >
+                          Descargar gráfico
+                        </button>
+                        <button
+                          onClick={() => setShowExplanationModal(false)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium shadow"
+                        >
+                          Cerrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
+                  <div className="inset-0 flex items-center justify-center">
+
                     <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-xl relative space-y-4">
                       <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-4">
-                        Probabilidades de cada clase:
+                        {t("my_studies.class_probabilities")}:
                       </h2>
 
                       {(selectedClassificationModel === "HCC-AI"
@@ -1817,41 +1967,8 @@ const EstudioDetalle = () => {
                         );
                       })}
 
-                      <div className="flex justify-end pt-2">
-                        <button
-                          onClick={() => setShowExplanationModal(false)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium shadow"
-                        >
-                          Cerrar
-                        </button>
-                      </div>
                     </div>
                   </div>
-                )}
-
-                <p className="mt-4 text-lg text-black dark:text-white">
-                  {t("my_studies.class_probabilities")}:
-                </p>
-
-                {/* Gráfico de Probabilidades */}
-                <div className="mt-6">
-                  <div className="mt-4">
-                    <BarChart
-                      probabilities={prediction.probabilities}
-                      labels={
-                        selectedClassificationModel === "METAVIR-AI"
-                          ? ["F0", "F1", "F2", "F3", "F4"]
-                          : [
-                              "Sano",
-                              "Esteatosis",
-                              "Cirrosis",
-                              "Hepatocarcinoma",
-                            ]
-                      }
-                      theme={localStorage.getItem("theme") || "light"}
-                    />
-                  </div>
-                </div>
 
                 {explicacionGenerada && (
                   <div className="mt-10 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6 shadow-md">
@@ -1925,10 +2042,35 @@ const EstudioDetalle = () => {
               </button>
               <button
                 onClick={handleSendEmail}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                disabled={isSendingEmail}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2"
               >
-                Enviar
+                {isSendingEmail ? (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Enviar"
+                )}
               </button>
+
             </div>
           </div>
         </div>
@@ -1966,25 +2108,12 @@ const EstudioDetalle = () => {
                 Cancelar
               </button>
               <button
-                onClick={async () => {
-                  if (!selectedDoctorId || !id) return;
-
-                  try {
-                    const estudioRef = doc(db, "hcc_ai_studies", id);
-                    await updateDoc(estudioRef, {
-                      sharedWithDoctorIds: arrayUnion(selectedDoctorId),
-                    });
-                    toast.success("Estudio compartido correctamente");
-                    setShowShareModal(false);
-                  } catch (error) {
-                    console.error("Error al compartir estudio:", error);
-                    toast.error("Error al compartir el estudio");
-                  }
-                }}
+                onClick={handleShareStudy}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
               >
                 Compartir
               </button>
+
             </div>
           </div>
         </div>

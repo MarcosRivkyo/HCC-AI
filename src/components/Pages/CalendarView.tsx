@@ -15,7 +15,9 @@ import { useCalendarViewModel } from "../../viewmodels/CalendarViewModel.ts";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc , getDoc, getFirestore } from "firebase/firestore";
 import { app, storage } from "../../config/firebase.ts";
-
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 
 const CalendarPageView: React.FC = () => {
   const {
@@ -38,6 +40,7 @@ const CalendarPageView: React.FC = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
+  const [reminderTime, setReminderTime] = useState<string>('12:00');
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -194,14 +197,25 @@ const CalendarPageView: React.FC = () => {
                   className="flex-grow px-4 py-2 rounded-md border dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="Escribe el recordatorio..."
                 />
-
+                <TimePicker
+                  onChange={(value) => setReminderTime(value ?? '')}
+                  value={reminderTime}
+                  disableClock
+                  clearIcon={null}
+                  format="HH:mm" 
+                  hourPlaceholder="hh"
+                  minutePlaceholder="mm"
+                  className="rounded-md border dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white"
+                />
                 <button
-                  onClick={addReminder}
-                  className="bg-yellow-500 dark:bg-yellow-500 text-black dark:text-black px-4 py-2 rounded-md font-bold hover:bg-yellow-400"
+                  onClick={() => addReminder(reminderTime)}
+                  className="bg-yellow-500 dark:bg-yellow-500 text-black px-4 py-2 rounded-md font-bold hover:bg-yellow-400"
                 >
                   Añadir
                 </button>
+
               </div>
+
             </div>
           )}
 
@@ -210,39 +224,47 @@ const CalendarPageView: React.FC = () => {
               Recordatorios
             </h3>
             <ul className="space-y-2">
-              {reminders
-                .filter((r) => r.date === value.toDateString())
-                .map((reminder) => (
-                  <li
-                    key={reminder.id}
-                    className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-md shadow-sm justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <input
-                        id={`reminder-${reminder.id}`}
-                        type="checkbox"
-                        checked={reminder.done}
-                        onChange={() => toggleReminderDone(reminder.id)}
-                        className="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-green-600 focus:ring-2 focus:ring-green-500 transition-all"
-                        aria-label={`Marcar ${reminder.text} como ${reminder.done ? "pendiente" : "completado"}`}
-                      />
-                      <label
-                        htmlFor={`reminder-${reminder.id}`}
-                        className={`cursor-pointer ${reminder.done ? "line-through opacity-50 text-gray-800 dark:text-white" : "text-gray-800 dark:text-gray-100"}`}
-                      >
-                        {reminder.text}
-                      </label>
-                    </div>
-
-                    <button
-                      onClick={() => deleteReminder(reminder.id)}
-                      className="text-red-500 hover:text-red-700 font-semibold text-sm px-2 py-1 rounded transition-colors"
-                      title="Eliminar recordatorio"
+                {reminders
+                  .filter((r) => r.date === value.toDateString())
+                  .map((reminder) => (
+                    <li
+                      key={reminder.id}
+                      className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-md shadow-sm justify-between"
                     >
-                      ✕
-                    </button>
-                  </li>
+                      <div className="flex items-center gap-3">
+                        <input
+                          id={`reminder-${reminder.id}`}
+                          type="checkbox"
+                          checked={reminder.done}
+                          onChange={() => toggleReminderDone(reminder.id)}
+                          className="h-5 w-5 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-green-600 focus:ring-2 focus:ring-green-500 transition-all"
+                          aria-label={`Marcar ${reminder.text} como ${reminder.done ? "pendiente" : "completado"}`}
+                        />
+                        <label
+                          htmlFor={`reminder-${reminder.id}`}
+                          className={`cursor-pointer flex flex-col ${
+                            reminder.done ? "line-through opacity-50 text-gray-800 dark:text-white" : "text-gray-800 dark:text-gray-100"
+                          }`}
+                        >
+                          <span>{reminder.text}</span>
+                          {reminder.time && (
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                              🕒 {reminder.time}
+                            </span>
+                          )}
+                        </label>
+                      </div>
+
+                      <button
+                        onClick={() => deleteReminder(reminder.id)}
+                        className="text-red-500 hover:text-red-700 font-semibold text-sm px-2 py-1 rounded transition-colors"
+                        title="Eliminar recordatorio"
+                      >
+                        ✕
+                      </button>
+                    </li>
                 ))}
+
             </ul>
           </div>
         </div>
@@ -281,11 +303,6 @@ const CalendarPageView: React.FC = () => {
         © 2025 HCC-AI
       </footer>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        theme={theme === "dark" ? "dark" : "light"}
-      />
     </div>
   );
 };

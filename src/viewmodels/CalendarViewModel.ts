@@ -20,6 +20,7 @@ export const useCalendarViewModel = () => {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [newReminder, setNewReminder] = useState("");
+  const [reminderTime, setReminderTime] = useState("12:00");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -43,23 +44,19 @@ export const useCalendarViewModel = () => {
     return () => unsubscribe();
   }, []);
 
-  const addReminder = async () => {
-    if (!newReminder || !selectedDate || !user) return;
+  const addReminder = async (time: string) => {
+    if (!newReminder || !selectedDate || !user || !time) return;
 
     const reminder = {
       date: selectedDate.toDateString(),
+      time,
       text: newReminder,
       done: false,
       createdAt: new Date(),
     };
 
     try {
-      const remindersRef = collection(
-        db,
-        "hcc_ai_users",
-        user.uid,
-        "reminders",
-      );
+      const remindersRef = collection(db, "hcc_ai_users", user.uid, "reminders");
       const docRef = await addDoc(remindersRef, reminder);
       setReminders([...reminders, { ...reminder, id: docRef.id }]);
       setNewReminder("");
@@ -68,6 +65,8 @@ export const useCalendarViewModel = () => {
       toast.error("No se pudo guardar el recordatorio");
     }
   };
+
+
 
   const deleteReminder = async (reminderId: string) => {
     if (!user) return;

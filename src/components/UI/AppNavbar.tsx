@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import Logout from "../Auth/Logout.tsx";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import logo_user from "../../assets/images/logo_user.png";
 
-import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaSignInAlt, FaUserPlus, FaChevronDown } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -23,6 +23,8 @@ const Navbar: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
 
   const [t, i18next] = useTranslation("global");
+  
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -39,6 +41,23 @@ const Navbar: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -50,7 +69,7 @@ const Navbar: React.FC = () => {
       {
         root: null,
         rootMargin: "0px",
-        threshold: 0.6, // al menos 60% visible para activarse
+        threshold: 0.6, 
       },
     );
 
@@ -63,13 +82,13 @@ const Navbar: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Easing function for smooth scroll animation
+
   function easeInOutCubic(t: number): number {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   const scrollToSection = (id: string) => {
-    setSelectedSection(id); // mantiene la selección al hacer clic
+    setSelectedSection(id); 
     const target = document.getElementById(id);
     if (!target) return;
 
@@ -132,35 +151,46 @@ const Navbar: React.FC = () => {
       {/* Área de login/usuario */}
       <div className="ml-auto flex space-x-8">
         {user && user.emailVerified ? (
-          <div className="relative w-64">
+          <div ref={dropdownRef} className="relative inline-block">
             <div
-              className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-gray-800 rounded-lg"
+              className={`inline-flex items-center gap-3 px-4 py-2 cursor-pointer bg-gray-900 hover:bg-gray-700 rounded-xl transition duration-300 shadow-md ${
+                isOpen ? "ring-2 ring-pink-500" : ""
+              }`}
               onClick={() => setIsOpen(!isOpen)}
             >
               <img
                 src={userData?.profilePicture || user?.photoURL || logo_user}
                 alt="Perfil"
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full border border-white"
               />
-              <span className="font-semibold">
+              <span className="font-semibold whitespace-nowrap">
                 {user?.displayName ||
-                  (userData && (userData.firstName || userData.lastName)
+                  (userData?.firstName || userData?.lastName
                     ? `${userData.firstName} ${userData.lastName}`
                     : user?.email || "Usuario")}
               </span>
+              <FaChevronDown
+                className={`text-sm transition-transform ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
             </div>
 
-            {isOpen && (
-              <div className="absolute top-full left-0 w-full bg-gray-800 rounded-lg shadow-lg overflow-hidden mt-2">
-                <button
-                  onClick={() => navigate("/dashboard")}
-                  className="block px-4 py-3 w-full text-left hover:bg-gray-700"
-                >
-                  👤 {t("navbar.access")}
-                </button>
-                <Logout />
-              </div>
-            )}
+
+          {isOpen && (
+            <div className="absolute top-full left-0 w-full bg-gray-900 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in">
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="flex items-center px-4 py-3 w-full text-left hover:bg-gray-800 transition duration-200"
+              >
+                <FaSignInAlt className="mr-2" />
+                {t("navbar.access")}
+              </button>
+
+              <Logout />
+            </div>
+          )}
+
           </div>
         ) : (
           <>

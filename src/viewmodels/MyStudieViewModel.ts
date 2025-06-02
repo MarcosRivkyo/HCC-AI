@@ -8,6 +8,7 @@ import {
   where,
   orderBy,
   getDocs,
+  getDoc,
   deleteDoc,
   doc,
   addDoc,
@@ -16,6 +17,7 @@ import {
 
 import { app } from "../config/firebase";
 import { Study } from "../models/Studies";
+import { ref } from "firebase/storage";
 
 export const useMisEstudios = () => {
   const [estudios, setEstudios] = useState<Study[]>([]);
@@ -105,8 +107,35 @@ export const useMisEstudios = () => {
   };
 
   const eliminarEstudioVM = async (id: string) => {
-    await deleteDoc(doc(db, "hcc_ai_studies", id));
-    setEstudios((prev) => prev.filter((e) => e.id !== id));
+
+    const estudioRef = doc(db, "hcc_ai_studies", id);
+    const estudioSnap = await getDoc(estudioRef);
+
+    if (estudioSnap.exists()) {
+      const estudioData = estudioSnap.data();
+      const predictionId = estudioData.predictionId;
+
+      if (predictionId) {
+        try {
+          await deleteDoc(doc(db, "hcc_ai_predictions", predictionId));
+        } catch (e) {
+          console.warn("No se pudo borrar la predicción asociada:", e);
+        }
+      }
+    await deleteDoc(estudioRef);
+    
+    } else {
+      throw new Error("El estudio no existe.");
+    }
+
+  };
+
+  const refetchEstudios = async () => {
+    const estudiosRef = collection(db, "hcc_ai_studies");
+    const q = query(estudiosRef, where("doctorId", "==", user.uid)); // o tu filtro
+    const snapshot = await getDocs(q);
+    const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Study[];
+    setEstudios(data);
   };
 
   return {
@@ -117,5 +146,6 @@ export const useMisEstudios = () => {
     setVista,
     crearEstudio,
     eliminarEstudioVM,
+    refetchEstudios,
   };
 };

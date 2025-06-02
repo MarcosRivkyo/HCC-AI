@@ -278,7 +278,7 @@
     "drop_image": "Suelta una imagen aquí",
     "anonymize_image": "Anonimizar Ecografía",
     "segmented_image": "Imagen Segmentada",
-    
+    "loading_image": "Anonimizando imagen...",
     "image_analysis_results": "Resultados del Análisis de la Imagen",
     "no_image_uploaded": "No se ha subido ninguna imagen.",
     "image_uploaded": "Imagen subida con éxito.",

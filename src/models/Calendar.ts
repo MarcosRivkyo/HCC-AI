@@ -4,4 +4,5 @@ export interface Reminder {
   text: string;
   done: boolean;
   createdAt?: Date;
+  time?: string;
 }

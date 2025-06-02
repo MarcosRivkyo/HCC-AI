@@ -47,6 +47,7 @@ const PredictImage: React.FC = () => {
     null,
   );
   const [showAnonChoice, setShowAnonChoice] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [progress, setProgress] = useState<number>(0);
   const [showModal, setShowModal] = useState(false);
@@ -147,7 +148,8 @@ const PredictImage: React.FC = () => {
         const imageObj = await fabric.Image.fromURL(imgSrc, {
           crossOrigin: "anonymous",
         });
-
+        imageObj.set("id", "backgroundImage");
+        
         const scale = Math.min(500 / imageObj.width!, 500 / imageObj.height!);
         imageObj.scale(scale);
         imageObj.set({
@@ -200,7 +202,9 @@ const PredictImage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    if (!image) return alert("Por favor, sube una imagen.");
+    if (!image || isLoading) return; 
+
+    setIsLoading(true); 
 
     const formData = new FormData();
     formData.append("file", image);
@@ -218,14 +222,16 @@ const PredictImage: React.FC = () => {
       const url = URL.createObjectURL(blob);
 
       setAnonymizedImageUrl(url);
-      setShowAnonChoice(true); // mostrar el modal de elección
-
+      setShowAnonChoice(true);
       toast.success("Imagen anonimizada correctamente.");
     } catch (error) {
       console.error("Error al anonimizar la imagen:", error);
       toast.error("Ocurrió un error al anonimizar la imagen.");
+    } finally {
+      setIsLoading(false); 
     }
   };
+
 
   const resetCanvas = () => {
     if (!canvas) return;
@@ -254,7 +260,6 @@ const PredictImage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-600 dark:text-white">
-      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
 
       <NavbarSecond
         userData={userData}
@@ -358,11 +363,40 @@ const PredictImage: React.FC = () => {
               </div>
 
               <button
-                className="mt-2 py-2 px-6 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition"
+                className={`mt-2 py-2 px-6 font-bold rounded-lg flex items-center justify-center gap-2 transition ${
+                  isLoading
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-yellow-500 hover:bg-yellow-400 text-black"
+                }`}
                 onClick={handleSubmit}
+                disabled={isLoading}
               >
-                {t("editor.anonymize_image")}
+                {isLoading && (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                )}
+                {isLoading ? t("editor.loading_image") : t("editor.anonymize_image")}
               </button>
+
+
             </div>
           </div>
         </div>

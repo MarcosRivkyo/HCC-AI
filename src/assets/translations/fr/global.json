@@ -193,7 +193,7 @@
       "drop_image": "Déposez l’image ici",
       "anonymize_image": "Anonymiser l'échographie",
       "segmented_image": "Image segmentée",
-
+      "loading_image": "Anonymisation de l'image...",
       "image_analysis_results": "Résultats de l’analyse d’image",
       "no_image_uploaded": "Aucune image téléversée.",
       "image_uploaded": "Image téléversée avec succès.",

@@ -28,6 +28,8 @@ import MisEstudios from "./components/Pages/MyStudies.tsx";
 import Models from "./components/Pages/Models.tsx";
 import FilesPage from "./components/Pages/FileView.tsx";
 import CalendarPage from "./components/Pages/CalendarView.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 i18next
   .use(initReactI18next)
@@ -60,6 +62,18 @@ if (storedTheme === "dark") {
 root.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />      
       <Router>
         <Routes>
 

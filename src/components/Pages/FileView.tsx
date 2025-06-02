@@ -345,25 +345,7 @@ const FilesPage: React.FC = () => {
         </div>
       )}
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={theme === "dark" ? "dark" : "light"}
-        toastClassName={() =>
-          `rounded-lg border border-black shadow-md px-4 py-3 text-sm ${
-            theme === "dark"
-              ? "bg-gray-800 text-white"
-              : "bg-white text-gray-800"
-          }`
-        }
-      />
+
 
       <footer className="w-full bg-black dark:bg-black text-white text-center py-4 shadow-lg rounded-t-lg">
         © 2025 HCC-AI

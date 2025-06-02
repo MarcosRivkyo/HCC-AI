@@ -6,10 +6,20 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(-10%)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 0.3s ease-out forwards',
+      },
+    },
   },
   plugins: [
-    require('@tailwindcss/typography'), // ✅ Añadido correctamente aquí
+    require('@tailwindcss/typography'),
     function ({ addBase, theme }) {
       const colors = theme('colors');
       const newVars = Object.fromEntries(

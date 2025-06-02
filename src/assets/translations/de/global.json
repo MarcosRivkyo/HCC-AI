@@ -281,7 +281,7 @@
         "drop_image": "Bild hier ablegen",
         "anonymize_image": "Anonymisieren der Ultraschalluntersuchung",
         "segmented_image": "Segmentiertes Bild",
-
+        "loading_image": "Bild wird anonymisiert...",
         "image_analysis_results": "Analyseergebnisse des Bildes",
         "no_image_uploaded": "Kein Bild hochgeladen.",
         "image_uploaded": "Bild erfolgreich hochgeladen.",
