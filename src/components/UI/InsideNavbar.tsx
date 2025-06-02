@@ -18,6 +18,7 @@ import {
 } from "react-icons/fi";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import "../../calendar-overrides.css";
+import { FaChevronDown, FaUserCircle, FaCog } from "react-icons/fa";
 
 type NavbarSecondProps = {
   userData?: any;
@@ -186,8 +187,8 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           className="w-32 max-w-full rounded-md cursor-pointer"
           alt="HCC-AI Logo"
           onClick={() => {
-            navigate("/dashboard");
-            setActivePath("/dashboard");
+            navigate("/");
+            setActivePath("/");
           }}
         />
       </div>
@@ -231,46 +232,62 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
       </ul>
 
       <div
-        className="flex items-center gap-4 relative w-72 justify-end"
+        className="flex items-center gap-4 relative justify-end"
         ref={menuRef}
       >
         <Clock reminders={reminders} />
 
         <div
-          className="flex items-center space-x-3 p-2 cursor-pointer hover:bg-gray-800 rounded-lg"
+          className={`inline-flex items-center gap-3 px-3 py-2 cursor-pointer bg-gray-800 hover:bg-gray-700 rounded-xl transition duration-300 shadow-md ${
+            isOpen ? "ring-2 ring-pink-500" : ""
+          }`}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <img
-            src={userData?.profilePicture || user?.photoURL || logo_user}
-            alt="Perfil"
-            className="w-10 h-10 rounded-full"
+          <div className="flex items-center space-x-3 overflow-hidden">
+            <img
+              src={userData?.profilePicture || user?.photoURL || logo_user}
+              alt="Perfil"
+              className="w-10 h-10 rounded-full border border-white"
+            />
+            <span className="font-semibold whitespace-nowrap">
+              {user?.displayName ||
+                userData?.userName ||
+                (userData?.firstName || userData?.lastName
+                  ? `${userData?.firstName || ""} ${userData?.lastName || ""}`.trim()
+                  : user?.email || "Usuario")}
+            </span>
+          </div>
+
+          <FaChevronDown
+            className={`text-sm ml-2 transition-transform ${
+              isOpen ? "rotate-180" : ""
+            }`}
           />
-          <span className="font-semibold truncate">
-            {user?.displayName ||
-              userData?.userName ||
-              (userData?.firstName || userData?.lastName
-                ? `${userData?.firstName || ""} ${userData?.lastName || ""}`.trim()
-                : user?.email || "Usuario")}
-          </span>
         </div>
+
 
         {isOpen && (
           <div
-            className="absolute top-full right-0 bg-gray-800 w-48 rounded-lg shadow-lg overflow-hidden mt-2"
+            className="absolute top-full right-0 bg-gray-800 w-48 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in"
             style={{ zIndex: 3000 }}
           >
+
             <button
               onClick={onProfileClick}
-              className="block px-4 py-3 w-full text-left hover:bg-gray-700"
+              className="flex items-center gap-2 px-4 py-3 w-full text-left hover:bg-gray-700 transition duration-200"
             >
-              👤 {t("navbar.view_profile")}
+              <FaUserCircle className="text-lg" />
+              {t("navbar.view_profile")}
             </button>
+
             <button
               onClick={onSettingsClick}
-              className="block px-4 py-3 w-full text-left hover:bg-gray-700"
+              className="flex items-center gap-2 px-4 py-3 w-full text-left hover:bg-gray-700 transition duration-200"
             >
-              ⚙️ {t("navbar.settings")}
+              <FaCog className="text-lg" />
+              {t("navbar.settings")}
             </button>
+
             <Logout />
           </div>
         )}

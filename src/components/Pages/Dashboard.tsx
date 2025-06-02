@@ -414,18 +414,6 @@ const Dashboard = () => {
     <div
       className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
     >
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={theme === "dark" ? "dark" : "light"}
-      />
 
       <NavbarSecond
         userData={userData}
@@ -536,10 +524,11 @@ const Dashboard = () => {
         </div>
 
         {}
-        <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-          © 2025 HCC-AI
-        </footer>
+
       </div>
+        <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+          © 2025 HCC-AI
+        </footer>      
     </div>
   );
 };

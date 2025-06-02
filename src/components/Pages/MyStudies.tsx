@@ -1,5 +1,5 @@
 // src/views/MisEstudios.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Slide, toast, ToastContainer } from "react-toastify";
@@ -39,11 +39,17 @@ const MisEstudios: React.FC = () => {
   const [scale, setScale] = useState<number>(parseFloat(localStorage.getItem("uiScale") || "1"));
   const [highContrast, setHighContrast] = useState(localStorage.getItem("highContrast") === "true");
 
-  const { estudios, user, userData, vista, setVista, crearEstudio, eliminarEstudioVM } = useMisEstudios();
+  const { estudios, user, userData, vista, setVista, crearEstudio, eliminarEstudioVM, refetchEstudios } = useMisEstudios();
   const { t, i18n } = useTranslation("global");
   const navigate = useNavigate();
 
   usePreventZoom(true, true);
+
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("zoom", scale.toString());
+  }, [scale]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -78,15 +84,21 @@ const MisEstudios: React.FC = () => {
     window.open(pdfReportUrl, "_blank");
   };
 
-  const eliminarEstudio = async (id: string) => {
+  const eliminarEstudio = async (id: string) => { 
     try {
       await eliminarEstudioVM(id);
       setConfirmarEliminacion(null);
+      await refetchEstudios();
       toast.success(t("my_studies.delete_success"));
     } catch (error: any) {
       toast.error(t("my_studies.delete_error") || "Error al eliminar el estudio");
     }
   };
+
+
+
+
+
 
   const estudiosFiltrados = estudios
     .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
@@ -123,18 +135,7 @@ const MisEstudios: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-    <ToastContainer
-      position="top-right"
-      autoClose={3000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
-    />
+
 
 
       <NavbarSecond

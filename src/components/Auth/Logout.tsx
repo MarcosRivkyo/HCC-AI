@@ -1,6 +1,7 @@
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { FaSignOutAlt } from "react-icons/fa";
 
 const Logout = () => {
   const auth = getAuth();
@@ -22,10 +23,12 @@ const Logout = () => {
   return (
     <button
       onClick={handleLogout}
-      className="w-full text-left px-4 py-3 hover:bg-red-600 text-red-400"
+      className="w-full text-left px-4 py-3 hover:bg-red-600 text-red-400 flex items-center"
     >
-      🚪 {t("navbar.logout")}
+      <FaSignOutAlt className="mr-2" />
+      {t("navbar.logout")}
     </button>
+
   );
 };
 

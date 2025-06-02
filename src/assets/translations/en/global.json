@@ -197,7 +197,7 @@
     "drop_image": "Drop image here",
     "anonymize_image": "Anonymize Ultrasound",
     "segmented_image": "Segmented Image",
-
+    "loading_image": "Anonymizing image...",
     "image_analysis_results": "Image Analysis Results",
     "no_image_uploaded": "No image uploaded.",
     "image_uploaded": "Image uploaded successfully.",
