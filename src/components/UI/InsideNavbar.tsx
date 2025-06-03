@@ -187,8 +187,8 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           className="w-32 max-w-full rounded-md cursor-pointer"
           alt="HCC-AI Logo"
           onClick={() => {
-            navigate("/");
-            setActivePath("/");
+            navigate("/dashboard");
+            setActivePath("/dashboard");
           }}
         />
       </div>
@@ -265,13 +265,11 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
           />
         </div>
 
-
         {isOpen && (
           <div
             className="absolute top-full right-0 bg-gray-800 w-48 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in"
             style={{ zIndex: 3000 }}
           >
-
             <button
               onClick={onProfileClick}
               className="flex items-center gap-2 px-4 py-3 w-full text-left hover:bg-gray-700 transition duration-200"

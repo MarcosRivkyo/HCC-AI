@@ -180,8 +180,6 @@ const Dashboard = () => {
     }
   }, [highContrast]);
 
-
-
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -414,7 +412,6 @@ const Dashboard = () => {
     <div
       className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
     >
-
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -524,11 +521,10 @@ const Dashboard = () => {
         </div>
 
         {}
-
       </div>
-        <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-          © 2025 HCC-AI
-        </footer>      
+      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
+        © 2025 HCC-AI
+      </footer>
     </div>
   );
 };

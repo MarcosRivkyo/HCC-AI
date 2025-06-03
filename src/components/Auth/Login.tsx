@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ImageSlider from "../UI/ImageSlider";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import usePreventZoom from "../UI/usePreventZoom";
 
 const Login = () => {
   const {
@@ -23,6 +24,8 @@ const Login = () => {
     signInWithEmail,
     handlePasswordReset,
   } = useLoginViewModel();
+
+  usePreventZoom(true, true);
 
   const { t } = useTranslation("global");
 

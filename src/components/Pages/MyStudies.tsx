@@ -13,10 +13,14 @@ import Assistant from "./AssistantView";
 import SettingsModal from "../UI/SettingsModal";
 import usePreventZoom from "../UI/usePreventZoom";
 import { useMisEstudios } from "../../viewmodels/MyStudieViewModel";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const MisEstudios: React.FC = () => {
   const [paginaActual, setPaginaActual] = useState(1);
-  const [confirmarEliminacion, setConfirmarEliminacion] = useState<string | null>(null);
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState<
+    string | null
+  >(null);
   const [estadoFiltro, setEstadoFiltro] = useState("");
   const [ordenFecha, setOrdenFecha] = useState<"asc" | "desc">("desc");
   const [busqueda, setBusqueda] = useState("");
@@ -29,35 +33,78 @@ const MisEstudios: React.FC = () => {
     patientName: "",
     doctorName: "",
     doctorId: "",
+    patientId: "",
     clinicalDescription: "",
   });
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [language, setLanguage] = useState(localStorage.getItem("language") || "es");
-  const [scale, setScale] = useState<number>(parseFloat(localStorage.getItem("uiScale") || "1"));
-  const [highContrast, setHighContrast] = useState(localStorage.getItem("highContrast") === "true");
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "es",
+  );
+  const [scale, setScale] = useState<number>(
+    parseFloat(localStorage.getItem("uiScale") || "1"),
+  );
+  const [highContrast, setHighContrast] = useState(
+    localStorage.getItem("highContrast") === "true",
+  );
+  const [pacientes, setPacientes] = useState<{ id: string; name: string }[]>(
+    [],
+  );
 
-  const { estudios, user, userData, vista, setVista, crearEstudio, eliminarEstudioVM, refetchEstudios } = useMisEstudios();
+  const {
+    estudios,
+    user,
+    userData,
+    vista,
+    setVista,
+    crearEstudio,
+    eliminarEstudioVM,
+    refetchEstudios,
+  } = useMisEstudios();
   const { t, i18n } = useTranslation("global");
   const navigate = useNavigate();
 
   usePreventZoom(true, true);
 
-
   useEffect(() => {
     document.documentElement.style.setProperty("zoom", scale.toString());
   }, [scale]);
-  
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  useEffect(() => {
+    const fetchPacientes = async () => {
+      const q = query(
+        collection(db, "hcc_ai_users"),
+        where("rol", "==", "Paciente"),
+      );
+      const querySnapshot = await getDocs(q);
+      const listaPacientes = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: `${doc.data().firstName} ${doc.data().lastName}`,
+      }));
+      setPacientes(listaPacientes);
+    };
+
+    fetchPacientes();
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!formData.patientId || !formData.patientName) {
+      toast.warning("Selecciona un paciente válido.");
+      return;
+    }
+
     try {
       await crearEstudio(formData);
       setMostrarFormulario(false);
@@ -68,6 +115,7 @@ const MisEstudios: React.FC = () => {
         patientName: "",
         doctorName: "",
         doctorId: "",
+        patientId: "",
         clinicalDescription: "",
       });
       toast.success("Estudio creado con éxito");
@@ -84,21 +132,18 @@ const MisEstudios: React.FC = () => {
     window.open(pdfReportUrl, "_blank");
   };
 
-  const eliminarEstudio = async (id: string) => { 
+  const eliminarEstudio = async (id: string) => {
     try {
       await eliminarEstudioVM(id);
       setConfirmarEliminacion(null);
       await refetchEstudios();
       toast.success(t("my_studies.delete_success"));
     } catch (error: any) {
-      toast.error(t("my_studies.delete_error") || "Error al eliminar el estudio");
+      toast.error(
+        t("my_studies.delete_error") || "Error al eliminar el estudio",
+      );
     }
   };
-
-
-
-
-
 
   const estudiosFiltrados = estudios
     .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
@@ -116,7 +161,10 @@ const MisEstudios: React.FC = () => {
 
   const estudiosPorPagina = 6;
   const indiceInicio = (paginaActual - 1) * estudiosPorPagina;
-  const estudiosPaginados = estudiosFiltrados.slice(indiceInicio, indiceInicio + estudiosPorPagina);
+  const estudiosPaginados = estudiosFiltrados.slice(
+    indiceInicio,
+    indiceInicio + estudiosPorPagina,
+  );
 
   const verEstudioDetalle = (id: string) => navigate(`/estudio/${id}`);
 
@@ -129,15 +177,13 @@ const MisEstudios: React.FC = () => {
       patientName: "",
       doctorName: "",
       doctorId: "",
+      patientId: "",
       clinicalDescription: "",
     });
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-
-
-
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -427,14 +473,31 @@ const MisEstudios: React.FC = () => {
                 className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
                 required
               />
-              <input
-                type="text"
-                name="patientName"
-                value={formData.patientName}
-                onChange={handleChange}
-                placeholder={t("my_studies.patient_name")}
+              <select
+                name="patientId"
+                value={formData.patientId}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const selectedPaciente = pacientes.find(
+                    (p) => p.id === selectedId,
+                  );
+                  setFormData((prev) => ({
+                    ...prev,
+                    patientId: selectedId,
+                    patientName: selectedPaciente?.name || "",
+                  }));
+                }}
                 className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-2 rounded-md"
-              />
+                required
+              >
+                <option value="">{t("my_studies.select_patient")}</option>
+                {pacientes.map((paciente) => (
+                  <option key={paciente.id} value={paciente.id}>
+                    {paciente.name}
+                  </option>
+                ))}
+              </select>
+
               <input
                 type="text"
                 name="clinicalDescription"
@@ -490,8 +553,6 @@ const MisEstudios: React.FC = () => {
           </div>
         </div>
       )}
-      
-
 
       <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
         © 2025 HCC-AI

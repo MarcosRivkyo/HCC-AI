@@ -2,7 +2,6 @@ import { useAssistantViewModel } from "../../viewmodels/AssistantViewModel";
 import { useTranslation } from "react-i18next";
 
 const Assistant = () => {
-
   const {
     question,
     setQuestion,

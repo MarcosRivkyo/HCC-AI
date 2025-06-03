@@ -5,12 +5,14 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import ImageSlider from "../UI/ImageSlider";
 import { useSignupViewModel } from "../../viewmodels/useSignupViewModel";
+import usePreventZoom from "../UI/usePreventZoom";
 
 export default function Signup() {
   const {
     authing,
     email,
     password,
+    rol,
     confirmPassword,
     accessCode,
     userName,
@@ -23,6 +25,7 @@ export default function Signup() {
     showConfirmPassword,
     setEmail,
     setPassword,
+    setRol,
     setConfirmPassword,
     setAccessCode,
     setUserName,
@@ -33,6 +36,8 @@ export default function Signup() {
     setShowConfirmPassword,
     signUpWithEmail,
   } = useSignupViewModel();
+
+  usePreventZoom(true, true);
 
   const { t } = useTranslation("global");
 
@@ -129,21 +134,34 @@ export default function Signup() {
           </div>
 
           <div className="w-full flex flex-wrap gap-4 mb-6">
-            <input
-              type="text"
-              placeholder={t("signup.access_code")}
-              className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder={t("signup.phone")}
-              className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
+            <select
+              className="flex-1 text-white bg-black appearance-none py-2 border-b border-gray-500 focus:outline-none focus:border-white"
+              value={rol}
+              onChange={(e) => setRol(e.target.value)}
+            >
+              <option value="Paciente">{t("signup.role.patient")}</option>
+              <option value="Médico">{t("signup.role.doctor")}</option>
+              <option value="Administrador">{t("signup.role.admin")}</option>
+            </select>
+
+            {rol !== "Paciente" && (
+              <input
+                type="text"
+                placeholder={t("signup.access_code")}
+                className="flex-1 text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white"
+                value={accessCode}
+                onChange={(e) => setAccessCode(e.target.value)}
+              />
+            )}
           </div>
+
+          <input
+            type="text"
+            placeholder={t("signup.phone")}
+            className="w-full text-white py-2 bg-transparent border-b border-gray-500 focus:outline-none focus:border-white mb-6"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
 
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {verificationMessage && (

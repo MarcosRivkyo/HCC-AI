@@ -204,6 +204,7 @@
     "my_studies": {
         "title": "Ihre Studien",
         "create_study": "Studie erstellen",
+        "select_patient": "-- Patient auswählen --",
         "search_by_name": "Nach Namen suchen",
         "filter_all": "Alle",
         "status_in_progress": "In Bearbeitung",
@@ -374,8 +375,9 @@
 
         },
         "help": {
-            "system_status": "Systemstatus:",
+            "system_status": "Status des Systems:",
             "all_ok": "🟢 Alle Systeme funktionieren einwandfrei.",
+            "all_ko": "🔴 Der Dienst ist derzeit inaktiv.",
             "download_manual": "Benutzerhandbuch herunterladen",
             "faq": "Häufige Fragen",
             "support": "Hast du Fragen? Schreib an:",
@@ -388,9 +390,30 @@
             "answer3": "Nach Abschluss der Analyse siehst du das segmentierte Bild und die Ergebnisse in der Studienansicht.",
             "answer4": "Ja. Nach der Generierung klicke im Studienmenü auf 'Bericht herunterladen'. Dies öffnet den Bericht in einem neuen Tab, wo du ihn herunterladen oder bearbeiten kannst."
         },
+
+        "admin": {
+        "title": "Administrationsbereich",
+        "system_status": "Systemstatus",
+        "system_active": "System aktiv",
+        "system_inactive": "System inaktiv",
+        "user_management": "Benutzerverwaltung",
+        "list_users": "Benutzer auflisten",
+        "no_users_found": "Keine Benutzer gefunden.",
+        "name": "Name",
+        "enail": "E-Mail",
+        "rol": "Rolle"
+        },        
         "common": {
             "save_changes": "Änderungen speichern"
         }
+    },
+    
+    "calendar": {
+    "title": "Veranstaltungskalender",
+    "add_reminder_for": "Erinnerung hinzufügen",
+    "reminders": "Erinnerungen",
+    "add": "Hinzufügen",
+    "reminder_placeholder": "Erinnerung eingeben"
     },
 
     "login": {

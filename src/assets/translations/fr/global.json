@@ -186,6 +186,8 @@
         "page": "Page",
         "of": "de"
         },
+
+
         
     "editor": {
       "title": "Éditeur d'image",
@@ -205,6 +207,7 @@
     "my_studies": {
       "title": "Ses Études",
       "create_study": "Créer une étude",
+      "select_patient": "-- Sélectionner un patient --",
       "search_by_name": "Rechercher par nom",
       "filter_all": "Tous",
       "status_in_progress": "En cours",
@@ -289,7 +292,14 @@
         "upload_icon": "Soumettre l'icône"
     },
 
-
+    "calendar": {
+      "title": "Calendrier des événements",
+      "add_reminder_for": "Ajouter un rappel",
+      "reminders": "Rappels",
+      "add": "Ajouter",
+      "reminder_placeholder": "Écris le rappel"
+    },
+    
     "actions": {
         "delete": "Supprimer",
         "edit": "Modifier",
@@ -365,6 +375,7 @@
     "help": {
       "system_status": "État du système :",
       "all_ok": "🟢 Tous les systèmes fonctionnent normalement.",
+      "all_ko": "🔴 Le service est actuellement inactif.",
       "download_manual": "Télécharger le manuel d’utilisateur",
       "faq": "Questions fréquentes",
       "support": "Vous avez des questions ? Écrivez à :",
@@ -377,6 +388,19 @@
       "answer3": "Une fois l’analyse terminée, vous verrez l’image segmentée et les résultats dans la vue de l’étude.",
       "answer4": "Oui. Une fois généré, cliquez sur Télécharger le rapport dans le menu de l’étude. Il s’ouvrira dans un nouvel onglet où vous pourrez le télécharger ou le modifier."
     },
+    "admin": {
+      "title": "Panneau d'administration",
+      "system_status": "État du système",
+      "system_active": "Système actif",
+      "system_inactive": "Système inactif",
+      "user_management": "Gestion des utilisateurs",
+      "list_users": "Lister les utilisateurs",
+      "no_users_found": "Aucun utilisateur trouvé.",
+      "name": "Nom",
+      "enail": "E-mail",
+      "rol": "Rôle"
+    },
+    
     "common": {
       "save_changes": "Enregistrer les modifications"
     }

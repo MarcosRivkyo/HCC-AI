@@ -10,9 +10,16 @@ import { FaCog } from "react-icons/fa";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 import { app } from "../../config/firebase.ts";
 import { getAuth, onAuthStateChanged, updateProfile } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
 
 interface SettingsModalProps {
   open: boolean;
@@ -40,7 +47,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setHighContrast,
   userData,
 }) => {
-
   const auth = getAuth();
   const uid = userData?.uid || auth.currentUser?.uid;
   const db = getFirestore(app);
@@ -58,6 +64,37 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [phone, setPhone] = useState(userData?.phone || "");
   const { t, i18n } = useTranslation("global");
   const [isSaving, setIsSaving] = useState(false);
+  const [userList, setUserList] = useState<any[]>([]);
+  const [filteredUserList, setFilteredUserList] = useState<any[]>([]);
+  const [systemActive, setSystemActive] = useState<boolean | null>(null);
+  const [filtroRol, setFiltroRol] = useState("Todos");
+  const [busquedaNombre, setBusquedaNombre] = useState("");
+
+  useEffect(() => {
+    const fetchSystemStatus = async () => {
+      const statusDoc = await getDoc(doc(db, "hcc_ai_status", "global_status"));
+      if (statusDoc.exists()) {
+        setSystemActive(statusDoc.data().active ?? false);
+      }
+    };
+    fetchSystemStatus();
+  }, []);
+
+  useEffect(() => {
+    const filtered = userList.filter((user) => {
+      const nameMatch =
+        `${user.firstName} ${user.lastName}`
+          .toLowerCase()
+          .includes(busquedaNombre.toLowerCase()) ||
+        user.email?.toLowerCase().includes(busquedaNombre.toLowerCase());
+
+      const rolMatch = filtroRol === "Todos" || user.rol === filtroRol;
+
+      return nameMatch && rolMatch;
+    });
+
+    setFilteredUserList(filtered);
+  }, [userList, busquedaNombre, filtroRol]);
 
   useEffect(() => {
     if (userData) {
@@ -85,69 +122,91 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     localStorage.setItem("uiScale", newScale.toString());
   };
 
-
-const updateUserData = async () => {
-  setIsSaving(true);
-  try {
-    const auth = getAuth();
-
-    const uid = userData?.uid || auth.currentUser?.uid;
-
-    if (!uid) {
-      console.warn("UID de usuario no definido.");
-      toast.error("No se pudo actualizar: UID de usuario no definido.");
-      setIsSaving(false);
-      return;
-    }
-
-    let photoURL = userData?.profilePicture || "";
-
-    if (newProfileImage) {
-      const storage = getStorage();
-      const folderPath = userData?.imageFolder || `HCC-AI/users/${uid}/images`;
-      const storageRef = ref(
-        storage,
-        `${folderPath}/profile_pictures/${newProfileImage.name}`
-      );
-      await uploadBytes(storageRef, newProfileImage);
-      photoURL = await getDownloadURL(storageRef);
-    }
-
-    const docRef = doc(db, "hcc_ai_users", uid);
-    console.log("Actualizando documento:", docRef.path);
-    await updateDoc(docRef, {
-      userName,
-      firstName,
-      lastName,
-      phone,
-      profilePicture: photoURL,
+  const toggleSystemStatus = async () => {
+    const newStatus = !systemActive;
+    await setDoc(doc(db, "hcc_ai_status", "global_status"), {
+      active: newStatus,
     });
+    setSystemActive(newStatus);
+  };
 
-    if (auth.currentUser) {
-      await updateProfile(auth.currentUser, {
-        displayName: userName, 
-        photoURL: photoURL,
+  const updateUserData = async () => {
+    setIsSaving(true);
+    try {
+      const auth = getAuth();
+
+      const uid = userData?.uid || auth.currentUser?.uid;
+
+      if (!uid) {
+        console.warn("UID de usuario no definido.");
+        toast.error("No se pudo actualizar: UID de usuario no definido.");
+        setIsSaving(false);
+        return;
+      }
+
+      let photoURL = userData?.profilePicture || "";
+
+      if (newProfileImage) {
+        const storage = getStorage();
+        const folderPath =
+          userData?.imageFolder || `HCC-AI/users/${uid}/images`;
+        const storageRef = ref(
+          storage,
+          `${folderPath}/profile_pictures/${newProfileImage.name}`,
+        );
+        await uploadBytes(storageRef, newProfileImage);
+        photoURL = await getDownloadURL(storageRef);
+      }
+
+      const docRef = doc(db, "hcc_ai_users", uid);
+      console.log("Actualizando documento:", docRef.path);
+      await updateDoc(docRef, {
+        userName,
+        firstName,
+        lastName,
+        phone,
+        profilePicture: photoURL,
       });
+
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: userName,
+          photoURL: photoURL,
+        });
+      }
+
+      console.log("Datos actualizados:", {
+        userName,
+        firstName,
+        lastName,
+        phone,
+        profilePicture: photoURL,
+      });
+
+      toast.success("Datos actualizados correctamente.");
+    } catch (error) {
+      console.error("Error al actualizar datos:", error);
+      toast.error("Error al actualizar datos del perfil.");
+    } finally {
+      setIsSaving(false);
     }
+  };
 
-    console.log("Datos actualizados:", {
-      userName,
-      firstName,
-      lastName,
-      phone,
-      profilePicture: photoURL,
-    });
-
-    toast.success("Datos actualizados correctamente.");
-  } catch (error) {
-    console.error("Error al actualizar datos:", error);
-    toast.error("Error al actualizar datos del perfil.");
-  } finally {
-    setIsSaving(false);
-  }
-};
-
-
+  const fetchFirestoreUsers = async () => {
+    try {
+      const usersCollection = collection(db, "hcc_ai_users");
+      const usersSnapshot = await getDocs(usersCollection);
+      const users = usersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUserList(users);
+      setFilteredUserList(users);
+    } catch (error) {
+      console.error("Error fetching users from Firestore:", error);
+      toast.error("No se pudo cargar la lista de usuarios.");
+    }
+  };
 
   if (!open) return null;
 
@@ -175,6 +234,10 @@ const updateUserData = async () => {
                   label: t("settings.sections.preferences"),
                 },
                 { id: "Ayuda", label: t("settings.sections.help") },
+
+                ...(userData?.rol === "Administrador"
+                  ? [{ id: "Administrador", label: "Administrador" }]
+                  : []),
               ].map((item) => (
                 <li
                   key={item.id}
@@ -580,16 +643,26 @@ const updateUserData = async () => {
           {activeSection === "Ayuda" && (
             <div className="space-y-8 w-full px-8 py-6 rounded-lg shadow-inner">
               <h3 className="text-3xl text-black dark:text-white font-semibold mb-6 border-b border-gray-600 pb-2">
-                {t("settings.help.system_status")}
+                {t("settings.title")}
               </h3>
 
               <div className="bg-gray-100 dark:bg-gray-900 p-4 mt-6 rounded-lg border border-gray-700">
                 <p className="text-black dark:text-white font-semibold">
-                  Estado del Sistema:
+                  {t("settings.help.system_status")}
                 </p>
-                <p className="text-green-700 font-semibold text-sm mt-1">
-                  {t("settings.help.all_ok")}
-                </p>
+                {systemActive === null ? (
+                  <p className="text-gray-500 text-sm mt-1 italic">
+                    {t("loading")}
+                  </p>
+                ) : systemActive ? (
+                  <p className="text-green-700 font-semibold text-sm mt-1">
+                    {t("settings.help.all_ok")}
+                  </p>
+                ) : (
+                  <p className="text-red-600 font-semibold text-sm mt-1">
+                    {t("settings.help.all_ko")}
+                  </p>
+                )}
               </div>
 
               <button
@@ -655,6 +728,134 @@ const updateUserData = async () => {
               </div>
             </div>
           )}
+
+          {activeSection === "Administrador" &&
+            userData?.rol === "Administrador" && (
+              <div className="space-y-8 w-full px-8 py-6 rounded-lg shadow-inner">
+                <h3 className="text-3xl text-black dark:text-white font-semibold mb-6 border-b border-gray-600 pb-2">
+                  {t("settings.admin.title")}
+                </h3>
+
+                {/* Sistema: Estado Global */}
+                <section className="space-y-3">
+                  <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                    {t("settings.admin.system_status")}
+                  </h4>
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`text-lg font-medium ${systemActive ? "text-green-600" : "text-red-500"}`}
+                    >
+                      {systemActive
+                        ? `🟢 ${t("settings.admin.system_active")}`
+                        : `🔴 ${t("settings.admin.system_inactive")}`}
+                    </span>
+                    <button
+                      onClick={toggleSystemStatus}
+                      className={`w-14 h-6 flex items-center rounded-full p-0.5 transition-colors duration-300 ${
+                        systemActive ? "bg-green-500" : "bg-red-500"
+                      }`}
+                    >
+                      <div
+                        className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ${
+                          systemActive ? "translate-x-7" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </section>
+
+                {/* Usuarios */}
+                <section className="space-y-4">
+                  <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                    {t("settings.admin.user_management")}
+                  </h4>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                      <button
+                        onClick={fetchFirestoreUsers}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm transition"
+                      >
+                        {t("settings.admin.list_users")}
+                      </button>
+
+                      <input
+                        type="text"
+                        placeholder="Buscar por nombre o email..."
+                        value={busquedaNombre}
+                        onChange={(e) => setBusquedaNombre(e.target.value)}
+                        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white w-full sm:w-72"
+                      />
+
+                      <select
+                        className="px-3 py-1.5 text-sm rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white w-full sm:w-44"
+                        value={filtroRol}
+                        onChange={(e) => setFiltroRol(e.target.value)}
+                      >
+                        <option value="Todos">Todos</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Médico">Doctor</option>
+                        <option value="Paciente">Paciente</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {filteredUserList.length === 0 ? (
+                    <p className="text-gray-600 dark:text-gray-300 text-center mt-4">
+                      {t("settings.admin.no_users_found")}
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700 mt-4">
+                      <table className="min-w-full text-sm">
+                        <thead className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase text-xs font-semibold">
+                          <tr>
+                            <th className="px-4 py-3 text-left">
+                              {t("settings.admin.name")}
+                            </th>
+                            <th className="px-4 py-3 text-left">
+                              {t("settings.admin.enail")}
+                            </th>
+                            <th className="px-4 py-3 text-left">
+                              {t("settings.admin.rol")}
+                            </th>
+                            <th className="px-4 py-3 text-left">UID</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                          {filteredUserList.map((user, index) => (
+                            <tr
+                              key={index}
+                              className="hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+                            >
+                              <td
+                                className="px-4 py-2 text-gray-800 dark:text-gray-300 max-w-[160px] truncate"
+                                title={`${user.firstName} ${user.lastName}`}
+                              >
+                                {user.firstName} {user.lastName}
+                              </td>
+                              <td
+                                className="px-4 py-2 text-gray-800 dark:text-gray-300 max-w-[220px] truncate"
+                                title={user.email}
+                              >
+                                {user.email || "Sin email"}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800 dark:text-gray-300">
+                                {user.rol || "Sin rol"}
+                              </td>
+                              <td
+                                className="px-4 py-2 text-gray-900 dark:text-white max-w-[180px] truncate"
+                                title={user.id}
+                              >
+                                {user.id}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </section>
+              </div>
+            )}
         </div>
       </div>
     </Modal>

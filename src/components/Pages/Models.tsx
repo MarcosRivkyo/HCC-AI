@@ -12,14 +12,10 @@ import usePreventZoom from "../UI/usePreventZoom";
 import { useModelsViewModel } from "../../viewmodels/AiModelsViewModel";
 import { ModelData } from "../../models/AiModels";
 
-
-
 const Models = () => {
-
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
   const [hoveredModelId, setHoveredModelId] = useState<string | null>(null);
-
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -35,16 +31,13 @@ const Models = () => {
 
   const { t, i18n } = useTranslation("global");
 
-
   usePreventZoom(true, true);
 
   const { models, user, userData } = useModelsViewModel();
 
-
   useEffect(() => {
     document.documentElement.style.setProperty("zoom", scale.toString());
   }, [scale]);
-
 
   const renderModelCards = (filteredModels: ModelData[]) =>
     filteredModels.length === 0 ? null : (
@@ -252,10 +245,6 @@ const Models = () => {
                       <li>
                         <strong>YOLOv8:</strong>{" "}
                         {t("models.used_submodels.YOLOv8")}
-                      </li>
-                      <li>
-                        <strong>YOLOv11:</strong>{" "}
-                        {t("models.used_submodels.YOLOv11")}
                       </li>
                     </ul>
                   </div>

@@ -29,6 +29,7 @@ export function useSignupViewModel() {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [rol, setRol] = useState("Paciente");
 
   const defaultProfilePictureUrl =
     "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2Fdefault_logo_user.png?alt=media&token=499a8fd4-85dc-49be-8d4a-a469aea1d1f7";
@@ -86,6 +87,7 @@ export function useSignupViewModel() {
         lastName,
         email: user.email,
         phone,
+        rol,
         profilePicture: defaultProfilePictureUrl,
         imageFolder: `HCC-AI/users/${user.uid}/images/`,
         documentFolder: `HCC-AI/users/${user.uid}/documents/`,
@@ -98,6 +100,7 @@ export function useSignupViewModel() {
       setLastName("");
       setEmail("");
       setPhone("");
+      setRol("Paciente");
       setPassword("");
       setConfirmPassword("");
       setAccessCode("");
@@ -119,6 +122,7 @@ export function useSignupViewModel() {
   return {
     authing,
     email,
+    rol,
     password,
     confirmPassword,
     accessCode,
@@ -132,6 +136,7 @@ export function useSignupViewModel() {
     showConfirmPassword,
     setEmail,
     setPassword,
+    setRol,
     setConfirmPassword,
     setAccessCode,
     setUserName,

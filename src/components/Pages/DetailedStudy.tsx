@@ -30,6 +30,7 @@ import { arrayUnion } from "firebase/firestore";
 import html2canvas from "html2canvas";
 
 import NavbarSecond from "../UI/InsideNavbar.tsx";
+import NavbarPatient from "../UI/NavbarPatient.tsx";
 
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
@@ -38,7 +39,13 @@ import usePreventZoom from "../UI/usePreventZoom.tsx";
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import Assistant from "./AssistantView.tsx";
-import { FaDownload, FaEnvelope, FaShareAlt, FaTrashAlt } from "react-icons/fa";
+import {
+  FaChartBar,
+  FaDownload,
+  FaEnvelope,
+  FaShareAlt,
+  FaTrashAlt,
+} from "react-icons/fa";
 import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
 import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
 import { useTranslation } from "react-i18next";
@@ -69,7 +76,6 @@ type Estudio = {
   pdfReportUrl?: string | null;
   predictionId?: string;
 };
-
 type Prediction = {
   maskUrl?: string;
   predicted_class: number;
@@ -173,7 +179,7 @@ const EstudioDetalle = () => {
   useEffect(() => {
     document.documentElement.style.setProperty("zoom", scale.toString());
   }, [scale]);
-  
+
   useEffect(() => {
     const auth = getAuth();
     setUser(auth.currentUser);
@@ -644,39 +650,38 @@ const EstudioDetalle = () => {
     setShowEmailModal(true);
   };
 
-const handleSendEmail = async () => {
-  if (!emailToSend || !emailToSend.includes("@")) {
-    toast.error("Correo electrónico inválido.");
-    return;
-  }
-
-  setIsSendingEmail(true); 
-
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/send-report`,
-      {
-        name: userData?.firstName || user.displayName || "Médico HCC-AI",
-        email: emailToSend,
-        message: `"Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}"`,
-      },
-    );
-
-    if (response.status === 200) {
-      toast.success("Informe enviado correctamente.");
-      setShowEmailModal(false);
-      setEmailToSend("");
-    } else {
-      toast.error("No se pudo enviar el correo.");
+  const handleSendEmail = async () => {
+    if (!emailToSend || !emailToSend.includes("@")) {
+      toast.error("Correo electrónico inválido.");
+      return;
     }
-  } catch (error) {
-    console.error("Error al enviar informe por correo:", error);
-    toast.error("Ocurrió un error al enviar el correo.");
-  } finally {
-    setIsSendingEmail(false); // 🔁 Restablecer botón
-  }
-};
 
+    setIsSendingEmail(true);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/send-report`,
+        {
+          name: userData?.firstName || user.displayName || "Médico HCC-AI",
+          email: emailToSend,
+          message: `"Te comparto el informe clínico del estudio "${estudio?.studieName ?? ""}". Puedes descargarlo aquí:\n\n${estudio?.pdfReportUrl ?? ""}"`,
+        },
+      );
+
+      if (response.status === 200) {
+        toast.success("Informe enviado correctamente.");
+        setShowEmailModal(false);
+        setEmailToSend("");
+      } else {
+        toast.error("No se pudo enviar el correo.");
+      }
+    } catch (error) {
+      console.error("Error al enviar informe por correo:", error);
+      toast.error("Ocurrió un error al enviar el correo.");
+    } finally {
+      setIsSendingEmail(false); // 🔁 Restablecer botón
+    }
+  };
 
   const handleSelectClassificationModel = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -700,7 +705,6 @@ const handleSendEmail = async () => {
     }));
   };
 
-
   const handleSaveChanges = async () => {
     const nuevoNombre = editedEstudio?.studieName?.trim();
 
@@ -714,12 +718,14 @@ const handleSendEmail = async () => {
       const data = doc.data();
       return (
         data.studieName?.toLowerCase() === nuevoNombre.toLowerCase() &&
-        doc.id !== id 
+        doc.id !== id
       );
     });
 
     if (nombreDuplicado) {
-      toast.error("Ya existe un estudio con ese nombre. Por favor, elige otro.");
+      toast.error(
+        "Ya existe un estudio con ese nombre. Por favor, elige otro.",
+      );
       return;
     }
 
@@ -739,7 +745,6 @@ const handleSendEmail = async () => {
       toast.error("Hubo un error al guardar los cambios.");
     }
   };
-
 
   const handleCancelEdit = () => {
     setEditing(false);
@@ -1106,7 +1111,7 @@ const handleSendEmail = async () => {
           name: userData?.firstName || user.displayName || "Médico HCC-AI",
           email: doctor.email,
           message: `Estudio: "${estudio?.studieName ?? "sin nombre"}"`,
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -1122,7 +1127,6 @@ const handleSendEmail = async () => {
     }
   };
 
-
   if (loading)
     return (
       <p className="text-gray-500 text-lg text-center mt-12">
@@ -1136,10 +1140,8 @@ const handleSendEmail = async () => {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
-
-
       {/* Botón para mostrar el panel lateral izquierdo */}
-      {!mostrarEstudiosRecientes && (
+      {!mostrarEstudiosRecientes && userData?.rol !== "Paciente" && (
         <button
           onClick={() => setMostrarEstudiosRecientes(true)}
           className="fixed top-1/2 left-0 transform -translate-y-1/2 z-50 bg-blue-600 text-white p-2 rounded-r-md hover:bg-blue-700 shadow"
@@ -1159,12 +1161,21 @@ const handleSendEmail = async () => {
         </button>
       )}
 
-      <NavbarSecond
-        userData={userData}
-        onProfileClick={() => setIsProfileOpen(true)}
-        onSettingsClick={() => setIsSettingsOpen(true)}
-        onAssistantClick={() => setShowAssistant(!showAssistant)}
-      />
+      {userData?.rol === "Paciente" ? (
+        <NavbarPatient
+          userData={userData}
+          onProfileClick={() => setIsProfileOpen(true)}
+          onSettingsClick={() => setIsSettingsOpen(true)}
+        />
+      ) : (
+        <NavbarSecond
+          userData={userData}
+          onProfileClick={() => setIsProfileOpen(true)}
+          onSettingsClick={() => setIsSettingsOpen(true)}
+          onAssistantClick={() => setShowAssistant(!showAssistant)}
+        />
+      )}
+
       {/* Panel lateral de estudios recientes */}
       {mostrarEstudiosRecientes && (
         <div className="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-40">
@@ -1233,15 +1244,11 @@ const handleSendEmail = async () => {
 
           {/* FILA 1 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 dark:bg-gray-800">
-
             <div className="relative bg-yellow-100 dark:bg-yellow-200 rounded-xl p-6 space-y-4 shadow-lg border-l-8 border-yellow-400 transform rotate-[-0.5deg]">
-
               <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-red-500 rounded-full shadow-md z-10" />
 
               <div className="flex items-center justify-between mb-2">
                 <div>
-
-
                   {editing ? (
                     <input
                       type="text"
@@ -1288,10 +1295,10 @@ const handleSendEmail = async () => {
               </p>
 
               <p className="text-gray-800">
-                <strong>{t("my_studies.doctor_name")}:</strong> {" "}
+                <strong>{t("my_studies.doctor_name")}:</strong>{" "}
                 <span className="text-gray-700 text-lg">
                   {estudio?.doctorName ?? "Desconocido"}
-                </span>                
+                </span>
               </p>
 
               <p className="text-gray-800">
@@ -1346,9 +1353,7 @@ const handleSendEmail = async () => {
                   </button>
                 </div>
               )}
-
             </div>
-
 
             <div className="flex justify-between items-start w-full">
               {/* Columna con la imagen */}
@@ -1405,9 +1410,15 @@ const handleSendEmail = async () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) =>
-                      estudio?.predictionId ? undefined : handleImagenChange(e)
-                    }
+                    onChange={(e) => {
+                      if (userData?.rol === "Paciente") {
+                        toast.warn("No tienes permiso para subir imágenes.");
+                        return;
+                      }
+                      if (!estudio?.predictionId) {
+                        handleImagenChange(e);
+                      }
+                    }}
                     disabled={!!estudio?.predictionId}
                     className="hidden"
                   />
@@ -1426,58 +1437,63 @@ const handleSendEmail = async () => {
               </div>
 
               {/* Menu de acciones */}
-              <div className="flex flex-col space-y-2 bg-gray-900 dark:bg-gray-900 p-2 rounded-lg shadow-md w-auto">
-
-                {/* Editar */}
-                <button
-                  onClick={() => setEditing(!editing)}
-                  title="Editar estudio"
-                  className={`w-10 h-10 flex items-center justify-center rounded-md transition 
-                    ${editing 
-                      ? "bg-yellow-400 hover:bg-yellow-500" 
-                      : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+              {userData?.rol !== "Paciente" && (
+                <div className="flex flex-col space-y-2 bg-gray-900 dark:bg-gray-900 p-2 rounded-lg shadow-md w-auto">
+                  {/* Editar */}
+                  <button
+                    onClick={() => setEditing(!editing)}
+                    title="Editar estudio"
+                    className={`w-10 h-10 flex items-center justify-center rounded-md transition 
+                    ${
+                      editing
+                        ? "bg-yellow-400 hover:bg-yellow-500"
+                        : "bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                     }`}
-                >
-                  <FaEdit className={editing ? "text-black" : "text-gray-700 dark:text-white"} />
-                </button>
+                  >
+                    <FaEdit
+                      className={
+                        editing ? "text-black" : "text-gray-700 dark:text-white"
+                      }
+                    />
+                  </button>
 
-                {/* Descargar */}                                
-                <button
-                  onClick={descargarPDF}
-                  title="Descargar informe"
-                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                >
-                  <FaDownload className="text-gray-700 dark:text-white" />
-                </button>
+                  {/* Descargar */}
+                  <button
+                    onClick={descargarPDF}
+                    title="Descargar informe"
+                    className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                  >
+                    <FaDownload className="text-gray-700 dark:text-white" />
+                  </button>
 
-                {/* Enviar por correo */}
-                <button
-                  onClick={enviarPDFporCorreo}
-                  title="Enviar por correo"
-                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                >
-                  <FaEnvelope className="text-gray-700 dark:text-white" />
-                </button>
+                  {/* Enviar por correo */}
+                  <button
+                    onClick={enviarPDFporCorreo}
+                    title="Enviar por correo"
+                    className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                  >
+                    <FaEnvelope className="text-gray-700 dark:text-white" />
+                  </button>
 
-                {/* Compartir */}
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  title="Compartir estudio"
-                  className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
-                >
-                  <FaShareAlt className="text-gray-700 dark:text-white" />
-                </button>
+                  {/* Compartir */}
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    title="Compartir estudio"
+                    className="w-10 h-10 flex items-center justify-center rounded-md bg-white dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                  >
+                    <FaShareAlt className="text-gray-700 dark:text-white" />
+                  </button>
 
-
-                {/* Eliminar */}
-                <button
-                  onClick={() => setConfirmarEliminacion(id ?? null)}
-                  title="Eliminar estudio"
-                  className="w-10 h-10 flex items-center justify-center rounded-md bg-red-600 hover:bg-red-700 transition"
-                >
-                  <FaTrashAlt className="text-white" />
-                </button>
-              </div>
+                  {/* Eliminar */}
+                  <button
+                    onClick={() => setConfirmarEliminacion(id ?? null)}
+                    title="Eliminar estudio"
+                    className="w-10 h-10 flex items-center justify-center rounded-md bg-red-600 hover:bg-red-700 transition"
+                  >
+                    <FaTrashAlt className="text-white" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1486,11 +1502,13 @@ const handleSendEmail = async () => {
             <div className="w-full h-px bg-gray-300"></div>
           </div>
 
-          {!estudio?.predictionId && (
+          {!estudio?.predictionId && userData?.rol !== "Paciente" && (
             <div className="flex justify-center">
               <button
                 onClick={() => setParametersVisible(true)}
-                className={`bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 ${parametersVisible ? "bg-blue-700" : ""}`}
+                className={`bg-blue-500 text-white px-6 py-2 rounded-md shadow-md hover:bg-blue-600 ${
+                  parametersVisible ? "bg-blue-700" : ""
+                }`}
               >
                 {t("my_studies.start_analysis")}
               </button>
@@ -1499,176 +1517,173 @@ const handleSendEmail = async () => {
 
           {/* Mostrar los parámetros del análisis */}
           {parametersVisible && (
-            <div className="mt-6 text-center">
-              <h3 className="text-xl font-semibold mb-4">
-                {t("my_studies.choose_parameters")}
-              </h3>
+            <div className="mt-6 flex justify-center">
+              <div className="w-full max-w-4xl text-center">
+                <h3 className="text-xl font-semibold mb-4">
+                  {t("my_studies.choose_parameters")}
+                </h3>
 
-              {/* Modelo de Clasificación */}
-              <div className="mb-6">
-                <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
-                  {t("my_studies.classification_models")}
-                </label>
-                <div className="flex gap-4">
-                  {[
-                    {
-                      name: "HCC-AI",
-                      description: t("my_studies.hcc_ai_description"),
-                    },
-                    {
-                      name: "METAVIR-AI",
-                      description: t("my_studies.metavir_ai_description"),
-                    },
-                  ].map((model) => (
-                    <button
-                      key={model.name}
-                      title={model.description}
-                      onClick={() => {
-                        setSelectedClassificationModel(model.name);
-                        if (model.name !== "METAVIR-AI") {
-                          setSelectedSubModel("efficient_net");
-                        }
-                      }}
-                      className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
-                        selectedClassificationModel === model.name
-                          ? "bg-blue-600 text-white border-blue-700"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-blue-400"
-                      }`}
-                    >
-                      {model.name}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Submodelo desplegable para METAVIR-AI */}
-                {selectedClassificationModel === "METAVIR-AI" && (
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
-                      {t("my_studies.metavir_submodels")}
-                    </label>
-                    <select
-                      value={selectedSubModel}
-                      onChange={(e) => setSelectedSubModel(e.target.value)}
-                      className="block w-full px-3 py-2 border dark:text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    >
-                      <option value="">
-                        {t("my_studies.choose_submodel")}
-                      </option>
-                      <option value="resnet">ResNet</option>
-                      <option value="VGG16">VGG16</option>
-                    </select>
+                {/* Modelo de Clasificación */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
+                    {t("my_studies.classification_models")}
+                  </label>
+                  <div className="flex gap-4">
+                    {[
+                      {
+                        name: "HCC-AI",
+                        description: t("my_studies.hcc_ai_description"),
+                      },
+                      {
+                        name: "METAVIR-AI",
+                        description: t("my_studies.metavir_ai_description"),
+                      },
+                    ].map((model) => (
+                      <button
+                        key={model.name}
+                        title={model.description}
+                        onClick={() => {
+                          setSelectedClassificationModel(model.name);
+                          if (model.name !== "METAVIR-AI") {
+                            setSelectedSubModel("efficient_net");
+                          }
+                        }}
+                        className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
+                          selectedClassificationModel === model.name
+                            ? "bg-blue-600 text-white border-blue-700"
+                            : "bg-white text-gray-700 border-gray-300 hover:border-blue-400"
+                        }`}
+                      >
+                        {model.name}
+                      </button>
+                    ))}
                   </div>
-                )}
-              </div>
 
-              {/* Modelo de Segmentación */}
-              <div className="mb-6">
-                <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
-                  {t("my_studies.segmentation_models")}
-                </label>
-                <div className="flex gap-4">
-                  {["SegmentadorHepático-AI"].map((model) => (
-                    <button
-                      key={model}
-                      onClick={() => {
-                        setSelectedSegmentationModel(model);
-                        setSelectedSegmentationSubModel(""); // Reiniciar submodelo
-                      }}
-                      className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
-                        selectedSegmentationModel === model
-                          ? "bg-green-600 text-white border-green-700"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-green-400"
-                      }`}
-                    >
-                      {model}
-                    </button>
-                  ))}
+                  {/* Submodelo desplegable para METAVIR-AI */}
+                  {selectedClassificationModel === "METAVIR-AI" && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
+                        {t("my_studies.metavir_submodels")}
+                      </label>
+                      <select
+                        value={selectedSubModel}
+                        onChange={(e) => setSelectedSubModel(e.target.value)}
+                        className="block w-full px-3 py-2 border dark:text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      >
+                        <option value="">
+                          {t("my_studies.choose_submodel")}
+                        </option>
+                        <option value="resnet">ResNet</option>
+                        <option value="VGG16">VGG16</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
 
-                {/* Submodelo desplegable solo si selecciona SEGMENTADOHEPATICO-AI */}
-                {selectedSegmentationModel === "SegmentadorHepático-AI" && (
-                  <div className="mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Submodelo de Segmentación */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
-                          {t("my_studies.segmentation_submodels")}
-                        </label>
-                        <select
-                          value={selectedSegmentationSubModel}
-                          onChange={(e) =>
-                            setSelectedSegmentationSubModel(e.target.value)
-                          }
-                          className="block dark:text-black w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                          <option value="">
-                            {t("my_studies.choose_submodel")}
-                          </option>
-                          <option value="YOLOv8">YOLOv8</option>
-                          <option value="YOLOv11">YOLOv11</option>
-                        </select>
-                      </div>
+                {/* Modelo de Segmentación */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold text-gray-800 mb-2 dark:text-white">
+                    {t("my_studies.segmentation_models")}
+                  </label>
+                  <div className="flex gap-4">
+                    {["SegmentadorHepático-AI"].map((model) => (
+                      <button
+                        key={model}
+                        onClick={() => {
+                          setSelectedSegmentationModel(model);
+                          setSelectedSegmentationSubModel(""); // Reiniciar submodelo
+                        }}
+                        className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
+                          selectedSegmentationModel === model
+                            ? "bg-green-600 text-white border-green-700"
+                            : "bg-white text-gray-700 border-gray-300 hover:border-green-400"
+                        }`}
+                      >
+                        {model}
+                      </button>
+                    ))}
+                  </div>
 
-                      {/* Umbral de Confianza */}
-                      <div>
-                        <label
-                          htmlFor="confidenceThreshold"
-                          className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
-                        >
-                          {t("my_studies.minimum_threshold")} (%)
-                        </label>
-                        <input
-                          id="confidenceThreshold"
-                          type="number"
-                          min={0}
-                          max={100}
-                          step={1}
-                          value={confidenceThreshold * 100}
-                          onChange={(e) =>
-                            setConfidenceThreshold(
-                              parseFloat(e.target.value) / 100,
-                            )
-                          }
-                          className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        />
-                        <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
-                          {t("my_studies.threshold_explanation")}
-                        </p>
+                  {/* Submodelo desplegable solo si selecciona SEGMENTADOHEPATICO-AI */}
+                  {selectedSegmentationModel === "SegmentadorHepático-AI" && (
+                    <div className="mt-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Submodelo de Segmentación */}
+
+                        {/* Umbral de Confianza */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
+                          {/* Umbral de Confianza */}
+                          <div className="w-full">
+                            <label
+                              htmlFor="confidenceThreshold"
+                              className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
+                            >
+                              {t("my_studies.minimum_threshold")} (%)
+                            </label>
+                            <input
+                              id="confidenceThreshold"
+                              type="number"
+                              min={0}
+                              max={100}
+                              step={1}
+                              value={confidenceThreshold * 100}
+                              onChange={(e) =>
+                                setConfidenceThreshold(
+                                  parseFloat(e.target.value) / 100,
+                                )
+                              }
+                              className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                            <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
+                              {t("my_studies.threshold_explanation")}
+                            </p>
+                          </div>
+
+                          {/* Checkbox + ayuda */}
+                          <div className="w-full">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                id="usarExplicacionIA"
+                                checked={usarExplicacionIA}
+                                onChange={() =>
+                                  setUsarExplicacionIA(!usarExplicacionIA)
+                                }
+                                className="mt-1 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              />
+                              <div>
+                                <label
+                                  htmlFor="usarExplicacionIA"
+                                  className="block text-sm font-medium text-gray-700 dark:text-white"
+                                >
+                                  {t("my_studies.generate_ai_explanation")}
+                                </label>
+                                <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
+                                  {t(
+                                    "my_studies.generate_ai_explanation_tooltip",
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="mb-6">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="usarExplicacionIA"
-                    checked={usarExplicacionIA}
-                    onChange={() => setUsarExplicacionIA(!usarExplicacionIA)}
-                    className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="usarExplicacionIA"
-                    className="text-sm text-gray-700 dark:text-white"
-                  >
-                    {t("my_studies.generate_ai_explanation")}
-                  </label>
+                  )}
                 </div>
-              </div>
 
-              {/* Botón para iniciar la predicción */}
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={iniciarPrediccionIA}
-                  className={`bg-yellow-400 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ${!selectedClassificationModel || !selectedSegmentationModel ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={
-                    !selectedClassificationModel || !selectedSegmentationModel
-                  }
-                >
-                  {t("my_studies.start_prediction")}
-                </button>
+                {/* Botón para iniciar la predicción */}
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={iniciarPrediccionIA}
+                    className={`bg-yellow-400 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ${!selectedClassificationModel || !selectedSegmentationModel ? "opacity-50 cursor-not-allowed" : ""}`}
+                    disabled={
+                      !selectedClassificationModel || !selectedSegmentationModel
+                    }
+                  >
+                    {t("my_studies.start_prediction")}
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -1808,10 +1823,10 @@ const handleSendEmail = async () => {
                   </p>
                   <button
                     onClick={() => setShowExplanationModal(true)}
-                    title="Ver explicación"
-                    className="w-7 h-7 bg-blue-600 text-white rounded-full text-sm flex items-center justify-center hover:bg-blue-700"
+                    title="Ver en forma de gráfica"
+                    className="w-8 h-8 bg-blue-600 text-white rounded-full text-sm flex items-center justify-center hover:bg-blue-700"
                   >
-                    ?
+                    <FaChartBar className="w-4 h-4" />
                   </button>
                 </div>
 
@@ -1821,17 +1836,22 @@ const handleSendEmail = async () => {
                       <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
                         Gráfico de Probabilidades
                       </h2>
-                    <div ref={chartRef}>
-                      <BarChart
-                        probabilities={prediction.probabilities}
-                        labels={
-                          selectedClassificationModel === "METAVIR-AI"
-                            ? ["F0", "F1", "F2", "F3", "F4"]
-                            : ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"]
-                        }
-                        theme={localStorage.getItem("theme") || "light"}
-                      />
-                    </div>
+                      <div ref={chartRef}>
+                        <BarChart
+                          probabilities={prediction.probabilities}
+                          labels={
+                            selectedClassificationModel === "METAVIR-AI"
+                              ? ["F0", "F1", "F2", "F3", "F4"]
+                              : [
+                                  "Sano",
+                                  "Esteatosis",
+                                  "Cirrosis",
+                                  "Hepatocarcinoma",
+                                ]
+                          }
+                          theme={localStorage.getItem("theme") || "light"}
+                        />
+                      </div>
                       <div className="flex justify-between pt-2 gap-2">
                         <button
                           onClick={handleDownloadChart}
@@ -1850,125 +1870,122 @@ const handleSendEmail = async () => {
                   </div>
                 )}
 
+                <div className="inset-0 flex items-center justify-center">
+                  <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-xl relative space-y-4">
+                    <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-4">
+                      {t("my_studies.class_probabilities")}:
+                    </h2>
 
-                  <div className="inset-0 flex items-center justify-center">
+                    {(selectedClassificationModel === "HCC-AI"
+                      ? ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"]
+                      : ["F0", "F1", "F2", "F3", "F4"]
+                    ).map((label, index) => {
+                      const prob = prediction.probabilities[index] || 0;
+                      const percentage = (prob * 100).toFixed(2);
 
-                    <div className="bg-gray-100 dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-xl relative space-y-4">
-                      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-4">
-                        {t("my_studies.class_probabilities")}:
-                      </h2>
+                      // Mismos colores para ambos modelos
+                      const colorPalette = [
+                        {
+                          border: "border-green-600",
+                          icon: "🟢",
+                          text: "text-green-700",
+                          stroke: "stroke-green-600",
+                        },
+                        {
+                          border: "border-yellow-400",
+                          icon: "🟡",
+                          text: "text-yellow-600",
+                          stroke: "stroke-yellow-400",
+                        },
+                        {
+                          border: "border-orange-500",
+                          icon: "🟠",
+                          text: "text-orange-600",
+                          stroke: "stroke-orange-500",
+                        },
+                        {
+                          border: "border-red-600",
+                          icon: "🔴",
+                          text: "text-red-600",
+                          stroke: "stroke-red-600",
+                        },
+                        {
+                          border: "border-red-800",
+                          icon: "🔴",
+                          text: "text-red-800",
+                          stroke: "stroke-red-800",
+                        },
+                      ];
 
-                      {(selectedClassificationModel === "HCC-AI"
-                        ? ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"]
-                        : ["F0", "F1", "F2", "F3", "F4"]
-                      ).map((label, index) => {
-                        const prob = prediction.probabilities[index] || 0;
-                        const percentage = (prob * 100).toFixed(2);
+                      const explicaciones =
+                        selectedClassificationModel === "HCC-AI"
+                          ? [
+                              "El hígado tiene una apariencia normal sin signos de daño estructural ni acumulación de grasa. Función hepática conservada. Riesgo bajo.",
+                              "Se observa acumulación de grasa en el hígado (hígado graso), común en personas con obesidad, diabetes o consumo elevado de alcohol. Aunque puede ser reversible, puede evolucionar si no se trata. Riesgo medio.",
+                              "El hígado muestra cicatrices y nódulos regenerativos debido a daño crónico. Esto limita su función y puede conllevar complicaciones como hipertensión portal o insuficiencia hepática. Riesgo alto.",
+                              "Se detecta una masa compatible con un tumor maligno primario del hígado. Puede haber sospecha fuerte de hepatocarcinoma (HCC). Requiere evaluación inmediata por un especialista. Riesgo muy alto.",
+                            ]
+                          : [
+                              "No hay signos de fibrosis. El tejido hepático se conserva íntegro. Riesgo bajo.",
+                              "Fibrosis leve en áreas portales, sin afectación de la arquitectura hepática general. Puede ser reversible. Riesgo bajo-medio.",
+                              "Fibrosis moderada con tabiques entre áreas portales. Señal de progresión. Puede evolucionar si no se trata. Riesgo medio.",
+                              "Fibrosis avanzada con puentes fibrosos extensos. El hígado comienza a perder funcionalidad. Riesgo alto.",
+                              "Cirrosis: distorsión severa del tejido hepático y pérdida significativa de la función. Puede conllevar a HCC o insuficiencia hepática. Riesgo muy alto.",
+                            ];
 
-                        // Mismos colores para ambos modelos
-                        const colorPalette = [
-                          {
-                            border: "border-green-600",
-                            icon: "🟢",
-                            text: "text-green-700",
-                            stroke: "stroke-green-600",
-                          },
-                          {
-                            border: "border-yellow-400",
-                            icon: "🟡",
-                            text: "text-yellow-600",
-                            stroke: "stroke-yellow-400",
-                          },
-                          {
-                            border: "border-orange-500",
-                            icon: "🟠",
-                            text: "text-orange-600",
-                            stroke: "stroke-orange-500",
-                          },
-                          {
-                            border: "border-red-600",
-                            icon: "🔴",
-                            text: "text-red-600",
-                            stroke: "stroke-red-600",
-                          },
-                          {
-                            border: "border-red-800",
-                            icon: "🔴",
-                            text: "text-red-800",
-                            stroke: "stroke-red-800",
-                          },
-                        ];
+                      const color = colorPalette[index];
 
-                        const explicaciones =
-                          selectedClassificationModel === "HCC-AI"
-                            ? [
-                                "El hígado tiene una apariencia normal sin signos de daño estructural ni acumulación de grasa. Función hepática conservada. Riesgo bajo.",
-                                "Se observa acumulación de grasa en el hígado (hígado graso), común en personas con obesidad, diabetes o consumo elevado de alcohol. Aunque puede ser reversible, puede evolucionar si no se trata. Riesgo medio.",
-                                "El hígado muestra cicatrices y nódulos regenerativos debido a daño crónico. Esto limita su función y puede conllevar complicaciones como hipertensión portal o insuficiencia hepática. Riesgo alto.",
-                                "Se detecta una masa compatible con un tumor maligno primario del hígado. Puede haber sospecha fuerte de hepatocarcinoma (HCC). Requiere evaluación inmediata por un especialista. Riesgo muy alto.",
-                              ]
-                            : [
-                                "No hay signos de fibrosis. El tejido hepático se conserva íntegro. Riesgo bajo.",
-                                "Fibrosis leve en áreas portales, sin afectación de la arquitectura hepática general. Puede ser reversible. Riesgo bajo-medio.",
-                                "Fibrosis moderada con tabiques entre áreas portales. Señal de progresión. Puede evolucionar si no se trata. Riesgo medio.",
-                                "Fibrosis avanzada con puentes fibrosos extensos. El hígado comienza a perder funcionalidad. Riesgo alto.",
-                                "Cirrosis: distorsión severa del tejido hepático y pérdida significativa de la función. Puede conllevar a HCC o insuficiencia hepática. Riesgo muy alto.",
-                              ];
-
-                        const color = colorPalette[index];
-
-                        return (
-                          <div
-                            key={index}
-                            className={`flex items-center gap-4 border-l-8 ${color.border} bg-white dark:bg-gray-800 rounded-lg shadow p-4`}
-                          >
-                            {/* Porcentaje circular */}
-                            <div className="relative w-24 h-24 flex items-center justify-center">
-                              <svg className="absolute w-full h-full transform -rotate-90">
-                                <circle
-                                  className="text-gray-300"
-                                  strokeWidth="6"
-                                  stroke="currentColor"
-                                  fill="transparent"
-                                  r="40"
-                                  cx="48"
-                                  cy="48"
-                                />
-                                <circle
-                                  className={`${color.stroke} transition-all duration-1000 ease-out`}
-                                  strokeWidth="6"
-                                  strokeDasharray="251.2"
-                                  strokeDashoffset={251.2 * (1 - prob)}
-                                  strokeLinecap="round"
-                                  stroke="currentColor"
-                                  fill="transparent"
-                                  r="40"
-                                  cx="48"
-                                  cy="48"
-                                />
-                              </svg>
-                              <span className="relative z-10 text-base font-bold text-gray-800 dark:text-white">
-                                {percentage}%
-                              </span>
-                            </div>
-
-                            {/* Info */}
-                            <div className="flex-1 space-y-1">
-                              <p
-                                className={`font-semibold ${color.text} text-lg`}
-                              >
-                                {color.icon} {label}
-                              </p>
-                              <p className="text-sm text-gray-700 dark:text-gray-300">
-                                {explicaciones[index]}
-                              </p>
-                            </div>
+                      return (
+                        <div
+                          key={index}
+                          className={`flex items-center gap-4 border-l-8 ${color.border} bg-white dark:bg-gray-800 rounded-lg shadow p-4`}
+                        >
+                          {/* Porcentaje circular */}
+                          <div className="relative w-24 h-24 flex items-center justify-center">
+                            <svg className="absolute w-full h-full transform -rotate-90">
+                              <circle
+                                className="text-gray-300"
+                                strokeWidth="6"
+                                stroke="currentColor"
+                                fill="transparent"
+                                r="40"
+                                cx="48"
+                                cy="48"
+                              />
+                              <circle
+                                className={`${color.stroke} transition-all duration-1000 ease-out`}
+                                strokeWidth="6"
+                                strokeDasharray="251.2"
+                                strokeDashoffset={251.2 * (1 - prob)}
+                                strokeLinecap="round"
+                                stroke="currentColor"
+                                fill="transparent"
+                                r="40"
+                                cx="48"
+                                cy="48"
+                              />
+                            </svg>
+                            <span className="relative z-10 text-base font-bold text-gray-800 dark:text-white">
+                              {percentage}%
+                            </span>
                           </div>
-                        );
-                      })}
 
-                    </div>
+                          {/* Info */}
+                          <div className="flex-1 space-y-1">
+                            <p
+                              className={`font-semibold ${color.text} text-lg`}
+                            >
+                              {color.icon} {label}
+                            </p>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">
+                              {explicaciones[index]}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
+                </div>
 
                 {explicacionGenerada && (
                   <div className="mt-10 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-6 shadow-md">
@@ -2070,7 +2087,6 @@ const handleSendEmail = async () => {
                   "Enviar"
                 )}
               </button>
-
             </div>
           </div>
         </div>
@@ -2113,7 +2129,6 @@ const handleSendEmail = async () => {
               >
                 Compartir
               </button>
-
             </div>
           </div>
         </div>
