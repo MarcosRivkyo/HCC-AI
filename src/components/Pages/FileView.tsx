@@ -24,8 +24,7 @@ const FilesPage: React.FC = () => {
   const [showAssistant, setShowAssistant] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  
+
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
     localStorage.getItem("language") || "es",
@@ -38,9 +37,7 @@ const FilesPage: React.FC = () => {
   );
   const { t, i18n } = useTranslation("global");
 
-
   usePreventZoom(true, true);
-
 
   const {
     user,
@@ -56,9 +53,8 @@ const FilesPage: React.FC = () => {
     handleUpload,
     confirmarEliminarArchivo,
     fetchAllFiles,
-    handleImageClick
+    handleImageClick,
   } = useFilesViewModel();
-
 
   useEffect(() => {
     document.documentElement.style.setProperty("zoom", scale.toString());
@@ -69,7 +65,7 @@ const FilesPage: React.FC = () => {
       fetchAllFiles();
     }
   }, [userData]);
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
       <NavbarSecond
@@ -193,7 +189,6 @@ const FilesPage: React.FC = () => {
                               if (file && path) handleUpload(path, file);
                             }}
                           />
-
                         </label>
                         <button onClick={() => toggleFolder(folderName)}>
                           {isOpen ? (
@@ -271,7 +266,9 @@ const FilesPage: React.FC = () => {
                                       .toLowerCase()
                                       .endsWith(".pdf") && (
                                       <button
-                                        onClick={(e) => handleImageClick(file.url, e)}
+                                        onClick={(e) =>
+                                          handleImageClick(file.url, e)
+                                        }
                                         className="text-sm text-yellow-600 dark:text-yellow-400 flex items-center gap-1 hover:underline"
                                         title="Editar imagen"
                                       >
@@ -344,8 +341,6 @@ const FilesPage: React.FC = () => {
           </div>
         </div>
       )}
-
-
 
       <footer className="w-full bg-black dark:bg-black text-white text-center py-4 shadow-lg rounded-t-lg">
         © 2025 HCC-AI

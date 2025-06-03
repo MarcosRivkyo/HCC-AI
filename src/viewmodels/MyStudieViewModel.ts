@@ -97,8 +97,8 @@ export const useMisEstudios = () => {
       studieDate: studieDateTimestamp,
       doctorId: user.uid,
       doctorName: userData?.firstName || user.displayName || user.email,
+      patientId: formData.patientId,
     });
-
     const snapshot = await getDocs(
       query(collection(db, "hcc_ai_studies"), where("doctorId", "==", user.uid), orderBy("studieDate", "desc"))
     );

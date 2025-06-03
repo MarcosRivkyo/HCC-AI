@@ -149,7 +149,7 @@ const PredictImage: React.FC = () => {
           crossOrigin: "anonymous",
         });
         imageObj.set("id", "backgroundImage");
-        
+
         const scale = Math.min(500 / imageObj.width!, 500 / imageObj.height!);
         imageObj.scale(scale);
         imageObj.set({
@@ -202,9 +202,9 @@ const PredictImage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent): Promise<void> => {
     event.preventDefault();
-    if (!image || isLoading) return; 
+    if (!image || isLoading) return;
 
-    setIsLoading(true); 
+    setIsLoading(true);
 
     const formData = new FormData();
     formData.append("file", image);
@@ -228,10 +228,9 @@ const PredictImage: React.FC = () => {
       console.error("Error al anonimizar la imagen:", error);
       toast.error("Ocurrió un error al anonimizar la imagen.");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
-
 
   const resetCanvas = () => {
     if (!canvas) return;
@@ -260,7 +259,6 @@ const PredictImage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-600 dark:text-white">
-
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -393,10 +391,10 @@ const PredictImage: React.FC = () => {
                     ></path>
                   </svg>
                 )}
-                {isLoading ? t("editor.loading_image") : t("editor.anonymize_image")}
+                {isLoading
+                  ? t("editor.loading_image")
+                  : t("editor.anonymize_image")}
               </button>
-
-
             </div>
           </div>
         </div>

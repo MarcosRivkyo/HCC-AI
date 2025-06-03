@@ -28,7 +28,6 @@ const Logout = () => {
       <FaSignOutAlt className="mr-2" />
       {t("navbar.logout")}
     </button>
-
   );
 };
 

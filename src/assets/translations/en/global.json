@@ -209,6 +209,7 @@
   "my_studies": {
       "title": "Your Studies",
       "create_study": "Create Study",
+      "select_patient": "-- Select Patient --",
       "search_by_name": "Search by name",
       "filter_all": "All",
       "status_in_progress": "In Progress",
@@ -292,7 +293,14 @@
     "upload_icon": "Upload icon"
   },
 
-
+  "calendar": {
+    "title": "Event Calendar",
+    "add_reminder_for": "Add Reminder",
+    "reminders": "Reminders",
+    "add": "Add",
+    "reminder_placeholder": "Write the reminder"
+  },
+  
   "actions": {
     "create": "Create",
     "delete": "Delete",
@@ -371,6 +379,7 @@
     "help": {
       "system_status": "System Status:",
       "all_ok": "🟢 All systems are operating normally.",
+      "all_ko": "🔴 The service is currently inactive.",
       "download_manual": "Download User Manual",
       "faq": "Frequently Asked Questions",
       "support": "Have any questions? Contact:",
@@ -382,6 +391,18 @@
       "answer2": "Go to Settings > Account > Change Password.",
       "answer3": "Once the analysis is complete, you’ll see the segmented image and results in the study view.",
       "answer4": "Yes. Once generated, click Download Report in the study menu. It will open in a new tab where you can download or edit it."
+    },
+    "admin": {
+      "title": "Admin Panel",
+      "system_status": "System Status",
+      "system_active": "System Active",
+      "system_inactive": "System Inactive",
+      "user_management": "User Management",
+      "list_users": "List Users",
+      "no_users_found": "No users found.",
+      "name": "Name",
+      "enail": "Email",
+      "rol": "Role"
     },
     "common": {
       "save_changes": "Save Changes"

@@ -93,7 +93,6 @@ const EstudiosRecientesCompact: React.FC = () => {
                   : t("my_studies.status_in_progress")}
               </span>
             </div>
-
           </li>
         ))}
       </ul>

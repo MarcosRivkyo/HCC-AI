@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
 
   const [t, i18next] = useTranslation("global");
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -69,7 +68,7 @@ const Navbar: React.FC = () => {
       {
         root: null,
         rootMargin: "0px",
-        threshold: 0.6, 
+        threshold: 0.6,
       },
     );
 
@@ -82,13 +81,12 @@ const Navbar: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-
   function easeInOutCubic(t: number): number {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   const scrollToSection = (id: string) => {
-    setSelectedSection(id); 
+    setSelectedSection(id);
     const target = document.getElementById(id);
     if (!target) return;
 
@@ -176,21 +174,19 @@ const Navbar: React.FC = () => {
               />
             </div>
 
+            {isOpen && (
+              <div className="absolute top-full left-0 w-full bg-gray-900 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in">
+                <button
+                  onClick={() => navigate("/dashboard")}
+                  className="flex items-center px-4 py-3 w-full text-left hover:bg-gray-800 transition duration-200"
+                >
+                  <FaSignInAlt className="mr-2" />
+                  {t("navbar.access")}
+                </button>
 
-          {isOpen && (
-            <div className="absolute top-full left-0 w-full bg-gray-900 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in">
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="flex items-center px-4 py-3 w-full text-left hover:bg-gray-800 transition duration-200"
-              >
-                <FaSignInAlt className="mr-2" />
-                {t("navbar.access")}
-              </button>
-
-              <Logout />
-            </div>
-          )}
-
+                <Logout />
+              </div>
+            )}
           </div>
         ) : (
           <>

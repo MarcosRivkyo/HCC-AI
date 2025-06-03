@@ -3,7 +3,15 @@ import { getAuth, deleteUser, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getStorage, ref, listAll, deleteObject } from "firebase/storage";
-import { getFirestore, doc, deleteDoc, getDocs, collection, query, where } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  deleteDoc,
+  getDocs,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 
 const DeleteAccountButton: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -12,31 +20,25 @@ const DeleteAccountButton: React.FC = () => {
   const { t } = useTranslation("global");
   const navigate = useNavigate();
 
-
-
   const deleteAllUserFiles = async (path: string) => {
     const storage = getStorage();
     const dirRef = ref(storage, path);
 
     const listResult = await listAll(dirRef);
 
-
     const deleteFilePromises = listResult.items.map((itemRef) =>
-      deleteObject(itemRef)
+      deleteObject(itemRef),
     );
 
-
     const deleteFolderPromises = listResult.prefixes.map((folderRef) =>
-      deleteAllUserFiles(folderRef.fullPath)
+      deleteAllUserFiles(folderRef.fullPath),
     );
 
     await Promise.all([...deleteFilePromises, ...deleteFolderPromises]);
   };
 
-
   const deleteUserStudiesAndPredictions = async (userId: string) => {
     const db = getFirestore();
-
 
     const studiesRef = collection(db, "hcc_ai_studies");
     const q = query(studiesRef, where("doctorId", "==", userId));
@@ -45,7 +47,6 @@ const DeleteAccountButton: React.FC = () => {
     for (const docSnap of studiesSnapshot.docs) {
       const studyId = docSnap.id;
       const predictionId = docSnap.data().predictionId;
-
 
       if (predictionId) {
         try {
@@ -75,11 +76,10 @@ const DeleteAccountButton: React.FC = () => {
       if (isConfirmed) {
         try {
           setLoading(true);
-          
+
           const db = getFirestore();
           const storage = getStorage();
           const userRef = ref(storage, `HCC-AI/users/${user.uid}`);
-
 
           // 1. Borrar archivos de Storage
           await deleteAllUserFiles(`HCC-AI/users/${user.uid}`);
@@ -96,7 +96,6 @@ const DeleteAccountButton: React.FC = () => {
           setLoading(false);
           alert(t("settings.account.delete_success"));
           navigate("/login");
-
         } catch (err: any) {
           setLoading(false);
           if (err.code === "auth/requires-recent-login") {

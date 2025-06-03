@@ -23,7 +23,7 @@
     "settings": "Configuración",
     "calendar": "CALENDARIO"
   },
-
+  
 
   "main": {
     "slogan": "IA aplicada al diagnóstico del carcinoma hepatocelular",
@@ -199,6 +199,7 @@
 
   "my_studies": {
       "title": "Sus Estudios",
+      "select_patient": "-- Seleccionar Paciente --",
       "create_study": "Crear Estudio",
       "search_by_name": "Buscar por nombre",
       "filter_all": "Todos",
@@ -292,6 +293,14 @@
     "phoneNumber": "Teléfono"
   },
 
+  "calendar": {
+    "title": "Calendario de Eventos",
+    "add_reminder_for": "Añadir Recordatorio",
+    "reminders": "Recordatorios",
+    "add": "Añadir",
+    "reminder_placeholder": "Escribe el recordatorio"
+  },
+
   "actions": {
     "delete": "Eliminar",
     "edit": "Editar",
@@ -369,6 +378,7 @@
     "help": {
       "system_status": "Estado del Sistema:",
       "all_ok": "🟢 Todos los sistemas funcionan con normalidad.",
+      "all_ko": "🔴 El servicio está inactivo.",
       "download_manual": "Descargar Manual de Usuario",
       "faq": "Preguntas Frecuentes",
       "support": "¿Tienes alguna duda? Escribe a:",
@@ -384,7 +394,18 @@
 
       
     },
-
+    "admin": {
+      "title": "Panel de Administración",
+      "system_status": "Estado del Sistema",
+      "system_active": "Sistema Activo",
+      "system_inactive": "Sistema Inactivo",
+      "user_management": "Gestión de Usuarios",
+      "list_users": "Listar Usuarios",
+      "no_users_found": "No hay usuarios para mostrar.",
+      "name": "Nombre",
+      "enail": "Email",
+      "rol": "Puesto"
+    },
 
 
 
@@ -421,7 +442,12 @@
       "button": "Registrarse",
       "or": "O",
       "have_account": "¿Ya tienes cuenta?",
-      "login_link": "Inicia Sesión"
+      "login_link": "Inicia Sesión",
+      "role":{
+        "doctor": "Médico",
+        "patient": "Paciente",
+        "admin": "Administrador"
+      }
     }
 
 

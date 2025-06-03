@@ -69,7 +69,6 @@ const EstudiosRecientes: React.FC<EstudiosRecientesProps> = ({
     fetchEstudios();
   }, []);
 
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -240,11 +239,11 @@ const EstudiosRecientes: React.FC<EstudiosRecientesProps> = ({
                   <FaEllipsisV />
                 </button>
 
-                  {menuActivo === estudio.id && (
-                    <div
-                      ref={menuRef}
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-2 z-10"
-                    >
+                {menuActivo === estudio.id && (
+                  <div
+                    ref={menuRef}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-2 z-10"
+                  >
                     <button
                       onClick={() => descargarEstudio(estudio.id)}
                       className="w-full flex items-center p-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"

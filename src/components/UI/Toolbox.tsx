@@ -68,80 +68,11 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
   const distanceTextRef = useRef<Text | null>(null);
   const tempLineRef = useRef<Line | null>(null);
 
-useEffect(() => {
-  if (!canvas) return;
-  const bgImage = canvas.getObjects().find((o: fabric.Object) => o.get("id") === "backgroundImage");
-
-  
-  if (bgImage) {
-    bgImage.set({
-      selectable: false,
-      evented: false,
-      lockMovementX: true,
-      lockMovementY: true,
-      lockScalingX: true,
-      lockScalingY: true,
-      lockRotation: true,
-      hasBorders: false,
-      hasControls: false,
-    });
-    canvas.renderAll();
-  }
-}, [historyIndex]);
-
-useEffect(() => {
-if (!(fabric.Object.prototype as any)._customToObjectExtended) {
-  const originalToObject = fabric.Object.prototype.toObject;
-  fabric.Object.prototype.toObject = function (propertiesToInclude?: string[]) {
-    return {
-      ...originalToObject.call(this, propertiesToInclude),
-      id: (this as any).id,
-    };
-  };
-  (fabric.Object.prototype as any)._customToObjectExtended = true;
-}
-
-}, []);
-
-
-
-const saveStateToHistory = () => {
-  if (!canvas) return;
-
-  const currentState = canvas.toDatalessJSON(["id"]);
-
-  setHistory((prev) => {
-    const updated = [...prev.slice(0, historyIndex + 1), currentState];
-
-    setHistoryIndex(updated.length - 1);
-    return updated;
-  });
-};
-
-
-const restoreStateFromHistory = (index: number) => {
-  if (!canvas || index < 0 || index >= history.length) return;
-
-
-canvas.loadFromJSON(history[index], () => {
-  setTimeout(() => {
-    canvas.renderAll();
-    canvas.setWidth(canvas.getWidth());
-    canvas.setHeight(canvas.getHeight());
-
-    canvas.isDrawingMode = drawingMode;
-    canvas.selection = true;
-    canvas.defaultCursor = "default";
-
-    if (drawingMode) {
-      canvas.freeDrawingBrush.color = brushColor;
-      canvas.freeDrawingBrush.width = brushWidth;
-    }
-
-    const zoomPoint = new fabric.Point(canvas.getWidth() / 2, canvas.getHeight() / 2);
-    canvas.zoomToPoint(zoomPoint, zoomLevel);
-
-    const bgImage = canvas.getObjects().find((o: fabric.Object) => o.get("id") === "backgroundImage");
+  useEffect(() => {
+    if (!canvas) return;
+    const bgImage = canvas
+      .getObjects()
+      .find((o: fabric.Object) => o.get("id") === "backgroundImage");
 
     if (bgImage) {
       bgImage.set({
@@ -155,36 +86,102 @@ canvas.loadFromJSON(history[index], () => {
         hasBorders: false,
         hasControls: false,
       });
+      canvas.renderAll();
     }
+  }, [historyIndex]);
 
-    canvas.renderAll();
-  }, 0);
-});
+  useEffect(() => {
+    if (!(fabric.Object.prototype as any)._customToObjectExtended) {
+      const originalToObject = fabric.Object.prototype.toObject;
+      fabric.Object.prototype.toObject = function (
+        propertiesToInclude?: string[],
+      ) {
+        return {
+          ...originalToObject.call(this, propertiesToInclude),
+          id: (this as any).id,
+        };
+      };
+      (fabric.Object.prototype as any)._customToObjectExtended = true;
+    }
+  }, []);
 
+  const saveStateToHistory = () => {
+    if (!canvas) return;
 
-  setHistoryIndex(index);
-};
+    const currentState = canvas.toDatalessJSON(["id"]);
 
+    setHistory((prev) => {
+      const updated = [...prev.slice(0, historyIndex + 1), currentState];
 
+      setHistoryIndex(updated.length - 1);
+      return updated;
+    });
+  };
 
-const undo = () => {
-  if (historyIndex > 0) {
+  const restoreStateFromHistory = (index: number) => {
+    if (!canvas || index < 0 || index >= history.length) return;
 
-    restoreStateFromHistory(historyIndex - 1);
-  } else {
-    toast.info("No hay más acciones para deshacer.");
-  }
-};
+    canvas.loadFromJSON(history[index], () => {
+      setTimeout(() => {
+        canvas.renderAll();
+        canvas.setWidth(canvas.getWidth());
+        canvas.setHeight(canvas.getHeight());
 
-const redo = () => {
-  if (historyIndex < history.length - 1) {
+        canvas.isDrawingMode = drawingMode;
+        canvas.selection = true;
+        canvas.defaultCursor = "default";
 
-    restoreStateFromHistory(historyIndex + 1);
-  } else {
-    toast.info("No hay más acciones para rehacer.");
-  }
-};
+        if (drawingMode) {
+          canvas.freeDrawingBrush.color = brushColor;
+          canvas.freeDrawingBrush.width = brushWidth;
+        }
 
+        const zoomPoint = new fabric.Point(
+          canvas.getWidth() / 2,
+          canvas.getHeight() / 2,
+        );
+        canvas.zoomToPoint(zoomPoint, zoomLevel);
+
+        const bgImage = canvas
+          .getObjects()
+          .find((o: fabric.Object) => o.get("id") === "backgroundImage");
+
+        if (bgImage) {
+          bgImage.set({
+            selectable: false,
+            evented: false,
+            lockMovementX: true,
+            lockMovementY: true,
+            lockScalingX: true,
+            lockScalingY: true,
+            lockRotation: true,
+            hasBorders: false,
+            hasControls: false,
+          });
+        }
+
+        canvas.renderAll();
+      }, 0);
+    });
+
+    setHistoryIndex(index);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      restoreStateFromHistory(historyIndex - 1);
+    } else {
+      toast.info("No hay más acciones para deshacer.");
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      restoreStateFromHistory(historyIndex + 1);
+    } else {
+      toast.info("No hay más acciones para rehacer.");
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -199,9 +196,6 @@ const redo = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [historyIndex, history]);
-
-
-
 
   // useEffect(() => {
   //   if (!canvas) return;
@@ -354,11 +348,10 @@ const redo = () => {
   };
 
   const startRectDrawing = () => {
-    
     if (drawingMode || isDrawingCircle || isDrawingLine || isDrawingRect) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }        
+    }
 
     setIsDrawingRect(true);
     canvas.selection = false;
@@ -366,176 +359,177 @@ const redo = () => {
   };
 
   const startCircleDrawing = () => {
-
     if (drawingMode || isDrawingCircle || isDrawingLine || isDrawingRect) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }            
+    }
     setIsDrawingCircle(true);
     canvas.selection = false;
     canvas.defaultCursor = "crosshair";
   };
 
+  useEffect(() => {
+    if (!canvas) return;
 
+    let shape: fabric.Rect | fabric.Circle | fabric.Line | null = null;
+    let startPoint: { x: number; y: number } | null = null;
+    let distanceText: fabric.Text | null = null;
 
+    const onMouseDown = (options: fabric.TEvent) => {
+      const pointer = canvas.getPointer(options.e);
+      startPoint = { x: pointer.x, y: pointer.y };
 
-useEffect(() => {
-  if (!canvas) return;
-
-  let shape: fabric.Rect | fabric.Circle | fabric.Line | null = null;
-  let startPoint: { x: number; y: number } | null = null;
-  let distanceText: fabric.Text | null = null;
-
-  const onMouseDown = (options: fabric.TEvent) => {
-    const pointer = canvas.getPointer(options.e);
-    startPoint = { x: pointer.x, y: pointer.y };
-
-    if (isDrawingRect) {
-      shape = new fabric.Rect({
-        left: startPoint.x,
-        top: startPoint.y,
-        width: 0,
-        height: 0,
-        stroke: "green",
-        strokeWidth: 2,
-        fill: "transparent",
-
-      });
-      canvas.add(shape);
-    }
-
-    if (isDrawingCircle) {
-      shape = new fabric.Circle({
-        left: startPoint.x,
-        top: startPoint.y,
-        radius: 0,
-        stroke: "green",
-        strokeWidth: 2,
-        fill: "transparent",
-
-      });
-      canvas.add(shape);
-    }
-
-    if (isDrawingLine) {
-      shape = new fabric.Line([startPoint.x, startPoint.y, startPoint.x, startPoint.y], {
-        stroke: "blue",
-        strokeWidth: 2,
-
-      });
-      canvas.add(shape);
-    }
-
-    canvas.renderAll();
-  };
-
-  const onMouseMove = (options: fabric.TEvent) => {
-    if (!shape || !startPoint) return;
-
-    const pointer = canvas.getPointer(options.e);
-
-    if (isDrawingRect && shape instanceof fabric.Rect) {
-      shape.set({
-        width: Math.abs(pointer.x - startPoint.x),
-        height: Math.abs(pointer.y - startPoint.y),
-        left: Math.min(startPoint.x, pointer.x),
-        top: Math.min(startPoint.y, pointer.y),
-      });
-    }
-
-    if (isDrawingCircle && shape instanceof fabric.Circle) {
-      const radius = Math.sqrt(
-        Math.pow(pointer.x - startPoint.x, 2) + Math.pow(pointer.y - startPoint.y, 2)
-      );
-      shape.set({ radius });
-    }
-
-    if (isDrawingLine && shape instanceof fabric.Line) {
-      shape.set({ x2: pointer.x, y2: pointer.y });
-
-      const distance = Math.sqrt(
-        Math.pow(pointer.x - startPoint.x, 2) + Math.pow(pointer.y - startPoint.y, 2)
-      );
-
-      if (distanceText) canvas.remove(distanceText);
-
-      distanceText = new fabric.Text(`${distance.toFixed(2)} px`, {
-        left: pointer.x + 5,
-        top: pointer.y + 5,
-        fontSize: 16,
-        fill: "black",
-        backgroundColor: "white",
-        selectable: false,
-        evented: false,
-      });
-
-      canvas.add(distanceText);
-    }
-
-    canvas.renderAll();
-  };
-
-  const onMouseUp = () => {
-    if (!shape) return;
-
-    if (isDrawingRect && shape instanceof fabric.Rect) {
-      const area = Math.round(shape.width! * shape.height!);
-      const text = new fabric.Text(`Área: ${area} px²`, {
-        left: shape.left!,
-        top: shape.top! - 20,
-        fontSize: 14,
-        fill: "green",
-      });
-      canvas.add(text);
-      shape.set({ selectable: true, evented: true });
-      setIsDrawingRect(false);
-    }
-
-    if (isDrawingCircle && shape instanceof fabric.Circle) {
-      const volume = Math.round((4 / 3) * Math.PI * Math.pow(shape.radius!, 3));
-      const text = new fabric.Text(`Volumen: ${volume} px³`, {
-        left: shape.left!,
-        top: shape.top! - 20,
-        fontSize: 14,
-        fill: "green",
-      });
-      canvas.add(text);
-      setIsDrawingCircle(false);
-    }
-
-    if (isDrawingLine) {
-      if (distanceText) {
-        canvas.remove(distanceText);
-        distanceText = null;
+      if (isDrawingRect) {
+        shape = new fabric.Rect({
+          left: startPoint.x,
+          top: startPoint.y,
+          width: 0,
+          height: 0,
+          stroke: "green",
+          strokeWidth: 2,
+          fill: "transparent",
+        });
+        canvas.add(shape);
       }
-      canvas.remove(shape); // la línea
-      setIsDrawingLine(false);
-    }
 
-    shape = null;
-    startPoint = null;
-    canvas.selection = true;
-    canvas.defaultCursor = "default";
+      if (isDrawingCircle) {
+        shape = new fabric.Circle({
+          left: startPoint.x,
+          top: startPoint.y,
+          radius: 0,
+          stroke: "green",
+          strokeWidth: 2,
+          fill: "transparent",
+        });
+        canvas.add(shape);
+      }
 
-    // Fondo al fondo si está presente
-    const bgImage = canvas.getObjects().find((o: fabric.Object) => o.get('id') === 'backgroundImage');
+      if (isDrawingLine) {
+        shape = new fabric.Line(
+          [startPoint.x, startPoint.y, startPoint.x, startPoint.y],
+          {
+            stroke: "blue",
+            strokeWidth: 2,
+          },
+        );
+        canvas.add(shape);
+      }
 
-    canvas.renderAll();
-    saveStateToHistory();
-  };
+      canvas.renderAll();
+    };
 
-  // Asignar listeners
-  canvas.on("mouse:down", onMouseDown);
-  canvas.on("mouse:move", onMouseMove);
-  canvas.on("mouse:up", onMouseUp);
+    const onMouseMove = (options: fabric.TEvent) => {
+      if (!shape || !startPoint) return;
 
-  return () => {
-    canvas.off("mouse:down", onMouseDown);
-    canvas.off("mouse:move", onMouseMove);
-    canvas.off("mouse:up", onMouseUp);
-  };
-}, [canvas, isDrawingRect, isDrawingCircle, isDrawingLine]);
+      const pointer = canvas.getPointer(options.e);
 
+      if (isDrawingRect && shape instanceof fabric.Rect) {
+        shape.set({
+          width: Math.abs(pointer.x - startPoint.x),
+          height: Math.abs(pointer.y - startPoint.y),
+          left: Math.min(startPoint.x, pointer.x),
+          top: Math.min(startPoint.y, pointer.y),
+        });
+      }
+
+      if (isDrawingCircle && shape instanceof fabric.Circle) {
+        const radius = Math.sqrt(
+          Math.pow(pointer.x - startPoint.x, 2) +
+            Math.pow(pointer.y - startPoint.y, 2),
+        );
+        shape.set({ radius });
+      }
+
+      if (isDrawingLine && shape instanceof fabric.Line) {
+        shape.set({ x2: pointer.x, y2: pointer.y });
+
+        const distance = Math.sqrt(
+          Math.pow(pointer.x - startPoint.x, 2) +
+            Math.pow(pointer.y - startPoint.y, 2),
+        );
+
+        if (distanceText) canvas.remove(distanceText);
+
+        distanceText = new fabric.Text(`${distance.toFixed(2)} px`, {
+          left: pointer.x + 5,
+          top: pointer.y + 5,
+          fontSize: 16,
+          fill: "black",
+          backgroundColor: "white",
+          selectable: false,
+          evented: false,
+        });
+
+        canvas.add(distanceText);
+      }
+
+      canvas.renderAll();
+    };
+
+    const onMouseUp = () => {
+      if (!shape) return;
+
+      if (isDrawingRect && shape instanceof fabric.Rect) {
+        const area = Math.round(shape.width! * shape.height!);
+        const text = new fabric.Text(`Área: ${area} px²`, {
+          left: shape.left!,
+          top: shape.top! - 20,
+          fontSize: 14,
+          fill: "green",
+        });
+        canvas.add(text);
+        shape.set({ selectable: true, evented: true });
+        setIsDrawingRect(false);
+      }
+
+      if (isDrawingCircle && shape instanceof fabric.Circle) {
+        const volume = Math.round(
+          (4 / 3) * Math.PI * Math.pow(shape.radius!, 3),
+        );
+        const text = new fabric.Text(`Volumen: ${volume} px³`, {
+          left: shape.left!,
+          top: shape.top! - 20,
+          fontSize: 14,
+          fill: "green",
+        });
+        canvas.add(text);
+        setIsDrawingCircle(false);
+      }
+
+      if (isDrawingLine) {
+        if (distanceText) {
+          canvas.remove(distanceText);
+          distanceText = null;
+        }
+        canvas.remove(shape); // la línea
+        setIsDrawingLine(false);
+      }
+
+      shape = null;
+      startPoint = null;
+      canvas.selection = true;
+      canvas.defaultCursor = "default";
+
+      // Fondo al fondo si está presente
+      const bgImage = canvas
+        .getObjects()
+        .find((o: fabric.Object) => o.get("id") === "backgroundImage");
+
+      canvas.renderAll();
+      saveStateToHistory();
+    };
+
+    // Asignar listeners
+    canvas.on("mouse:down", onMouseDown);
+    canvas.on("mouse:move", onMouseMove);
+    canvas.on("mouse:up", onMouseUp);
+
+    return () => {
+      canvas.off("mouse:down", onMouseDown);
+      canvas.off("mouse:move", onMouseMove);
+      canvas.off("mouse:up", onMouseUp);
+    };
+  }, [canvas, isDrawingRect, isDrawingCircle, isDrawingLine]);
 
   useEffect(() => {
     if (!canvas) return;
@@ -554,20 +548,18 @@ useEffect(() => {
   }, [zoomLevel]);
 
   const zoomIn = () => {
-
     if (drawingMode) {
-    toast.warning("Desactiva el modo dibujo para realizar la operación.");
-    return;
-    }        
+      toast.warning("Desactiva el modo dibujo para realizar la operación.");
+      return;
+    }
     setZoomLevel((prevZoom) => Math.min(prevZoom + 0.1, 3)); // Aumenta el zoom, hasta un máximo de 3x
   };
 
   const zoomOut = () => {
-
     if (drawingMode) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }            
+    }
     setZoomLevel((prevZoom) => Math.max(prevZoom - 0.1, 0.5)); // Disminuye el zoom, hasta un mínimo de 0.5x
   };
 
@@ -620,7 +612,6 @@ useEffect(() => {
         canvas.centerObject(image); // Centramos la imagen en el lienzo
         saveStateToHistory();
         canvas.renderAll();
-
       }
     };
 
@@ -633,7 +624,7 @@ useEffect(() => {
     if (drawingMode) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }    
+    }
 
     const userText = prompt("Introduce el texto que deseas agregar:");
     if (!userText) return;
@@ -653,7 +644,6 @@ useEffect(() => {
 
   // Función para activar/desactivar el modo de dibujo
   const toggleDrawingMode = () => {
-    
     if (!canvas) return;
 
     // Alternar entre el modo de dibujo y el modo normal
@@ -666,7 +656,6 @@ useEffect(() => {
       canvas.freeDrawingBrush.width = brushWidth;
     }
     saveStateToHistory();
-
   };
 
   // Función para cambiar el color del pincel
@@ -715,7 +704,7 @@ useEffect(() => {
     if (drawingMode) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }        
+    }
     if (window.confirm("Esta operación es irreversible, desea borrarlo?")) {
       canvas.remove(...canvas.getObjects());
     }
@@ -725,7 +714,7 @@ useEffect(() => {
     if (drawingMode) {
       toast.warning("Desactiva el modo dibujo para realizar la operación.");
       return;
-    }    
+    }
     const link = document.createElement("a");
     link.download = "photo_editor_image.png";
     link.href = canvas.toDataURL();
@@ -847,10 +836,7 @@ useEffect(() => {
     <div className="toolbox bg-gray-900 p-4 rounded-xl space-y-1 text-white w-full max-w-[220px]">
       {/* Fila 1: Descargar y Borrar */}
       <div className="flex justify-between gap-2">
-        <button
-          title="Descargar imagen"
-          onClick={downloadImage}
-        >
+        <button title="Descargar imagen" onClick={downloadImage}>
           <FontAwesomeIcon icon={faDownload} />
         </button>
 
@@ -862,7 +848,7 @@ useEffect(() => {
 
       {/* Fila 2: Añadir texto */}
       <div className="flex justify-center">
-        <button title="Agregar texto" onClick={addText} >
+        <button title="Agregar texto" onClick={addText}>
           <FontAwesomeIcon icon={faFont} />
         </button>
       </div>
@@ -881,71 +867,68 @@ useEffect(() => {
 
       {/* Fila 3: Pintar */}
       <div className="flex justify-center">
-          <button
-            title="Modo dibujo"
-            onClick={toggleDrawingMode}
-            className={`p-2 rounded transition font-bold relative ${
-              drawingMode
-                ? "ring-4 ring-yellow-400 shadow-md shadow-yellow-300"
-                : "ring-0"
-            } bg-gray-800 text-white`}
-          >
-            <FontAwesomeIcon icon={faPencil} />
-          </button>
+        <button
+          title="Modo dibujo"
+          onClick={toggleDrawingMode}
+          className={`p-2 rounded transition font-bold relative ${
+            drawingMode
+              ? "ring-4 ring-yellow-400 shadow-md shadow-yellow-300"
+              : "ring-0"
+          } bg-gray-800 text-white`}
+        >
+          <FontAwesomeIcon icon={faPencil} />
+        </button>
       </div>
 
       {/* Opciones de dibujo si está activado */}
-{drawingMode && (
-  <div className="space-y-2">
-    <select
-      value={brushType}
-      onChange={handleBrushTypeChange}
-      className="w-full bg-gray-900 text-white rounded p-1"
-    >
-      <option value="pen">Lápiz</option>
-      <option value="circle">Círculo</option>
-      <option value="spray">Spray</option>
-    </select>
+      {drawingMode && (
+        <div className="space-y-2">
+          <select
+            value={brushType}
+            onChange={handleBrushTypeChange}
+            className="w-full bg-gray-900 text-white rounded p-1"
+          >
+            <option value="pen">Lápiz</option>
+            <option value="circle">Círculo</option>
+            <option value="spray">Spray</option>
+          </select>
 
-    <input
-      type="color"
-      value={brushColor}
-      onChange={handleBrushColorChange}
-      className="w-full h-8 p-0"
-    />
+          <input
+            type="color"
+            value={brushColor}
+            onChange={handleBrushColorChange}
+            className="w-full h-8 p-0"
+          />
 
-    {/* Label a la izquierda del input */}
-    <div className="flex items-center gap-2">
-      <label htmlFor="brush-width" className="text-sm text-white whitespace-nowrap">
-        Ancho
-      </label>
-      <input
-        id="brush-width"
-        type="number"
-        min="1"
-        max="100"
-        value={brushWidth}
-        onChange={handleBrushWidthChange}
-        className="flex-1 p-1 rounded bg-gray-900 text-white"
-      />
-    </div>
-  </div>
-)}
+          {/* Label a la izquierda del input */}
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="brush-width"
+              className="text-sm text-white whitespace-nowrap"
+            >
+              Ancho
+            </label>
+            <input
+              id="brush-width"
+              type="number"
+              min="1"
+              max="100"
+              value={brushWidth}
+              onChange={handleBrushWidthChange}
+              className="flex-1 p-1 rounded bg-gray-900 text-white"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="h-[2px] w-full bg-white opacity-40 my-2 rounded" />
 
       {/* Fila 4: Rectángulo y Círculo */}
       <div className="flex justify-between gap-2">
-        <button
-          title="Dibujar rectángulo"
-          onClick={startRectDrawing}
-        >
+        <button title="Dibujar rectángulo" onClick={startRectDrawing}>
           <FontAwesomeIcon icon={faDrawPolygon} />
         </button>
-        <button
-          title="Dibujar círculo"
-          onClick={startCircleDrawing}
-        >
+        <button title="Dibujar círculo" onClick={startCircleDrawing}>
           <FontAwesomeIcon icon={faCircle} />
         </button>
       </div>
@@ -983,8 +966,6 @@ useEffect(() => {
           <FontAwesomeIcon icon={faRedo} />
         </button>
       </div>
-
-
     </div>
   );
 };
