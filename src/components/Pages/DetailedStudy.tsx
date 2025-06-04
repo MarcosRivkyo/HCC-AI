@@ -547,7 +547,7 @@ const EstudioDetalle = () => {
     }
 
     // 7. ANÁLISIS IA — SIEMPRE EN UNA NUEVA PÁGINA
-    if (predictionData?.predicted_class) {
+    if (predictionData?.predicted_class !== undefined && predictionData?.predicted_class !== null){
       // Crear nueva página para el análisis
       pdf.addPage();
       let y = 20;

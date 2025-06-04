@@ -29,6 +29,7 @@ import MisEstudios from "./components/Pages/MyStudies.tsx";
 import Models from "./components/Pages/Models.tsx";
 import FilesPage from "./components/Pages/FileView.tsx";
 import CalendarPage from "./components/Pages/CalendarView.tsx";
+import MobileWarning from "./components/UI/MobileWarning.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -57,6 +58,9 @@ if (storedTheme === "dark") {
   document.documentElement.classList.remove("dark");
 }
 
+export const isMobile = () => {
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
 
 
 
@@ -75,6 +79,9 @@ root.render(
         pauseOnHover
         theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
       />      
+
+      {isMobile() && <MobileWarning />}      
+      
       <Router>
         <Routes>
 
