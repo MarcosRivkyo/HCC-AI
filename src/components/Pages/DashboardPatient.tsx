@@ -9,8 +9,10 @@ import SettingsModal from "../UI/SettingsModal.tsx";
 import NavbarPatient from "../UI/NavbarPatient.tsx";
 import CalendarViewPatient from "./CalendarViewPatient.tsx";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
+import Footer from "../UI/InsideFooter.tsx";
 import UsefulLinks from "../UI/UsefulLinks";
-
+import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";
+import logoHPsinBG from "../../assets/images/logoHP-removebg.png";
 const DashboardPatient = () => {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
@@ -117,10 +119,11 @@ const DashboardPatient = () => {
           )}
         </div>
       </main>
+      
+      <Footer />
 
-      <footer className="bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg">
-        © 2025 HCC-AI
-      </footer>
+
+
     </div>
   );
 };

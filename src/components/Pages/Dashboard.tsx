@@ -40,6 +40,7 @@ import "react-calendar/dist/Calendar.css";
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
+import Footer from "../UI/InsideFooter.tsx";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -521,10 +522,10 @@ const Dashboard = () => {
         </div>
 
         {}
-      </div>
-      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-        © 2025 HCC-AI
-      </footer>
+      </div> 
+      
+      <Footer />
+
     </div>
   );
 };

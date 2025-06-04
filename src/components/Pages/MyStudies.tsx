@@ -15,6 +15,7 @@ import usePreventZoom from "../UI/usePreventZoom";
 import { useMisEstudios } from "../../viewmodels/MyStudieViewModel";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import Footer from "../UI/InsideFooter.tsx";
 
 const MisEstudios: React.FC = () => {
   const [paginaActual, setPaginaActual] = useState(1);
@@ -106,7 +107,7 @@ const MisEstudios: React.FC = () => {
     }
 
     try {
-      await crearEstudio(formData);
+      const nuevoEstudioId = await crearEstudio(formData);
       setMostrarFormulario(false);
       setFormData({
         studieName: "",
@@ -118,7 +119,10 @@ const MisEstudios: React.FC = () => {
         patientId: "",
         clinicalDescription: "",
       });
+
       toast.success("Estudio creado con éxito");
+      navigate(`/estudio/${nuevoEstudioId}`);
+      
     } catch (err: any) {
       toast.warning(err.message);
     }
@@ -554,9 +558,7 @@ const MisEstudios: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-        © 2025 HCC-AI
-      </footer>
+    <Footer />
     </div>
   );
 };

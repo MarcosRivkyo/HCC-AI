@@ -2,6 +2,8 @@ import { FaLinkedin, FaEnvelope, FaGithub } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
+import logoUSAL from "../../assets/images/logo_usal.png";
+import logoHP from "../../assets/images/logoHP.png";
 
 const Footer: React.FC = () => {
   const [t, i18next] = useTranslation("global");
@@ -21,21 +23,21 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="flex space-x-6 text-sm">
-          <a href="#home" className="hover:text-gray-300">
-            {t("navbar.home")}
-          </a>
-          <a href="#objectives" className="hover:text-gray-300">
-            {t("navbar.objective")}
-          </a>
-          <a href="#services" className="hover:text-gray-300">
-            {t("navbar.services")}
-          </a>
-          <a href="#technology" className="hover:text-gray-300">
-            {t("navbar.technologies")}
-          </a>
-          <a href="#contact" className="hover:text-gray-300">
-            {t("navbar.contact")}
-          </a>
+            <a href="https://www.usal.es" target="_blank" rel="noopener noreferrer">
+              <img
+                src={logoUSAL}
+                alt="Logo USAL"
+                className="w-64 mx-auto md:mx-0"
+              />
+            </a>
+
+            <a href="https://hpscds.com/" target="_blank" rel="noopener noreferrer">
+              <img
+                src={logoHP}
+                alt="Logo HP"
+                className="w-64 mx-auto md:mx-0"
+              />
+            </a>
         </div>
 
         <div className="flex space-x-4 mt-6 md:mt-0">

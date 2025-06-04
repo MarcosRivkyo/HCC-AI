@@ -9,6 +9,7 @@ import {
   addDoc,
   collection,
   getDocs,
+  Timestamp,
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app, storage } from "../../config/firebase.ts";
@@ -51,6 +52,7 @@ import EstudiosRecientesCompact from "../UI/RecentStudiesCompact.tsx";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { FaEdit } from "react-icons/fa";
+import Footer from "../UI/AppFooter.tsx";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -290,10 +292,16 @@ const EstudioDetalle = () => {
         const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
         const allUsers = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...(doc.data() as any),
         }));
 
-        const filtered = allUsers.filter((u) => u.id !== user?.uid);
+
+        const filtered = allUsers.filter(
+          (u) =>
+            (u.rol === "Médico" || u.rol === "Administrador") &&
+            u.id !== user?.uid,
+        );
+
         setDoctorsList(filtered);
       } catch (error) {
         console.error("Error al obtener la lista de doctores:", error);
@@ -304,6 +312,7 @@ const EstudioDetalle = () => {
       fetchDoctors();
     }
   }, [user]);
+
 
   const getImageAsBase64 = (imageUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -735,6 +744,7 @@ const EstudioDetalle = () => {
         studieName: nuevoNombre,
         patientName: editedEstudio?.patientName,
         clinicalDescription: editedEstudio?.clinicalDescription,
+        studieDate: Timestamp.fromDate(new Date(editedEstudio?.studieDate)),
       });
 
       toast.success("Estudio actualizado correctamente.");
@@ -1091,7 +1101,10 @@ const EstudioDetalle = () => {
   const handleShareStudy = async () => {
     if (!selectedDoctorId || !id) return;
 
-    const doctor = doctorsList.find((d) => d.id === selectedDoctorId);
+    const doctor = doctorsList
+      .filter((d) => d.rol === "Médico" || d.rol === "Administrador")
+      .find((d) => d.id === selectedDoctorId);
+
     if (!doctor?.email) {
       toast.error("No se encontró el correo del doctor.");
       return;
@@ -1126,6 +1139,12 @@ const EstudioDetalle = () => {
       toast.error("Error al compartir el estudio o enviar el correo.");
     }
   };
+
+  const toLocalDatetimeInputValue = (date: Date) => {
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  };
+
 
   if (loading)
     return (
@@ -1284,15 +1303,44 @@ const EstudioDetalle = () => {
                 </p>
               </div>
 
-              <p className="text-sm text-gray-500">
-                {estudio?.studieDate?.toDate().toLocaleString(i18n.language, {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+              <p className="text-gray-800">
+                <strong>{t("dashboard.study_date")}:</strong>{" "}
+                {editing ? (
+                  <input
+                    type="datetime-local"
+                    name="studieDate"
+                    value={
+                      editedEstudio?.studieDate
+                        ? toLocalDatetimeInputValue(
+                            editedEstudio.studieDate?.seconds
+                              ? new Date(editedEstudio.studieDate.seconds * 1000)
+                              : new Date(editedEstudio.studieDate)
+                          )
+                        : ""
+                    }
+
+                    onChange={(e) =>
+                      setEditedEstudio((prev) => ({
+                        ...prev!,
+                        studieDate: new Date(e.target.value),
+                      }))
+                    }
+                    className="text-gray-800 text-lg border rounded px-2 py-1 dark:text-black"
+                  />
+                ) : (
+                  <span className="text-gray-700 text-lg">
+                    {new Date(
+                      estudio?.studieDate?.seconds
+                        ? estudio.studieDate.seconds * 1000 // Timestamp
+                        : estudio?.studieDate // Date o string
+                    ).toLocaleString()}
+                  </span>
+
+                )}
               </p>
+
+
+
 
               <p className="text-gray-800">
                 <strong>{t("my_studies.doctor_name")}:</strong>{" "}
@@ -1303,20 +1351,11 @@ const EstudioDetalle = () => {
 
               <p className="text-gray-800">
                 <strong>{t("my_studies.patient_name")}:</strong>{" "}
-                {editing ? (
-                  <input
-                    type="text"
-                    name="patientName"
-                    value={editedEstudio?.patientName || ""}
-                    onChange={handleInputChange}
-                    className="text-gray-800 text-lg border rounded px-2 py-1 dark:text-black"
-                  />
-                ) : (
-                  <span className="text-gray-700 text-lg">
-                    {estudio?.patientName}
-                  </span>
-                )}
+                <span className="text-gray-700 text-lg">
+                  {estudio?.patientName ?? "Desconocido"}
+                </span>
               </p>
+
 
               <div>
                 <h2 className="text-lg font-semibold text-gray-800 mb-1">
@@ -2164,10 +2203,8 @@ const EstudioDetalle = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="bg-gray-900 dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-        © 2025 HCC-AI
-      </footer>
+    <Footer />
+    
     </div>
   );
 };

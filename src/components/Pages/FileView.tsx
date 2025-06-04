@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import logoHCC from "../../assets/images/logo_hcc_ai_bg.jpg";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
 import { useFilesViewModel } from "../../viewmodels/FileViewModel.ts";
+import Footer from "../UI/InsideFooter.tsx";
 
 const FilesPage: React.FC = () => {
   const [showAssistant, setShowAssistant] = useState(false);
@@ -342,9 +343,8 @@ const FilesPage: React.FC = () => {
         </div>
       )}
 
-      <footer className="w-full bg-black dark:bg-black text-white text-center py-4 shadow-lg rounded-t-lg">
-        © 2025 HCC-AI
-      </footer>
+    <Footer />
+    
     </div>
   );
 };

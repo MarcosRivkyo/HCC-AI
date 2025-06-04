@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
+import Footer from "../UI/InsideFooter.tsx";
 
 interface PredictionResponse {
   predicted_class: number;
@@ -459,9 +460,7 @@ const PredictImage: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-black text-white text-center p-4 w-full mt-auto shadow-inner">
-        © 2025 HCC-AI
-      </footer>
+      <Footer />
     </div>
   );
 };
