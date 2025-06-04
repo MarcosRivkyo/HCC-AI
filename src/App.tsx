@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import i18next from "i18next";
 import { FaCheckCircle } from "react-icons/fa";
+import MobileWarning from "./components/UI/MobileWarning.tsx";
 
 import ImageSlider from "./components/UI/ImageSlider2.tsx";
 import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
@@ -56,6 +57,14 @@ const languages = [
   { code: "fr", label: "Français", flag: frenchFlag },
   { code: "de", label: "Deutsch", flag: germanFlag },
 ];
+
+
+const isMobile = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
+};
+
 
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
@@ -562,6 +571,7 @@ function App() {
 
   return (
     <div className="bg-black text-white min-h-screen">
+      {isMobile() && <MobileWarning />} 
       <Navbar />
       <Home />
       <About />
