@@ -7,6 +7,8 @@ import { FaFilePdf } from "react-icons/fa";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { FaCog } from "react-icons/fa";
+import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";
+import logoHPsinBG from "../../assets/images/logoHP-removebg.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
@@ -69,6 +71,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const [systemActive, setSystemActive] = useState<boolean | null>(null);
   const [filtroRol, setFiltroRol] = useState("Todos");
   const [busquedaNombre, setBusquedaNombre] = useState("");
+  const [dailyReminderEnabled, setDailyReminderEnabled] = useState(
+    userData?.recepcionRecordatorio ?? true
+  );
+
 
   useEffect(() => {
     const fetchSystemStatus = async () => {
@@ -79,6 +85,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     };
     fetchSystemStatus();
   }, []);
+
+
+  useEffect(() => {
+    if (userData?.recepcionRecordatorio !== undefined) {
+      setDailyReminderEnabled(userData.recepcionRecordatorio);
+    }
+  }, [userData]);
 
   useEffect(() => {
     const filtered = userList.filter((user) => {
@@ -129,6 +142,55 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     });
     setSystemActive(newStatus);
   };
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      const userDoc = doc(db, "hcc_ai_users", userId);
+      await updateDoc(userDoc, {
+        rol: newRole,
+      });
+
+      toast.success(`Rol actualizado a ${newRole}`);
+      // Refresca la lista de usuarios para reflejar los cambios
+      fetchFirestoreUsers();
+    } catch (error) {
+      console.error("Error actualizando rol:", error);
+      toast.error("No se pudo actualizar el rol.");
+    }
+  };
+
+  const handleDailyReminderToggle = async (userId: string) => {
+    const newValue = !dailyReminderEnabled;
+    setDailyReminderEnabled(newValue);
+    try {
+      const userRef = doc(db, "hcc_ai_users", userId);
+
+      await updateDoc(userRef, { recepcionRecordatorio: newValue });
+      toast.success("Preferencia actualizada");
+    } catch (error) {
+      console.error("Error actualizando preferencia:", error);
+      toast.error("No se pudo guardar la preferencia");
+    }
+  };
+
+
+  const deleteUserFromFirestore = async (userId: string) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.")) {
+      return;
+    }
+
+    try {
+      await updateDoc(doc(db, "hcc_ai_users", userId), { eliminado: true }); 
+      // await deleteDoc(doc(db, "hcc_ai_users", userId));
+
+      toast.success("Usuario eliminado correctamente.");
+      fetchFirestoreUsers(); // Actualiza la lista
+    } catch (error) {
+      console.error("Error eliminando usuario:", error);
+      toast.error("No se pudo eliminar el usuario.");
+    }
+  };
+
 
   const updateUserData = async () => {
     setIsSaving(true);
@@ -192,21 +254,27 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   };
 
-  const fetchFirestoreUsers = async () => {
-    try {
-      const usersCollection = collection(db, "hcc_ai_users");
-      const usersSnapshot = await getDocs(usersCollection);
-      const users = usersSnapshot.docs.map((doc) => ({
+const fetchFirestoreUsers = async () => {
+  try {
+    const usersCollection = collection(db, "hcc_ai_users");
+    const usersSnapshot = await getDocs(usersCollection);
+    const users = usersSnapshot.docs
+      .map((doc) => ({
         id: doc.id,
-        ...doc.data(),
-      }));
-      setUserList(users);
-      setFilteredUserList(users);
-    } catch (error) {
-      console.error("Error fetching users from Firestore:", error);
-      toast.error("No se pudo cargar la lista de usuarios.");
-    }
-  };
+        ...(doc.data() as any), // ← aquí forzamos tipo any
+      }))
+      .filter((user) => user.eliminado !== true);
+
+
+    setUserList(users);
+    setFilteredUserList(users);
+  } catch (error) {
+    console.error("Error fetching users from Firestore:", error);
+    toast.error("No se pudo cargar la lista de usuarios.");
+  }
+};
+
+
 
   if (!open) return null;
 
@@ -256,7 +324,34 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           <div className="pt-6 text-center text-sm text-gray-700 dark:text-gray-400 border-t border-gray-400 dark:border-gray-700">
-            <p className="font-medium">Marcos Rivas Kyoguro</p>
+            {/* Logos centrados */}
+            <div className="flex flex-col justify-center items-center space-y-2 mb-2">
+
+              <a
+                href="https://www.usal.es"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={logoUSALsinBG}
+                  alt="Logo USAL"
+                  className="w-32 h-auto cursor-pointer"
+                />
+              </a>
+              <a
+                href="https://www.hpscds.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={logoHPsinBG}
+                  alt="Logo HP"
+                  className="w-32 h-auto cursor-pointer"
+                />
+              </a>
+            </div>
+
+            <p className="font-medium ">Marcos Rivas Kyoguro</p>
             <a
               href="mailto:marcos.rivkyo@usal.es"
               className="text-xs break-words hover:underline"
@@ -265,6 +360,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </a>
             <p className="italic mt-1">© {new Date().getFullYear()} HCC-AI</p>
           </div>
+
         </div>
 
         {}
@@ -579,6 +675,33 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
 
+              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">
+                      {dailyReminderEnabled
+                        ? "Desactivar envío diario de recordatorios por correo"
+                        : "Activar envío diario de recordatorios por correo"}
+                 </span>
+                  <button
+                    onClick={() => handleDailyReminderToggle(uid)}
+                    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-300 ${
+                      dailyReminderEnabled ? "bg-green-500" : "bg-gray-400 dark:bg-gray-600"
+                    }`}
+                    role="switch"
+                    aria-checked={dailyReminderEnabled}
+                  >
+                    <span
+                      className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-300 ${
+                        dailyReminderEnabled ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </div>
+
+
+
+
               {/* Accesibilidad */}
               <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg border border-gray-700 space-y-4">
                 <h4 className="text-xl font-semibold text-black dark:text-white">
@@ -818,6 +941,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                               {t("settings.admin.rol")}
                             </th>
                             <th className="px-4 py-3 text-left">UID</th>
+                            <th className="px-4 py-3 text-left">Acciones</th>
                           </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
@@ -839,7 +963,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                                 {user.email || "Sin email"}
                               </td>
                               <td className="px-4 py-2 text-gray-800 dark:text-gray-300">
-                                {user.rol || "Sin rol"}
+                                <select
+                                  value={user.rol || "Paciente"}
+                                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                  className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm"
+                                >
+                                  <option value="Paciente">Paciente</option>
+                                  <option value="Médico">Médico</option>
+                                  <option value="Administrador">Administrador</option>
+                                </select>
                               </td>
                               <td
                                 className="px-4 py-2 text-gray-900 dark:text-white max-w-[180px] truncate"
@@ -847,6 +979,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                               >
                                 {user.id}
                               </td>
+                              <td className="px-4 py-2">
+                                <button
+                                  onClick={() => deleteUserFromFirestore(user.id)}
+                                  className="text-red-600 hover:text-red-400 text-sm font-semibold"
+                                >
+                                  Eliminar
+                                </button>
+                              </td>
+                              
                             </tr>
                           ))}
                         </tbody>

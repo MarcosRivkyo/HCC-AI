@@ -41,12 +41,15 @@ export const dailyReminderEmail = functions
       const userData = userDoc.data();
       const email = userData?.email;
       const name = userData?.userName || "";
+      const shouldReceive = userData?.recepcionRecordatorio ?? false;
 
       if (!email) {
-        console.log(`Usuario ${userId} no tiene correo electrónico.`);
         continue;
       }
 
+      if (!shouldReceive) {
+        continue;
+      }      
       const remindersSnapshot = await db
         .collection("hcc_ai_users")
         .doc(userId)

@@ -12,7 +12,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import ImageSlider from "./components/UI/ImageSlider2.tsx";
 import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
 
-import Footer from "./components/UI/Footer.tsx";
+import Footer from "./components/UI/AppFooter.tsx";
 import Navbar from "./components/UI/AppNavbar.tsx";
 import usePreventZoom from "./components/UI/usePreventZoom.tsx";
 
@@ -23,6 +23,11 @@ import englishFlag from "./assets/images/english_language.png";
 import frenchFlag from "./assets/images/french_language.jpg";
 import germanFlag from "./assets/images/german_language.png";
 import analisis_medico from "./assets/images/analisis_medico.png";
+import logoUSAL from "./assets/images/logo_usal.png";
+import logoUSALsinBG from "./assets/images/logo_usal_removebg.png";
+
+import logoHP from "./assets/images/logoHP.png";
+import logoHPsinBG from "./assets/images/logoHP-removebg.png";
 
 import {
   FaPython,
@@ -154,6 +159,33 @@ const Home: React.FC = () => {
       <div className="absolute inset-0 z-10">
         <ImageSlider />
       </div>
+
+<div className="absolute bottom-60 left-1/2 -translate-x-1/2 z-30 flex flex-row items-center space-x-8">
+  <a
+    href="https://www.usal.es"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src={logoUSALsinBG}
+      alt="Logo USAL"
+      className="w-64 cursor-pointer"
+    />
+  </a>
+  <a
+    href="https://hpscds.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src={logoHPsinBG}
+      alt="Logo HP"
+      className="w-64 cursor-pointer"
+    />
+  </a>
+</div>
+
+
     </section>
   );
 };

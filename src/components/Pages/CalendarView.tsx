@@ -18,6 +18,7 @@ import { app, storage } from "../../config/firebase.ts";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
+import Footer from "../UI/InsideFooter.tsx";
 
 const CalendarPageView: React.FC = () => {
   const {
@@ -295,9 +296,8 @@ const CalendarPageView: React.FC = () => {
         )}
       </main>
 
-      <footer className="bg-black text-white text-center p-4 w-full mt-auto shadow-inner">
-        © 2025 HCC-AI
-      </footer>
+      <Footer />
+
     </div>
   );
 };

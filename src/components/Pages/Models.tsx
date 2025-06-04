@@ -11,6 +11,7 @@ import SettingsModal from "../UI/SettingsModal";
 import usePreventZoom from "../UI/usePreventZoom";
 import { useModelsViewModel } from "../../viewmodels/AiModelsViewModel";
 import { ModelData } from "../../models/AiModels";
+import Footer from "../UI/InsideFooter";
 
 const Models = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -360,9 +361,7 @@ const Models = () => {
           </div>
         </main>
       </div>
-      <footer className="bg-black dark:bg-black text-white text-center p-4 w-full mt-auto shadow-lg rounded-t-lg mb-0">
-        © 2025 HCC-AI
-      </footer>
+    <Footer />
     </div>
   );
 };

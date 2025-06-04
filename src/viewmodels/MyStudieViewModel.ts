@@ -92,7 +92,7 @@ export const useMisEstudios = () => {
     finalDate.setHours(12);
     const studieDateTimestamp = Timestamp.fromDate(finalDate);
 
-    await addDoc(collection(db, "hcc_ai_studies"), {
+    const docRef = await addDoc(collection(db, "hcc_ai_studies"), {
       ...formData,
       studieDate: studieDateTimestamp,
       doctorId: user.uid,
@@ -100,10 +100,20 @@ export const useMisEstudios = () => {
       patientId: formData.patientId,
     });
     const snapshot = await getDocs(
-      query(collection(db, "hcc_ai_studies"), where("doctorId", "==", user.uid), orderBy("studieDate", "desc"))
+      query(
+        collection(db, "hcc_ai_studies"),
+        where("doctorId", "==", user.uid),
+        orderBy("studieDate", "desc")
+      )
     );
-    const nuevosEstudios = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) as Study[];
+    const nuevosEstudios = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Study[];
+
     setEstudios(nuevosEstudios);
+
+    return docRef.id;
   };
 
   const eliminarEstudioVM = async (id: string) => {
