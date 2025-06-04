@@ -59,13 +59,6 @@ const languages = [
 ];
 
 
-const isMobile = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent,
-  );
-};
-
-
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
@@ -571,7 +564,7 @@ function App() {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      {isMobile() && <MobileWarning />} 
+      <MobileWarning /> 
       <Navbar />
       <Home />
       <About />
