@@ -58,10 +58,6 @@ if (storedTheme === "dark") {
   document.documentElement.classList.remove("dark");
 }
 
-export const isMobile = () => {
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-};
-
 
 
 root.render(
@@ -80,7 +76,6 @@ root.render(
         theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
       />      
 
-      {isMobile() && <MobileWarning />}      
       
       <Router>
         <Routes>

@@ -927,8 +927,8 @@ const fetchFirestoreUsers = async () => {
                       {t("settings.admin.no_users_found")}
                     </p>
                   ) : (
-                    <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700 mt-4">
-                      <table className="min-w-full text-sm">
+                    <div className="w-full rounded-lg shadow-md border border-gray-200 dark:border-gray-700 mt-4">
+                      <table className="min-w-full table-fixed text-sm">
                         <thead className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase text-xs font-semibold">
                           <tr>
                             <th className="px-4 py-3 text-left">

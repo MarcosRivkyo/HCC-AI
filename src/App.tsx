@@ -141,54 +141,39 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <section
-      id="home"
-      className="text-center text-2xl pt-16 p-10 relative h-screen"
-    >
-      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black bg-opacity-50">
-        <div className="flex flex-col items-center justify-center bg-black bg-opacity-50 p-6 rounded-lg">
-          <h1 className="text-[100px] font-bold mb-6">
-            <span className="text-white">HCC-</span>
-            <span className="text-red-500">AI</span>
-          </h1>
-
-          {showFirstTextEffect && <TextEffectDemo lang="es" />}
-
-          {showSecondTextEffect && <TextEffectDemo lang="eng" />}
+      <section
+        id="home"
+        className="text-center text-2xl pt-16 p-10 relative h-screen"
+      >
+        {/* Fondo de imágenes */}
+        <div className="absolute inset-0 z-10">
+          <ImageSlider />
         </div>
-      </div>
 
-      <div className="absolute inset-0 z-10">
-        <ImageSlider />
-      </div>
+        {/* Texto central (superior) */}
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-black bg-opacity-50 p-6 rounded-lg">
+            <h1 className="text-[100px] font-bold mb-6">
+              <span className="text-white">HCC-</span>
+              <span className="text-red-500">AI</span>
+            </h1>
 
-<div className="absolute bottom-60 left-1/2 -translate-x-1/2 z-30 flex flex-row items-center space-x-8">
-  <a
-    href="https://www.usal.es"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img
-      src={logoUSALsinBG}
-      alt="Logo USAL"
-      className="w-64 cursor-pointer"
-    />
-  </a>
-  <a
-    href="https://hpscds.com/"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img
-      src={logoHPsinBG}
-      alt="Logo HP"
-      className="w-64 cursor-pointer"
-    />
-  </a>
-</div>
+            {showFirstTextEffect && <TextEffectDemo lang="es" />}
+            {showSecondTextEffect && <TextEffectDemo lang="eng" />}
+          </div>
+        </div>
 
+        {/* Logos debajo del texto */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center space-x-8">
+          <a href="https://www.usal.es" target="_blank" rel="noopener noreferrer">
+            <img src={logoUSALsinBG} alt="Logo USAL" className="w-64 cursor-pointer" />
+          </a>
+          <a href="https://hpscds.com/" target="_blank" rel="noopener noreferrer">
+            <img src={logoHPsinBG} alt="Logo HP" className="w-64 cursor-pointer" />
+          </a>
+        </div>
+      </section>
 
-    </section>
   );
 };
 
@@ -563,9 +548,11 @@ function App() {
   usePreventZoom();
 
   return (
-    <div className="bg-black text-white min-h-screen">
-      <MobileWarning /> 
+    <div className="bg-black text-white min-h-screen pt-16 sm:pt-20">
+
       <Navbar />
+      <MobileWarning /> 
+
       <Home />
       <About />
       <Services />
