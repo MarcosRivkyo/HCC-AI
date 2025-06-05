@@ -77,6 +77,10 @@ type Estudio = {
   imagenUrl?: string | null;
   pdfReportUrl?: string | null;
   predictionId?: string;
+  doctorId?: string;
+  patientId?: string;
+  sharedWithDoctorIds?: string[];
+
 };
 type Prediction = {
   maskUrl?: string;
@@ -228,6 +232,21 @@ const EstudioDetalle = () => {
 
     return () => unsubscribe();
   }, [db]);
+
+
+  useEffect(() => {
+    if (!estudio || !userData) return;
+
+    const isDoctor = estudio.doctorId === user?.uid;
+    const isPatient = estudio.patientId === user?.uid;
+    const isShared = estudio.sharedWithDoctorIds?.includes(user?.uid);
+
+    if (!isDoctor && !isPatient && !isShared) {
+      // Redirige o muestra mensaje de acceso denegado
+      toast.error("No tienes permiso para ver este estudio.");
+      navigate("/dashboard"); // O a otra ruta que prefieras
+    }
+  }, [estudio, userData]);  
 
   useEffect(() => {
     const fetchPredictionData = async () => {
@@ -947,14 +966,21 @@ const EstudioDetalle = () => {
     event.preventDefault();
     console.log("imagenSeleccionada:", imagenSeleccionada);
 
-    if (!imagenSeleccionada) {
+    const formData = new FormData();
+
+    if (!imagenSeleccionada && estudio?.imagenUrl) {
+        const response = await fetch(estudio.imagenUrl);
+        const blob = await response.blob();
+        const fileFromUrl = new File([blob], "imagen_estudio.png", { type: blob.type });
+        formData.append("file", fileFromUrl);
+    } else if (imagenSeleccionada) {
+      formData.append("file", imagenSeleccionada);
+    } else {
       alert("Por favor, sube una imagen.");
       return;
     }
 
     setPredict(true);
-    const formData = new FormData();
-    formData.append("file", imagenSeleccionada);
     formData.append("model_name", selectedSubModel);
 
     try {
