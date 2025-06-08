@@ -7,6 +7,7 @@ import {
   FiUpload,
   FiTrash2,
   FiEye,
+  FiInfo
 } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,6 +21,9 @@ import logoHCC from "../../assets/images/logo_hcc_ai_bg.jpg";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
 import { useFilesViewModel } from "../../viewmodels/FileViewModel.ts";
 import Footer from "../UI/InsideFooter.tsx";
+import { getDocs, collection, query, where } from "firebase/firestore";
+import { db } from "../../config/firebase.ts";
+import Modal from "../UI/Modal.tsx";
 
 const FilesPage: React.FC = () => {
   const [showAssistant, setShowAssistant] = useState(false);
@@ -37,6 +41,11 @@ const FilesPage: React.FC = () => {
     localStorage.getItem("highContrast") === "true",
   );
   const { t, i18n } = useTranslation("global");
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [imageInfo, setImageInfo] = useState<any | null>(null);
+  const [documentInfo, setDocumentInfo] = useState<any | null>(null);
+  const [imageInfoOpen, setImageInfoOpen] = useState(false);
+  const [documentInfoOpen, setDocumentInfoOpen] = useState(false);
 
   usePreventZoom(true, true);
 
@@ -66,6 +75,40 @@ const FilesPage: React.FC = () => {
       fetchAllFiles();
     }
   }, [userData]);
+const handleOpenImageInfo = async (imageUrl: string) => {
+  try {
+    const q = query(collection(db, "hcc_ai_images"), where("url", "==", imageUrl));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const data = snapshot.docs[0].data();
+      setImageInfo(data);
+      setImageInfoOpen(true); // ✅ solo abre modal de imagen
+    } else {
+      toast.warn("No se encontró información para esta imagen.");
+    }
+  } catch (err) {
+    console.error("Error al buscar info de imagen:", err);
+    toast.error("Error al obtener información de la imagen.");
+  }
+};
+
+const handleOpenDocumentInfo = async (pdfUrl: string) => {
+  try {
+    const q = query(collection(db, "hcc_ai_documents"), where("url", "==", pdfUrl)); // ✅ corregido campo
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const data = snapshot.docs[0].data();
+      setDocumentInfo(data);
+      setDocumentInfoOpen(true); // ✅ solo abre modal de documento
+    } else {
+      toast.warn("No se encontró información para este informe.");
+    }
+  } catch (err) {
+    console.error("Error al buscar info del informe:", err);
+    toast.error("Error al obtener información del informe.");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
@@ -74,6 +117,7 @@ const FilesPage: React.FC = () => {
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={false}
       />
       <ProfileModal
         isOpen={isProfileOpen}
@@ -132,15 +176,14 @@ const FilesPage: React.FC = () => {
         {loading ? (
           <div className="fixed inset-0 z-50 flex items-center justify-center ">
             <div className="relative w-32 h-32 flex items-center justify-center">
-              {/* Spinner circular */}
+
               <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
 
-              {/* Logo estático o animado */}
-              <img
-                src={logoHCC}
-                alt="Cargando..."
-                className="w-20 h-12 object-contain"
-              />
+                <img
+                  src={logoHCC}
+                  alt="Cargando..."
+                  className="w-20 h-12 object-contain rounded-full"
+                />
             </div>
           </div>
         ) : (
@@ -163,7 +206,10 @@ const FilesPage: React.FC = () => {
                     key={folderName}
                     className="bg-white dark:bg-gray-800 border rounded-xl shadow-md"
                   >
-                    <div className="flex items-center justify-between px-5 py-4 text-lg font-semibold text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 rounded-t-xl">
+                    <div
+                      onClick={() => toggleFolder(folderName)}
+                      className="flex items-center justify-between px-5 py-4 text-lg font-semibold text-gray-800 dark:text-white bg-gray-50 dark:bg-gray-700 rounded-t-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                    >                      
                       <div className="flex items-center gap-3 capitalize">
                         {folderName === "informes" ? (
                           <FiFileText size={20} />
@@ -173,36 +219,24 @@ const FilesPage: React.FC = () => {
                         {folderName}
                       </div>
                       <div className="flex items-center gap-3">
-                        <label
-                          title="Subir archivo"
-                          className="cursor-pointer flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
-                        >
-                          <FiUpload />
-                          <input
-                            type="file"
-                            hidden
-                            onChange={(e) => {
-                              const path =
-                                folderName === "informes"
-                                  ? userData?.documentFolder
-                                  : `${userData?.imageFolder}${folderName}/`;
-                              const file = e.target.files?.[0];
-                              if (file && path) handleUpload(path, file);
-                            }}
-                          />
-                        </label>
-                        <button onClick={() => toggleFolder(folderName)}>
                           {isOpen ? (
                             <FiChevronDown size={20} />
                           ) : (
                             <FiChevronRight size={20} />
                           )}
-                        </button>
                       </div>
                     </div>
 
                     {isOpen && (
                       <>
+
+                      {paginatedFiles.length === 0 ? (
+                        <div className="px-5 py-4 text-center text-gray-500 dark:text-gray-400 italic">
+                          {folderName === "informes"
+                            ? "No hay informes disponibles."
+                            : "No hay imágenes disponibles."}
+                        </div>
+                      ) : (                      
                         <div className="px-5 pb-6 pt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                           {paginatedFiles.map((file, idx) => {
                             const folderPath =
@@ -262,6 +296,7 @@ const FilesPage: React.FC = () => {
                                     <FiEye /> Ver
                                   </a>
 
+
                                   {folderName !== "informes" &&
                                     !file.name
                                       .toLowerCase()
@@ -276,12 +311,31 @@ const FilesPage: React.FC = () => {
                                         ✏️ Editar
                                       </button>
                                     )}
+
+                                    {folderName === "informes" ? (
+                                      <button
+                                        onClick={() => handleOpenDocumentInfo(file.url)}
+                                        className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1 hover:underline"
+                                        title="Ver información del informe"
+                                      >
+                                        <FiInfo /> Info
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={() => handleOpenImageInfo(file.url)}
+                                        className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1 hover:underline"
+                                        title="Ver información de la imagen"
+                                      >
+                                        <FiInfo /> Info
+                                      </button>
+                                    )}
+
                                 </div>
                               </div>
                             );
                           })}
                         </div>
-
+                      )}
                         {files.length > filesPerPage && (
                           <div className="flex justify-between items-center mt-4 px-5">
                             <button
@@ -310,6 +364,83 @@ const FilesPage: React.FC = () => {
                 );
               })}
             </div>
+
+
+          {imageInfoOpen && imageInfo && (
+                <Modal open={imageInfoOpen} onClose={() => setImageInfoOpen(false)}>
+                  <div className="bg-gradient-to-br from-gray-900 via-gray-700 to-gray-700 p-6 rounded-xl text-white shadow-lg">
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">Información de Imagen</h2>
+
+                    <img
+                      src={imageInfo.url}
+                      alt="Vista previa"
+                      className="w-full max-h-64 object-contain mb-4 rounded-lg shadow-md border border-white"
+                    />
+
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex justify-between items-center">
+                        <span><span className="font-semibold">Estudio ID:</span> {imageInfo.estudioId}</span>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(imageInfo.estudioId);
+                            toast.success("ID copiado");
+                          }}
+                          className="ml-2 px-2 py-1 text-xs bg-white text-gray-800 rounded hover:bg-gray-100"
+                        >
+                          Copiar
+                        </button>
+                      </li>
+        
+                      <li><span className="font-semibold">Subido por:</span> {imageInfo.subidoPorDoctorId}</li>
+                      <li><span className="font-semibold">Fecha de subida:</span> {new Date(imageInfo.fechaSubida.seconds * 1000).toLocaleString()}</li>
+
+                      <li><span className="font-semibold">Resolución:</span> {imageInfo.resolucion}</li>
+                      <li><span className="font-semibold">Peso:</span> {imageInfo.pesoKB} KB</li>
+                      <li><span className="font-semibold">Tipo:</span> {imageInfo.tipo}</li>
+                      <li>
+                        <span className="font-semibold">ID de predicción:</span>{" "}
+                        {imageInfo.idPrediccion || "Aún sin analizar"}
+                      </li>
+
+                      <li>
+                        <span className="font-semibold">Clase predicha:</span>{" "}
+                        {typeof imageInfo.clasePredicha === "number"
+                          ? imageInfo.clasePredicha
+                          : "Aún sin analizar"}
+                      </li>
+                    </ul>
+                  </div>
+                </Modal>
+
+            )}
+
+
+            {documentInfoOpen && documentInfo && (
+              <Modal open={documentInfoOpen} onClose={() => {
+                setDocumentInfoOpen(false);
+                setDocumentInfo(null);
+              }}>
+                <div className="bg-gradient-to-br from-gray-900 via-gray-700 to-gray-700 p-6 rounded-xl text-white shadow-lg">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                    Información del Informe
+                  </h2>
+
+                  <ul className="space-y-2 text-sm">
+                    <li><span className="font-semibold">Estudio ID:</span> {documentInfo.estudioId}</li>
+                    <li><span className="font-semibold">Fecha de creación:</span> {new Date(documentInfo.fechaCreacion.seconds * 1000).toLocaleString()}</li>
+                    
+                    <li><span className="font-semibold">Médico autor:</span> {documentInfo.doctorId}</li>
+                    <li><span className="font-semibold">Paciente:</span> {documentInfo.pacienteId}</li>
+                    
+                  </ul>
+                </div>
+              </Modal>
+            )}
+
+             
+
+            
+                      
           </main>
         )}
       </div>

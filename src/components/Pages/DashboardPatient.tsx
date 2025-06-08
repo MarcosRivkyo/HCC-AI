@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 import NavbarSecond from "../UI/InsideNavbar.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
-import NavbarPatient from "../UI/NavbarPatient.tsx";
 import CalendarViewPatient from "./CalendarViewPatient.tsx";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
 import Footer from "../UI/InsideFooter.tsx";
 import UsefulLinks from "../UI/UsefulLinks";
 import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";
 import logoHPsinBG from "../../assets/images/logoHP-removebg.png";
+
 const DashboardPatient = () => {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
@@ -66,11 +66,14 @@ const DashboardPatient = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
-      <NavbarPatient
+      <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
+        onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={true}
       />
+
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}

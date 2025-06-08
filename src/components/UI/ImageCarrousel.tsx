@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "../../App.css";
+import logoHCCDark from "../../assets/images/logo_hcc_ai_bg.jpg";
 
 interface ImageCarrouselProps {
   onImageSelect: (url: string) => void;
@@ -74,7 +75,18 @@ const ImageCarrousel: React.FC<ImageCarrouselProps> = ({ onImageSelect }) => {
     <div className="flex-1 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700">
       <main className="flex-1 overflow-auto">
         {loading ? (
-          <p>Cargando imágenes...</p>
+            <div className="flex items-center justify-center h-64 relative">
+              <div className="relative w-32 h-32 flex items-center justify-center">
+
+                <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+                <img
+                  src={logoHCCDark}
+                  alt="Cargando..."
+                  className="w-20 h-12 object-contain rounded-full"
+                />
+              </div>
+            </div>
         ) : (
           <Slider {...settings}>
             {imagenes.length > 0 ? (

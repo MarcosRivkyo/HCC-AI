@@ -150,7 +150,11 @@ const MisEstudios: React.FC = () => {
   };
 
   const estudiosFiltrados = estudios
-    .filter((e) => e.studieName.toLowerCase().includes(busqueda.toLowerCase()))
+    .filter((e) =>
+      e.studieName.toLowerCase().includes(busqueda.toLowerCase()) ||
+      e.id.toLowerCase().includes(busqueda.toLowerCase())
+    )
+
     .filter((e) => (estadoFiltro ? e.status === estadoFiltro : true))
     .filter((e) => {
       if (!fechaFiltro) return true;
@@ -193,6 +197,7 @@ const MisEstudios: React.FC = () => {
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={false}
       />
 
       <ProfileModal
@@ -323,16 +328,21 @@ const MisEstudios: React.FC = () => {
                 className="bg-white rounded-2xl overflow-hidden shadow-lg transition-transform hover:scale-105"
               >
                 {estudio.imagenUrl ? (
-                  <div className="h-48 w-full overflow-hidden">
+                  <div
+                    className="h-48 w-full overflow-hidden cursor-pointer"
+                    onClick={() => verEstudioDetalle(estudio.id)}
+                    title="Ir al estudio"
+                  >
                     <img
                       src={estudio.imagenUrl}
                       alt="Miniatura"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                 ) : (
                   <div className="h-48 w-full bg-gray-400 dark:bg-gray-800" />
                 )}
+
                 <div className="p-5 bg-gray-000 dark:bg-gray-900">
                   <h2
                     onClick={() => verEstudioDetalle(estudio.id)}

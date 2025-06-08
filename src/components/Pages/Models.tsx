@@ -274,6 +274,7 @@ const Models = () => {
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={false}
       />
 
       <ProfileModal

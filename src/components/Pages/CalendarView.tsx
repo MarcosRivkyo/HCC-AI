@@ -92,10 +92,11 @@ const CalendarPageView: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
       <NavbarSecond
-        userData={{}}
+        userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={false}
       />
 
       <ProfileModal

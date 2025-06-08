@@ -265,6 +265,7 @@ const PredictImage: React.FC = () => {
         onProfileClick={() => setIsProfileOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
         onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={false}
       />
 
       <ProfileModal
