@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   getFirestore,
@@ -10,6 +10,8 @@ import {
   collection,
   getDocs,
   Timestamp,
+  query,
+  where
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app, storage } from "../../config/firebase.ts";
@@ -36,6 +38,7 @@ import NavbarPatient from "../UI/NavbarPatient.tsx";
 import ProfileModal from "../UI/ProfileModal.tsx";
 import SettingsModal from "../UI/SettingsModal.tsx";
 import usePreventZoom from "../UI/usePreventZoom.tsx";
+import logoHCC from "../../assets/images/logo_hcc_ai_bg.jpg";
 
 import jsPDF from "jspdf";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
@@ -145,7 +148,7 @@ const EstudioDetalle = () => {
   const [selectedDoctorId, setSelectedDoctorId] = useState("");
 
   const [fileName, setFileName] = useState<string>(""); // si quieres usarlo como estado
-
+  const isPatient = userData?.rol === "Paciente";
   const chartRef = useRef(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -165,11 +168,10 @@ const EstudioDetalle = () => {
     string | null
   >(null);
 
-  // Use the existing handleEliminarEstudio for deletion
   const eliminarEstudio = async (id: string) => {
     try {
-      // Aquí va tu lógica real de eliminación en Firestore
       await deleteDoc(doc(db, "hcc_ai_studies", id));
+      navigate("/dashboard");
       toast.success("Estudio eliminado");
     } catch (err) {
       toast.error("Error al eliminar el estudio");
@@ -493,7 +495,11 @@ const EstudioDetalle = () => {
     const generalInfo = [
       ["ID del Estudio", id],
       ["Estado", "Finalizado"],
-      ["Fecha", estudio.studieDate.toDate().toLocaleString()],
+      ["Fecha", (
+        estudio.studieDate?.toDate
+          ? estudio.studieDate.toDate()
+          : new Date(estudio.studieDate)
+      ).toLocaleString()],
       ["ID del Paciente", estudio.patientName],
       ["ID del Doctor", estudio.doctorName],
     ];
@@ -663,6 +669,9 @@ const EstudioDetalle = () => {
         const docRef = doc(db, "hcc_ai_studies", id);
         await updateDoc(docRef, { pdfReportUrl: downloadURL });
         setEstudio((prev) => ({ ...prev!, pdfReportUrl: downloadURL }));
+
+        await guardarDocumento(downloadURL);
+
       }
       console.log("PDF subido y URL guardada correctamente:", downloadURL);
     } catch (err) {
@@ -819,38 +828,50 @@ const EstudioDetalle = () => {
     }
   };
 
-  const handleEliminarEcografia = async () => {
-    if (!estudio || !estudio.imagenUrl) return;
+const handleEliminarEcografia = async () => {
+  if (!estudio || !estudio.imagenUrl) return;
 
-    try {
-      const userId = user.uid;
-      const folderPath =
-        userData.imageFolder || `HCC-AI/users/${userId}/images`;
-      const fileName = decodeURIComponent(
-        estudio.imagenUrl.split("%2F").pop()?.split("?")[0] || "",
-      );
+  try {
+    const userId = user.uid;
+    const folderPath =
+      userData.imageFolder || `HCC-AI/users/${userId}/images`;
 
-      const storageRef = ref(storage, `${folderPath}/ecografias/${fileName}`);
-      console.log("File name:", fileName);
-      console.log("Eliminando imagen de Firebase Storage:", estudio.imagenUrl);
+    const fileName = decodeURIComponent(
+      estudio.imagenUrl.split("%2F").pop()?.split("?")[0] || "",
+    );
 
-      await deleteObject(storageRef);
+    const storageRef = ref(storage, `${folderPath}/ecografias/${fileName}`);
+    console.log("Eliminando imagen de Firebase Storage:", estudio.imagenUrl);
+    await deleteObject(storageRef);
 
-      const docRef = doc(db, "hcc_ai_studies", id!);
-      await updateDoc(docRef, {
-        imagenUrl: null,
-      });
+    // 🟡 Borrar el campo en hcc_ai_studies
+    const docRef = doc(db, "hcc_ai_studies", id!);
+    await updateDoc(docRef, {
+      imagenUrl: null,
+    });
 
-      setEstudio((prev) => ({
-        ...prev!,
-        imagenUrl: null,
-      }));
-      alert("Ecografía eliminada correctamente");
-    } catch (error) {
-      console.error("Error al eliminar ecografía:", error);
-      alert("Error al eliminar la ecografía");
-    }
-  };
+    // 🟢 Eliminar el documento correspondiente en hcc_ai_images
+    const q = query(
+      collection(db, "hcc_ai_images"),
+      where("url", "==", estudio.imagenUrl)
+    );
+    const snapshot = await getDocs(q);
+    snapshot.forEach(async (docSnap) => {
+      await deleteDoc(doc(db, "hcc_ai_images", docSnap.id));
+    });
+
+    // 🟢 Actualizar estado local
+    setEstudio((prev) => ({
+      ...prev!,
+      imagenUrl: null,
+    }));
+
+    alert("Ecografía eliminada correctamente");
+  } catch (error) {
+    console.error("Error al eliminar ecografía:", error);
+    alert("Error al eliminar la ecografía");
+  }
+};
 
   const procesarImagen = (file: File, tipo: "ecografias" | "mask") => {
     setImagenSeleccionada(file);
@@ -886,6 +907,23 @@ const EstudioDetalle = () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
           if (!id) return;
+
+
+          const resolution = "128x128";
+          const sizeKB = Math.round(uploadTask.snapshot.totalBytes / 1024);
+
+          const newImageDoc = {
+            url: downloadURL,
+            fechaSubida: Timestamp.now(),
+            estudioId: id,
+            subidoPorDoctorId: user.uid,
+            resolucion: resolution,
+            pesoKB: sizeKB,
+            asociadaAPrediccionId: estudio?.predictionId || null,
+            tipo: "original",
+          };
+
+          await addDoc(collection(db, "hcc_ai_images"), newImageDoc);
 
           const docRef = doc(db, "hcc_ai_studies", id);
 
@@ -959,6 +997,60 @@ const EstudioDetalle = () => {
     }
   };
 
+
+  const actualizarImagenConPrediccion = async (
+    imagenUrl: string,
+    predictionId: string,
+    clasePredicha: number,
+    modeloClasificacion: string 
+  ) => {
+    try {
+      const q = query(
+        collection(db, "hcc_ai_images"),
+        where("url", "==", imagenUrl)
+      );
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        const docRef = doc(db, "hcc_ai_images", snapshot.docs[0].id);
+
+        const claseTexto =
+          modeloClasificacion === "HCC-AI"
+            ? ["Sano", "Esteatosis", "Cirrosis", "Hepatocarcinoma"][clasePredicha] ?? "Desconocido"
+            : `F${clasePredicha}`;
+
+        await updateDoc(docRef, {
+          clasePredicha: claseTexto,
+          idPrediccion: predictionId,
+        });
+
+        console.log("Imagen actualizada con clase y ID de predicción:", claseTexto);
+      } else {
+        console.warn("No se encontró documento en hcc_ai_images para esa imagen.");
+      }
+    } catch (error) {
+      console.error("Error al actualizar la imagen:", error);
+    }
+  };
+
+  const guardarDocumento = async (pdfUrl: string) => {
+
+    try {
+      await addDoc(collection(db, "hcc_ai_documents"), {
+        fechaCreacion: Timestamp.now(),
+        url: pdfUrl,
+        estudioId: id,
+        pacienteId: estudio?.patientId || "Paciente desconocido",
+        doctorId: estudio?.doctorId || "Doctor desconocido",
+      });
+
+      console.log("Documento guardado en hcc_ai_documents");
+    } catch (error) {
+      console.error("Error al guardar documento:", error);
+    }
+  };
+
+
   const iniciarPrediccionIA = async (event: React.FormEvent): Promise<void> => {
     if (!id) return;
 
@@ -1020,6 +1112,7 @@ const EstudioDetalle = () => {
         },
       );
 
+
       const { image_base64, detected_labels, confidence_threshold } =
         segmentationResponse.data;
 
@@ -1043,6 +1136,10 @@ const EstudioDetalle = () => {
 
       const imageUrl = await getDownloadURL(storageRef);
       setSegmentation({ segmented_image_url: imageUrl });
+
+
+
+
       console.log("Segmentación:", imageUrl);
 
       let explicacion = "";
@@ -1084,11 +1181,35 @@ const EstudioDetalle = () => {
         },
       );
 
+      const maskImageDoc = {
+        url: imageUrl,
+        fechaSubida: Timestamp.now(),
+        estudioId: id,
+        subidoPorDoctorId: user.uid,
+        resolucion: "128x128",
+        pesoKB: Math.round(imageBlob.size / 1024),
+        asociadaAPrediccionId: predictionDocRef.id,
+        clasePredicha: predictionResponse.data.predicted_class,
+        idPrediccion: predictionDocRef.id,
+        tipo: "mask", 
+      };
+
+      await addDoc(collection(db, "hcc_ai_images"), maskImageDoc);
+
       const docRefStudy = doc(db, "hcc_ai_studies", id);
       await updateDoc(docRefStudy, {
         predictionId: predictionDocRef.id,
         status: "Finalizado",
       });
+
+      if (estudio?.imagenUrl) {
+        await actualizarImagenConPrediccion(
+          estudio.imagenUrl,
+          predictionDocRef.id,
+          predictionResponse.data.predicted_class,
+          selectedClassificationModel,
+        );
+      }
 
       setEstudio((prev) => ({
         ...prev!,
@@ -1100,6 +1221,8 @@ const EstudioDetalle = () => {
       }));
 
       await generarPDF(predictionResponse.data, imageUrl, explicacion);
+
+
       setParametersVisible(false);
 
       console.log("Predicción y segmentación completadas.");
@@ -1114,6 +1237,8 @@ const EstudioDetalle = () => {
       setPredict(false);
     }
   };
+
+  
 
   const handleDownloadChart = async () => {
     if (!chartRef.current) return;
@@ -1174,10 +1299,19 @@ const EstudioDetalle = () => {
 
   if (loading)
     return (
-      <p className="text-gray-500 text-lg text-center mt-12">
-        Cargando estudio...
-      </p>
-    );
+          <div className="fixed inset-0 z-50 flex items-center justify-center ">
+            <div className="relative w-32 h-32 flex items-center justify-center">
+
+              <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+                <img
+                  src={logoHCC}
+                  alt="Cargando..."
+                  className="w-20 h-12 object-contain rounded-full"
+                />
+            </div>
+          </div>
+        )
   if (!estudio)
     return (
       <p className="text-center text-red-600">No se encontró el estudio.</p>
@@ -1206,20 +1340,17 @@ const EstudioDetalle = () => {
         </button>
       )}
 
-      {userData?.rol === "Paciente" ? (
-        <NavbarPatient
-          userData={userData}
-          onProfileClick={() => setIsProfileOpen(true)}
-          onSettingsClick={() => setIsSettingsOpen(true)}
-        />
-      ) : (
-        <NavbarSecond
-          userData={userData}
-          onProfileClick={() => setIsProfileOpen(true)}
-          onSettingsClick={() => setIsSettingsOpen(true)}
-          onAssistantClick={() => setShowAssistant(!showAssistant)}
-        />
-      )}
+
+      <NavbarSecond
+        userData={userData}
+        onProfileClick={() => setIsProfileOpen(true)}
+        onSettingsClick={() => setIsSettingsOpen(true)}
+        onAssistantClick={() => setShowAssistant(!showAssistant)}
+        isPatientView={isPatient}
+      />
+
+
+
 
       {/* Panel lateral de estudios recientes */}
       {mostrarEstudiosRecientes && (

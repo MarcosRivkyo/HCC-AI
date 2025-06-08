@@ -433,9 +433,16 @@
     "or": "OU",
     "have_account": "Vous avez déjà un compte ?",
     "login_link": "Se connecter"
+  },
+
+  "roles": {
+    "Paciente": "Patient",
+    "Médico": "Médecin",
+    "Administrador": "Administrateur",
+    "registeredAs": "Enregistré en tant que :",
+    "fullName": "Nom:",
+    "nameUnavailable": "Nom non disponible"
   }
-
-
 
 
 }

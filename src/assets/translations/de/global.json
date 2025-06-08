@@ -443,8 +443,15 @@
         "or": "ODER",
         "have_account": "Du hast bereits ein Konto?",
         "login_link": "Anmelden"
+    },
+
+    "roles": {
+        "Paciente": "Patient",
+        "Médico": "Arzt",
+        "Administrador": "Administrator",
+        "registeredAs": "Registriert als:",
+        "fullName": "Name:",
+        "nameUnavailable": "Name nicht verfügbar"
     }
-
-
 
 }
