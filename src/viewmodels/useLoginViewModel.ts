@@ -24,15 +24,19 @@ export function useLoginViewModel() {
       const userCredential = await AuthDAO.login(email, password);
       const user = userCredential.user;
 
-      if (user.emailVerified) {
-        fetch(import.meta.env.VITE_BACKEND_URL + "/", {
-          method: "GET",
-        }).catch(() => {
 
-        });
-          console.log("Arrancando backend");
-          setTransitioning(true);
-          navigate("/dashboard");
+      if (user.emailVerified) {
+        try {
+          await Promise.all([
+            fetch(import.meta.env.VITE_BACKEND_URL + "/", { method: "GET" }),
+            fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", { method: "GET" }),
+          ]);
+          console.log("Backends arrancados");
+        } catch (err) {
+        }
+
+        setTransitioning(true);
+        navigate("/dashboard");
       } else {
         await AuthDAO.logout();
         setError("Debes verificar tu correo antes de acceder.");
