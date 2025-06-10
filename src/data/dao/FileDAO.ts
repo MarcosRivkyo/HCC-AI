@@ -209,6 +209,7 @@ export const FileDAO = {
     folderPath: string;
     studyId: string;
   }) {
+    void userId;
     try {
       const fileName = decodeURIComponent(
         imageUrl.split("%2F").pop()?.split("?")[0] || "",
