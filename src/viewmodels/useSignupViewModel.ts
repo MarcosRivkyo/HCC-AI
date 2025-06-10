@@ -1,21 +1,8 @@
 import { useState } from "react";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
-} from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import { auth, db } from "../config/firebase";
+import { AuthDAO } from "../data/dao/AuthDAO";
+import { UserDAO } from "../data/dao/UserDAO";
 
 export function useSignupViewModel() {
-  const navigate = useNavigate();
   const [authing, setAuthing] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +40,12 @@ export function useSignupViewModel() {
   ];
 
   const signUpWithEmail = async () => {
+    const usernameRegex = /^[a-z0-9_]+$/;
+    const forbiddenPatterns = /(select|insert|delete|update|drop|--|'|"|;)/i;
     const validCodes = import.meta.env.VITE_ACCESS_CODE;
+    setAuthing(true);
+    setError("");
+    setVerificationMessage("");
 
     if (!validCodes.includes(accessCode.trim())) {
       setError("El código de acceso es inválido.");
@@ -63,25 +55,35 @@ export function useSignupViewModel() {
 
     if (password !== confirmPassword) {
       setError("Las contraseñas no coinciden");
+      setAuthing(false);
       return;
     }
 
-    setAuthing(true);
-    setError("");
-    setVerificationMessage("");
+    if (!usernameRegex.test(userName)) {
+      setError(
+        "El nombre de usuario solo puede contener letras minúsculas, números y guiones bajos.",
+      );
+      setAuthing(false);
+      return;
+    }
+
+    if (forbiddenPatterns.test(userName)) {
+      setError(
+        "El nombre de usuario contiene caracteres o palabras no permitidas.",
+      );
+      setAuthing(false);
+      return;
+    }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await AuthDAO.registerUser(email, password);
       const user = userCredential.user;
 
-      await updateProfile(user, {
-        displayName: userName,
-        photoURL: defaultProfilePictureUrl,
-      });
+      await AuthDAO.updateUserProfile(user, userName, defaultProfilePictureUrl);
 
-      await sendEmailVerification(user);
+      await AuthDAO.sendVerificationEmail(user);
 
-      await setDoc(doc(db, "hcc_ai_users", user.uid), {
+      const userProfile = {
         userName,
         firstName,
         lastName,
@@ -91,9 +93,10 @@ export function useSignupViewModel() {
         profilePicture: defaultProfilePictureUrl,
         imageFolder: `HCC-AI/users/${user.uid}/images/`,
         documentFolder: `HCC-AI/users/${user.uid}/documents/`,
-        createdAt: serverTimestamp(),
         useful_links: defaultUsefulLinks,
-      });
+      };
+
+      await UserDAO.createUser(user.uid, userProfile);
 
       setUserName("");
       setFirstName("");
@@ -105,7 +108,9 @@ export function useSignupViewModel() {
       setConfirmPassword("");
       setAccessCode("");
 
-      setVerificationMessage("Registro exitoso. Por favor, verifica tu correo electrónico antes de iniciar sesión.");
+      setVerificationMessage(
+        "Registro exitoso. Por favor, verifica tu correo electrónico antes de iniciar sesión.",
+      );
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         setError("Esta dirección de correo ya está registrada.");
@@ -122,9 +127,9 @@ export function useSignupViewModel() {
   return {
     authing,
     email,
-    rol,
     password,
     confirmPassword,
+    rol,
     accessCode,
     userName,
     firstName,

@@ -457,6 +457,9 @@
       "registeredAs": "Registrado como:",
       "fullName": "Nombre:",
       "nameUnavailable": "Nombre no disponible"
+    },
+    "warning":{
+      "pc_optimitation": "⚠️ Esta aplicación está optimizada para pantallas de escritorio. Puede que algunas interfaces se solapen en dispositivos móviles. Para una mejor experiencia, acceda desde un PC o un portátil."
     } 
 
 

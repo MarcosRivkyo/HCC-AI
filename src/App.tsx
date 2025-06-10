@@ -8,14 +8,14 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import i18next from "i18next";
 import { FaCheckCircle } from "react-icons/fa";
-import MobileWarning from "./components/UI/MobileWarning.tsx";
+import MobileWarning from "./views/Components/MobileWarning.tsx";
 
-import ImageSlider from "./components/UI/ImageSlider2.tsx";
-import { TextEffectDemo } from "./components/UI/TextEffectDemo.tsx";
+import ImageSlider from "./views/Components/ImageSlider2.tsx";
+import { TextEffectDemo } from "./views/Components/TextEffectDemo.tsx";
 
-import Footer from "./components/UI/AppFooter.tsx";
-import Navbar from "./components/UI/AppNavbar.tsx";
-import usePreventZoom from "./components/UI/usePreventZoom.tsx";
+import Footer from "./views/Components/AppFooter.tsx";
+import Navbar from "./views/Components/AppNavbar.tsx";
+import usePreventZoom from "./views/Components/usePreventZoom.tsx";
 
 import ia_cancer from "./assets/images/ia_cancer.png";
 import hepato_eco from "./assets/images/hepatic_eco.png";
