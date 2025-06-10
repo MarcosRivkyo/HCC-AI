@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../config/firebase";
+import { AuthDAO } from "../data/dao/AuthDAO";
 
 export function useLoginViewModel() {
-  const authInstance = getAuth();
   const navigate = useNavigate();
 
   const [authing, setAuthing] = useState(false);
@@ -23,19 +21,29 @@ export function useLoginViewModel() {
     setError("");
 
     try {
-      const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
+      const userCredential = await AuthDAO.login(email, password);
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        setTransitioning(true);
-        navigate("/dashboard");
+        fetch(import.meta.env.VITE_BACKEND_URL + "/", {
+          method: "GET",
+        }).catch(() => {
+
+        });
+          console.log("Arrancando backend");
+          setTransitioning(true);
+          navigate("/dashboard");
       } else {
-        await signOut(authInstance);
+        await AuthDAO.logout();
         setError("Debes verificar tu correo antes de acceder.");
       }
     } catch (error: any) {
       if (error.code === "auth/invalid-credential") {
         setError("Los datos introducidos no fueron correctos.");
+      } else if (error.code === "auth/invalid-email") {
+        setError("El correo electrónico introducido no es válido.");
+      } else if (error.code === "auth/missing-password") {
+        setError("Debe ingresar su contraseña para iniciar sesión.");
       } else {
         setError(error.message);
       }
@@ -51,8 +59,10 @@ export function useLoginViewModel() {
     }
 
     try {
-      await sendPasswordResetEmail(auth, resetEmail);
-      setSuccessMessage("Se ha enviado un correo para restablecer tu contraseña.");
+      await AuthDAO.sendResetEmail(resetEmail);
+      setSuccessMessage(
+        "Se ha enviado un correo para restablecer tu contraseña.",
+      );
     } catch (error) {
       if ((error as FirebaseError).code === "auth/user-not-found") {
         setError("No hay una cuenta registrada con ese correo.");
@@ -79,6 +89,6 @@ export function useLoginViewModel() {
     setShowPassword,
     setTransitioning,
     signInWithEmail,
-    handlePasswordReset
+    handlePasswordReset,
   };
 }

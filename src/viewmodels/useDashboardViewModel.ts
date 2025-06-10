@@ -1,32 +1,28 @@
 // src/viewmodels/useDashboardViewModel.ts
 import { useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  fetchUserData,
-  updateUserProfile,
-  uploadProfileImage,
-  updateAuthProfile,
-  checkExistingStudy,
-  createStudy,
-} from "../models/userModel";
 import { toast } from "react-toastify";
-
+import { UserDAO } from "../data/dao/UserDAO";
+import { AuthDAO } from "../data/dao/AuthDAO";
 
 export const useDashboardViewModel = () => {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
-
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(localStorage.getItem("theme") as "light" | "dark" || "light");
-  console.log(theme)
-  const [language, setLanguage] = useState(localStorage.getItem("language") || "es");
-  const [scale, setScale] = useState<number>(parseFloat(localStorage.getItem("uiScale") || "1"));
-  const [highContrast, setHighContrast] = useState(localStorage.getItem("highContrast") === "true");
+  const [theme, setTheme] = useState<"light" | "dark">(
+    (localStorage.getItem("theme") as "light" | "dark") || "light",
+  );
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "es",
+  );
+  const [scale, setScale] = useState<number>(
+    parseFloat(localStorage.getItem("uiScale") || "1"),
+  );
+  const [highContrast, setHighContrast] = useState(
+    localStorage.getItem("highContrast") === "true",
+  );
 
   const [claveEstudios, setClaveEstudios] = useState(Date.now());
   const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
@@ -42,16 +38,23 @@ export const useDashboardViewModel = () => {
   });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), async (currentUser) => {
+    const unsubscribe = AuthDAO.subscribeToAuthChanges(async (currentUser) => {
       setUser(currentUser);
+
       if (currentUser) {
-        const data = await fetchUserData(currentUser.uid);
-        setUserData(data);
-        setFormData((prev) => ({
-          ...prev,
-          doctorId: currentUser.uid,
-          doctorName: data?.firstName || currentUser.displayName || currentUser.email,
-        }));
+        try {
+          const data = await UserDAO.getUserById(currentUser.uid);
+          setUserData(data);
+          setFormData((prev) => ({
+            ...prev,
+            doctorId: currentUser.uid,
+            doctorName:
+              data?.firstName || currentUser.displayName || currentUser.email,
+          }));
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast.error("No se pudieron cargar los datos del usuario.");
+        }
       }
     });
 
@@ -64,6 +67,10 @@ export const useDashboardViewModel = () => {
   }, [scale]);
 
   useEffect(() => {
+    localStorage.setItem("language", language);
+  }, [language]);
+
+  useEffect(() => {
     if (highContrast) {
       document.body.classList.add("high-contrast");
     } else {
@@ -72,70 +79,14 @@ export const useDashboardViewModel = () => {
     localStorage.setItem("highContrast", String(highContrast));
   }, [highContrast]);
 
-  const updateUser = async (info: {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    userName: string;
-  }) => {
-    if (!user) return;
-
-    setIsSaving(true);
-    try {
-      let photoURL = userData?.profilePicture;
-      if (newProfileImage) {
-        const path = `HCC-AI/users/${user.uid}/profile_pictures/${user.uid}`;
-        photoURL = await uploadProfileImage(newProfileImage, path);
-      }
-
-      await updateAuthProfile(user, info.userName, photoURL || "");
-      await updateUserProfile(user.uid, {
-        firstName: info.firstName,
-        lastName: info.lastName,
-        phone: info.phone,
-        profilePicture: photoURL,
-        email: user.email,
-      });
-
-      setUserData((prev: any) => ({
-        ...prev,
-        firstName: info.firstName,
-        lastName: info.lastName,
-        phone: info.phone,
-        profilePicture: photoURL,
-      }));
-
-      toast.success("Perfil actualizado");
-    } catch (error) {
-      toast.error("Error al actualizar perfil");
-      console.error(error);
-    } finally {
-      setIsSaving(false);
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-  };
-
-  const createNewStudy = async () => {
-    const exists = await checkExistingStudy(formData.studieName, formData.doctorId);
-    if (exists) {
-      toast.warning("Ya existe un estudio con ese nombre.");
-      return;
-    }
-
-    await createStudy(formData);
-    toast.success("Estudio creado correctamente");
-
-    setFormData({
-      studieName: "",
-      status: "En Progreso",
-      studieDate: "",
-      patientName: "",
-      doctorName: userData?.firstName || user?.displayName || user?.email,
-      doctorId: user?.uid || "",
-      clinicalDescription: "",
-    });
-
-    setClaveEstudios(Date.now());
-  };
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const handleImageSelect = (url: string) => {
     setSelectedImageUrl(url);
@@ -143,20 +94,8 @@ export const useDashboardViewModel = () => {
   };
 
   return {
-    // Datos de usuario
     user,
     userData,
-    isSaving,
-    newProfileImage,
-    setNewProfileImage,
-    updateUser,
-
-    // Formulario
-    formData,
-    setFormData,
-    createNewStudy,
-
-    // UI state
     isProfileOpen,
     setIsProfileOpen,
     isSettingsOpen,
@@ -173,6 +112,5 @@ export const useDashboardViewModel = () => {
     setHighContrast,
     claveEstudios,
     handleImageSelect,
-    selectedImageUrl,
   };
 };

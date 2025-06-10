@@ -442,7 +442,11 @@
     "registeredAs": "Enregistré en tant que :",
     "fullName": "Nom:",
     "nameUnavailable": "Nom non disponible"
+  },
+  "warning": {
+    "pc_optimization": "⚠️ Cette application est optimisée pour les écrans d’ordinateur. Certaines interfaces peuvent se chevaucher sur les appareils mobiles. Pour une meilleure expérience, veuillez y accéder depuis un PC ou un ordinateur portable."
   }
+
 
 
 }

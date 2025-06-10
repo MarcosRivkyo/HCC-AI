@@ -452,6 +452,10 @@
         "registeredAs": "Registriert als:",
         "fullName": "Name:",
         "nameUnavailable": "Name nicht verfügbar"
+    },
+    "warning": {
+        "pc_optimization": "⚠️ Diese Anwendung ist für Desktop-Bildschirme optimiert. Einige Oberflächen können sich auf Mobilgeräten überlappen. Für das beste Erlebnis greifen Sie bitte über einen PC oder Laptop zu."
     }
+
 
 }

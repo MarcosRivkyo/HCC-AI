@@ -445,6 +445,8 @@
     "registeredAs": "Registered as:",
     "fullName": "Name:",
     "nameUnavailable": "Name not available"
+  },
+  "warning": {
+    "pc_optimization": "⚠️ This application is optimized for desktop screens. Some interfaces may overlap on mobile devices. For the best experience, please access from a PC or laptop."
   }
-
 }
