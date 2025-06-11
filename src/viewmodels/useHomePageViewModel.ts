@@ -1,10 +1,9 @@
-// src/viewmodels/useDashboardViewModel.ts
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserDAO } from "../data/dao/UserDAO";
 import { AuthDAO } from "../data/dao/AuthDAO";
 
-export const useDashboardViewModel = () => {
+export const useHomePageViewModel = () => {
   const [user, setUser] = useState<any>(null);
   const [userData, setUserData] = useState<any>(null);
 

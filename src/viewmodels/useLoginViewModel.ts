@@ -26,17 +26,18 @@ export function useLoginViewModel() {
 
 
       if (user.emailVerified) {
+        navigate("/dashboard");
+        setTransitioning(true);
+
         try {
           await Promise.all([
             fetch(import.meta.env.VITE_BACKEND_URL + "/", { method: "GET" }),
             fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", { method: "GET" }),
           ]);
-          console.log("Backends arrancados");
         } catch (err) {
         }
 
-        setTransitioning(true);
-        navigate("/dashboard");
+
       } else {
         await AuthDAO.logout();
         setError("Debes verificar tu correo antes de acceder.");

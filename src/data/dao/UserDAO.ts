@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -12,6 +13,21 @@ import { updateProfile, User } from "firebase/auth";
 import { db, storage } from "../../config/firebase";
 
 export const UserDAO = {
+
+
+  async getAll(): Promise<any[]> {
+    try {
+      const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as any),
+      }));
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      return [];
+    }
+  },
+
   async createUser(uid: string, userData: any) {
     return await setDoc(doc(db, "hcc_ai_users", uid), {
       ...userData,
@@ -19,6 +35,16 @@ export const UserDAO = {
     });
   },
 
+  async deleteUser(uid: string): Promise<void> {
+    try {
+      await deleteDoc(doc(db, "hcc_ai_users", uid));
+      console.log(`Usuario con ID ${uid} eliminado correctamente.`);
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+      throw error;
+    }
+  },
+  
   async getUserRole(uid: string): Promise<string | null> {
     const docRef = doc(db, "hcc_ai_users", uid);
     const docSnap = await getDoc(docRef);

@@ -1,0 +1,67 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="ViewModels/useDetailedStudyViewModel" />
+
+# `useEstudioDetalleViewModel`
+
+Este *custom hook* encapsula toda la lógica funcional y de interfaz para la vista de detalle de un estudio clínico en la plataforma **HCC-AI**.
+
+---
+
+## 🧩 Dependencias
+
+Este hook hace uso de:
+
+- `react-router-dom`: navegación y acceso a parámetros de ruta
+- `firebase`: autenticación y Firestore
+- `axios`: comunicación HTTP
+- `jsPDF`, `html2canvas`: generación de documentos
+- `marked`: parseo de markdown para explicaciones
+- DAOs personalizados: `AuthDAO`, `UserDAO`, `StudyDAO`, `FileDAO`
+
+---
+
+## 🧠 Estados principales expuestos
+
+```ts
+// Datos del estudio y usuario
+estudio: Estudio | null
+user: any
+userData: any
+
+// Estados de interfaz
+loading: boolean
+editing: boolean
+theme: "light" | "dark"
+language: string
+showModal: boolean
+showEmailModal: boolean
+showAssistant: boolean
+
+// Imagen y predicción
+imagenSeleccionada: File | null
+prediction: { predicted_class: number; probabilities: number[] } | null
+segmentation: { segmented_image_url: string } | null
+
+
+iniciarPrediccionIA(): Promise<void>
+generarPDF(pred, maskUrl, explicacion): Promise<void>
+eliminarEstudio(id: string): Promise<void>
+enviarPDFporCorreo(): void
+handleSendEmail(): Promise<void>
+handleSaveChanges(): Promise<void>
+handleImagenChange(e: ChangeEvent): void
+procesarImagen(file: File, tipo: "ecografias" | "mask"): Promise<void>
+handleDrop(e: DragEvent): void
+handleDownloadChart(): Promise<void>
+
+
+
+
+```ts
+estudio
+prediction
+segmentation
+editing
+showAssistant
+showEmailModal

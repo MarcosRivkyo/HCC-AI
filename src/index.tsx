@@ -17,8 +17,8 @@ import global_en from "./assets/translations/en/global.json";
 import global_es from "./assets/translations/es/global.json";
 import global_fr from "./assets/translations/fr/global.json";
 import global_de from "./assets/translations/de/global.json";
-import Dashboard from "./views/Pages/Dashboard.tsx";
-import DashboardPatient from "./views/Pages/DashboardPatient.tsx";
+import HomePage from "./views/Pages/HomePage.tsx";
+import HomePagePatient from "./views/Pages/HomePagePatient.tsx";
 import Login from "./views/Auth/Login.tsx";
 import Signup from "./views/Auth/Signup.tsx";
 import AuthRoute from "./views/Auth/AuthRoute.tsx";
@@ -86,8 +86,8 @@ root.render(
           <Route path="/signup" element={<Signup />} />
 
           {/* privadas */}
-          <Route path="/dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
-          <Route path="/dashboard-patient" element={<AuthRoute><DashboardPatient /></AuthRoute>} />
+          <Route path="/dashboard" element={<AuthRoute><HomePage /></AuthRoute>} />
+          <Route path="/dashboard-patient" element={<AuthRoute><HomePagePatient /></AuthRoute>} />
           <Route path="/assistant" element={<AuthRoute><Assistant /></AuthRoute>} />
           <Route path="/editar-imagen" element={<AuthRoute><PredictImage /></AuthRoute>} />
           <Route path="/estudio/:id" element={<AuthRoute><EstudioDetalle /></AuthRoute>} />
