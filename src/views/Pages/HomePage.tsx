@@ -1,4 +1,4 @@
-import { useDashboardViewModel } from "../../viewmodels/useDashboardViewModel";
+import { useHomePageViewModel } from "../../viewmodels/useHomePageViewModel.ts";
 
 import Assistant from "./AssistantView.tsx";
 import usePreventZoom from "../Components/usePreventZoom.tsx";
@@ -38,7 +38,7 @@ const Dashboard = () => {
     setHighContrast,
     claveEstudios,
     handleImageSelect,
-  } = useDashboardViewModel();
+  } = useHomePageViewModel();
 
   const { t } = useTranslation("global");
 

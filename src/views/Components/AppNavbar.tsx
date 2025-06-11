@@ -101,7 +101,17 @@ const Navbar: React.FC = () => {
               {isOpen && (
                 <div className="absolute top-full left-0 w-full bg-gray-900 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in">
                   <button
-                    onClick={() => navigate("/dashboard")}
+                    onClick={async () => {
+
+                      navigate("/dashboard");                      
+                      try {
+                        await Promise.all([
+                          fetch(import.meta.env.VITE_BACKEND_URL + "/", { method: "GET" }),
+                          fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", { method: "GET" }),
+                        ]);
+                      } catch (err) {
+                      }
+                    }}
                     className="flex items-center px-4 py-3 w-full text-left hover:bg-gray-800 transition duration-200"
                   >
                     <FaSignInAlt className="mr-2" />
@@ -111,6 +121,7 @@ const Navbar: React.FC = () => {
                   <Logout />
                 </div>
               )}
+
             </div>
           ) : (
             <>

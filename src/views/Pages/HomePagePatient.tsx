@@ -1,4 +1,4 @@
-import { useDashboardViewModel } from "../../viewmodels/useDashboardViewModel";
+import { useHomePageViewModel } from "../../viewmodels/useHomePageViewModel.ts";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -30,7 +30,7 @@ const DashboardPatient = () => {
     highContrast,
     setHighContrast,
     claveEstudios,
-  } = useDashboardViewModel();
+  } = useHomePageViewModel();
 
   const { t } = useTranslation("global");
 
