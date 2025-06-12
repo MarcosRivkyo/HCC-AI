@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { MemoryRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
-import i18n from '../../config/i18n';
+import i18n from '../config/i18n';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-import logoHCC_AI from '../../assets/images/logo_hcc_ai.jpg';
-import ImageSlider from '../Components/ImageSlider';
-import usePreventZoom from '../Components/usePreventZoom';
+import logoHCC_AI from '../assets/images/logo_hcc_ai.jpg';
+import ImageSlider from '../views/Components/ImageSlider';
+import usePreventZoom from '../views/Components/usePreventZoom';
 
 interface LoginProps {
   /** Simula mensaje de error */
@@ -18,7 +18,6 @@ interface LoginProps {
 }
 
 const MockLogin: React.FC<LoginProps> = ({
-  errorMessage,
   defaultEmail = '',
 }) => {
   const { t } = useTranslation("global");
