@@ -1,6 +1,3 @@
-import { Meta } from '@storybook/blocks';
-
-<Meta title="ViewModels/useDetailedStudyViewModel" />
 
 # `useEstudioDetalleViewModel`
 
@@ -42,26 +39,3 @@ showAssistant: boolean
 imagenSeleccionada: File | null
 prediction: { predicted_class: number; probabilities: number[] } | null
 segmentation: { segmented_image_url: string } | null
-
-
-iniciarPrediccionIA(): Promise<void>
-generarPDF(pred, maskUrl, explicacion): Promise<void>
-eliminarEstudio(id: string): Promise<void>
-enviarPDFporCorreo(): void
-handleSendEmail(): Promise<void>
-handleSaveChanges(): Promise<void>
-handleImagenChange(e: ChangeEvent): void
-procesarImagen(file: File, tipo: "ecografias" | "mask"): Promise<void>
-handleDrop(e: DragEvent): void
-handleDownloadChart(): Promise<void>
-
-
-
-
-```ts
-estudio
-prediction
-segmentation
-editing
-showAssistant
-showEmailModal

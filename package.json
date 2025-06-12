@@ -18,7 +18,6 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "@shadcn/ui": "^0.0.4",
-    "@storybook/blocks": "^8.6.14",
     "@subframe/core": "^1.138.0",
     "@tailwindcss/typography": "^0.5.16",
     "axios": "^1.7.9",
