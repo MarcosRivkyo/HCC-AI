@@ -1,7 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next";
 import { useAppNavbarViewModel } from "../../viewmodels/useAppNavbarViewModel";
 

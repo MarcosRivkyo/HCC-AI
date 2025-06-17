@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AuthDAO } from "../data/dao/AuthDAO";
 import { UserDAO } from "../data/dao/UserDAO";
-
+ 
 export function useSignupViewModel() {
   const [authing, setAuthing] = useState(false);
   const [email, setEmail] = useState("");

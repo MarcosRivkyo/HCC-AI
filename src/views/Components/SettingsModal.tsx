@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useSettingsViewModel } from "../../viewmodels/useSettingsViewModel.ts";
+
+import React from "react";
 import Modal from "./Modal.tsx";
 import ChangePasswordForm from "./ChangePasswordForm.tsx";
 import DeleteAccountButton from "./DeleteAccountButton.tsx";
@@ -8,19 +10,7 @@ import { useTranslation } from "react-i18next";
 import { FaCog } from "react-icons/fa";
 import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";
 import logoHPsinBG from "../../assets/images/logoHP-removebg.png";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { toast } from "react-toastify";
-import { useEffect } from "react";
-import {
-  getFirestore,
-  doc,
-  updateDoc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
-import { app } from "../../config/firebase.ts";
-import { getAuth, updateProfile } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+
 
 interface SettingsModalProps {
   open: boolean;
@@ -33,7 +23,7 @@ interface SettingsModalProps {
   setScale: (scale: number) => void;
   highContrast: boolean;
   setHighContrast: (val: boolean) => void;
-  userData?: any; // Optional prop if you want to pass user data
+  userData?: any; 
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -48,76 +38,52 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setHighContrast,
   userData,
 }) => {
-  const auth = getAuth();
-  const uid = userData?.uid || auth.currentUser?.uid;
-  const db = getFirestore(app);
 
-  const [activeSection, setActiveSection] = useState("Cuenta");
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const [theme, setTheme] = useState<"light" | "dark">(
-    (localStorage.getItem("theme") as "light" | "dark") || "light",
-  );
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
-  const [userName, setUserName] = useState(userData?.userName || "");
-  const [firstName, setFirstName] = useState(userData?.firstName || "");
-  const [lastName, setLastName] = useState(userData?.lastName || "");
-  const [phone, setPhone] = useState(userData?.phone || "");
+  const {
+    uid,
+    activeSection,
+    setActiveSection,
+    expandedItem,
+    setExpandedItem,
+    theme,
+    setTheme,
+    previewImage,
+    setPreviewImage,
+    newProfileImage,
+    setNewProfileImage,
+    userName,
+    setUserName,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    phone,
+    setPhone,
+    isSaving,
+    updateUserData,
+    systemActive,
+    toggleSystemStatus,
+    userList,
+    filteredUserList,
+    busquedaNombre,
+    setBusquedaNombre,
+    filtroRol,
+    setFiltroRol,
+    fetchFirestoreUsers,
+    handleRoleChange,
+    handleToggle,
+    deleteUserFromFirestore,
+    dailyReminderEnabled,
+    handleDailyReminderToggle,
+  } = useSettingsViewModel(userData);
+  
+
+
   const { t, i18n } = useTranslation("global");
-  const [isSaving, setIsSaving] = useState(false);
-  const [userList, setUserList] = useState<any[]>([]);
-  const [filteredUserList, setFilteredUserList] = useState<any[]>([]);
-  const [systemActive, setSystemActive] = useState<boolean | null>(null);
-  const [filtroRol, setFiltroRol] = useState("Todos");
-  const [busquedaNombre, setBusquedaNombre] = useState("");
-  const [dailyReminderEnabled, setDailyReminderEnabled] = useState(
-    userData?.recepcionRecordatorio ?? true,
-  );
 
-  useEffect(() => {
-    const fetchSystemStatus = async () => {
-      const statusDoc = await getDoc(doc(db, "hcc_ai_status", "global_status"));
-      if (statusDoc.exists()) {
-        setSystemActive(statusDoc.data().active ?? false);
-      }
-    };
-    fetchSystemStatus();
-  }, []);
 
-  useEffect(() => {
-    if (userData?.recepcionRecordatorio !== undefined) {
-      setDailyReminderEnabled(userData.recepcionRecordatorio);
-    }
-  }, [userData]);
 
-  useEffect(() => {
-    const filtered = userList.filter((user) => {
-      const nameMatch =
-        `${user.firstName} ${user.lastName}`
-          .toLowerCase()
-          .includes(busquedaNombre.toLowerCase()) ||
-        user.email?.toLowerCase().includes(busquedaNombre.toLowerCase());
 
-      const rolMatch = filtroRol === "Todos" || user.rol === filtroRol;
-
-      return nameMatch && rolMatch;
-    });
-
-    setFilteredUserList(filtered);
-  }, [userList, busquedaNombre, filtroRol]);
-
-  useEffect(() => {
-    if (userData) {
-      setUserName(userData.userName || "");
-      setFirstName(userData.firstName || "");
-      setLastName(userData.lastName || "");
-      setPhone(userData.phone || "");
-    }
-  }, [userData]);
-
-  const handleToggle = (item: string) => {
-    setExpandedItem(expandedItem === item ? null : item);
-  };
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLang = e.target.value;
@@ -132,145 +98,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     localStorage.setItem("uiScale", newScale.toString());
   };
 
-  const toggleSystemStatus = async () => {
-    const newStatus = !systemActive;
-    await setDoc(doc(db, "hcc_ai_status", "global_status"), {
-      active: newStatus,
-    });
-    setSystemActive(newStatus);
-  };
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
-    try {
-      const userDoc = doc(db, "hcc_ai_users", userId);
-      await updateDoc(userDoc, {
-        rol: newRole,
-      });
 
-      toast.success(`Rol actualizado a ${newRole}`);
-      // Refresca la lista de usuarios para reflejar los cambios
-      fetchFirestoreUsers();
-    } catch (error) {
-      console.error("Error actualizando rol:", error);
-      toast.error("No se pudo actualizar el rol.");
-    }
-  };
-
-  const handleDailyReminderToggle = async (userId: string) => {
-    const newValue = !dailyReminderEnabled;
-    setDailyReminderEnabled(newValue);
-    try {
-      const userRef = doc(db, "hcc_ai_users", userId);
-
-      await updateDoc(userRef, { recepcionRecordatorio: newValue });
-      toast.success("Preferencia actualizada");
-    } catch (error) {
-      console.error("Error actualizando preferencia:", error);
-      toast.error("No se pudo guardar la preferencia");
-    }
-  };
-
-  const deleteUserFromFirestore = async (userId: string) => {
-    if (
-      !window.confirm(
-        "¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.",
-      )
-    ) {
-      return;
-    }
-
-    try {
-      await updateDoc(doc(db, "hcc_ai_users", userId), { eliminado: true });
-      // await deleteDoc(doc(db, "hcc_ai_users", userId));
-
-      toast.success("Usuario eliminado correctamente.");
-      fetchFirestoreUsers(); // Actualiza la lista
-    } catch (error) {
-      console.error("Error eliminando usuario:", error);
-      toast.error("No se pudo eliminar el usuario.");
-    }
-  };
-
-  const updateUserData = async () => {
-    setIsSaving(true);
-    try {
-      const auth = getAuth();
-
-      const uid = userData?.uid || auth.currentUser?.uid;
-
-      if (!uid) {
-        console.warn("UID de usuario no definido.");
-        toast.error("No se pudo actualizar: UID de usuario no definido.");
-        setIsSaving(false);
-        return;
-      }
-
-      let photoURL = userData?.profilePicture || "";
-
-      if (newProfileImage) {
-        const storage = getStorage();
-        const folderPath =
-          userData?.imageFolder || `HCC-AI/users/${uid}/images`;
-        const storageRef = ref(
-          storage,
-          `${folderPath}/profile_pictures/${newProfileImage.name}`,
-        );
-        await uploadBytes(storageRef, newProfileImage);
-        photoURL = await getDownloadURL(storageRef);
-      }
-
-      const docRef = doc(db, "hcc_ai_users", uid);
-      console.log("Actualizando documento:", docRef.path);
-      await updateDoc(docRef, {
-        userName,
-        firstName,
-        lastName,
-        phone,
-        profilePicture: photoURL,
-      });
-
-      if (auth.currentUser) {
-        await updateProfile(auth.currentUser, {
-          displayName: userName,
-          photoURL: photoURL,
-        });
-      }
-
-      console.log("Datos actualizados:", {
-        userName,
-        firstName,
-        lastName,
-        phone,
-        profilePicture: photoURL,
-      });
-
-      toast.success("Datos actualizados correctamente.");
-    } catch (error) {
-      console.error("Error al actualizar datos:", error);
-      toast.error("Error al actualizar datos del perfil.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const fetchFirestoreUsers = async () => {
-    try {
-      const usersCollection = collection(db, "hcc_ai_users");
-      const usersSnapshot = await getDocs(usersCollection);
-      const users = usersSnapshot.docs
-        .map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as any), // ← aquí forzamos tipo any
-        }))
-        .filter((user) => user.eliminado !== true);
-
-      setUserList(users);
-      setFilteredUserList(users);
-    } catch (error) {
-      console.error("Error fetching users from Firestore:", error);
-      toast.error("No se pudo cargar la lista de usuarios.");
-    }
-  };
 
   if (!open) return null;
 
