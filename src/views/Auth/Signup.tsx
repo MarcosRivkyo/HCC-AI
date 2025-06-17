@@ -36,7 +36,7 @@ export default function Signup() {
     setShowConfirmPassword,
     signUpWithEmail,
   } = useSignupViewModel();
-
+ 
   usePreventZoom(true, true);
 
   const { t } = useTranslation("global");

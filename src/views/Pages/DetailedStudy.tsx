@@ -671,11 +671,7 @@ const EstudioDetalle = () => {
                                 >
                                   {t("my_studies.generate_ai_explanation")}
                                 </label>
-                                <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
-                                  {t(
-                                    "my_studies.generate_ai_explanation_tooltip",
-                                  )}
-                                </p>
+
                               </div>
                             </div>
                           </div>

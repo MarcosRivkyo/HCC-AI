@@ -1,7 +1,7 @@
 import {
   collection,
   deleteDoc,
-  doc,
+  doc, 
   getDoc,
   getDocs,
   serverTimestamp,

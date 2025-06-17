@@ -1,0 +1,70 @@
+import logoHCC_AI from "../assets/images/logo_hcc_ai.jpg";
+import logoLenguajes from "../assets/images/react_ts_vire.png";
+
+# Introducción
+
+<div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "60px",
+    marginTop: 40,
+    marginBottom: 40,
+    flexWrap: "wrap",
+    backgroundColor: "#f9fafb",
+    padding: "30px 20px",
+    borderRadius: "16px",
+  }}
+>
+  {[logoHCC_AI, logoLenguajes].map((src, i) => (
+    <img
+      key={i}
+      src={src}
+      alt={i === 0 ? "Logo HCC-AI" : "Tecnologías React, TypeScript y Vite"}
+      style={{
+        maxWidth: "320px",
+        width: "100%",
+        height: "auto",
+        objectFit: "contain",
+        borderRadius: "12px",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "#fff",
+        padding: "12px",
+        transition: "transform 0.3s ease",
+      }}
+      onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
+      onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+    />
+  ))}
+</div>
+
+Esta es la documentación técnica del frontend del proyecto **HCC-AI**, implementado utilizando **React**, **TypeScript** y **Vite** como base tecnológica. La documentación está construida con **Storybook**, empleando el formato **MDX** para facilitar la integración entre componentes interactivos y contenido explicativo.
+
+El objetivo de esta documentación es proporcionar una guía clara y estructurada sobre los distintos componentes visuales, patrones de diseño, organización del código y mejores prácticas utilizadas en la interfaz del sistema. Está orientada a desarrolladores y colaboradores técnicos que participen en el mantenimiento, evolución o integración de nuevas funcionalidades dentro del sistema.
+
+El frontend de HCC-AI ha sido diseñado para ser modular, mantenible y escalable, priorizando una experiencia de usuario fluida y eficiente para los distintos perfiles de usuario de la plataforma (médico, paciente y administrador). Cada sección de esta documentación corresponde a un módulo o grupo de componentes específicos del sistema.
+
+A lo largo de esta guía, se describen:
+
+- Componentes visuales reutilizables.
+- Lógica y comportamiento encapsulados en hooks y ViewModels.
+- Prácticas adoptadas para estilos, navegación y gestión de estado.
+- Integración con servicios externos y modelos de inteligencia artificial.
+
+El uso de Storybook permite visualizar los componentes en aislamiento, validar su comportamiento y facilitar su reutilización en el desarrollo continuo del proyecto.
+
+---
+
+## Estructura de la documentación
+
+La documentación está organizada en tres grandes bloques que puedes explorar desde el menú lateral:
+
+- **Componentes:** Elementos UI reutilizables que forman la base visual de la aplicación.
+- **Views:** Vistas completas que agrupan componentes para conformar páginas funcionales.
+- **ViewModels:** Lógica y estado desacoplados que gestionan datos y comportamientos detrás de las vistas y componentes.
+
+Seleccionando cualquiera de estas categorías podrás navegar fácilmente por la jerarquía y comprender tanto la parte visual como la funcional de cada módulo en la plataforma.
+
+---
+

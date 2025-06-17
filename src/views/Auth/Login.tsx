@@ -25,7 +25,7 @@ const Login = () => {
     signInWithEmail,
     handlePasswordReset,
   } = useLoginViewModel();
-
+ 
   usePreventZoom(true, true);
 
   const { t } = useTranslation("global");

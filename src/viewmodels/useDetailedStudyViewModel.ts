@@ -877,7 +877,7 @@ export const useEstudioDetalleViewModel = () => {
         {
           name: userData?.firstName || user.displayName || "Médico HCC-AI",
           email: doctor.email,
-          message: `Estudio: "${estudio?.studieName ?? "sin nombre"}"`,
+          message: `Estudio: "${estudio?.studieName ?? "sin nombre"}"\n\nSi deseas verlo desde la aplicación, pulsa en el siguiente enlace e inicia sesión con tu cuenta:\nhttps://hcc-ai.vercel.app//estudio/${id}`,
         },
       );
 

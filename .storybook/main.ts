@@ -11,6 +11,7 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding",
     "@storybook/addon-a11y",
     "@storybook/addon-vitest"
+
   ],
   "framework": {
     "name": "@storybook/react-vite",
