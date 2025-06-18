@@ -29,6 +29,7 @@ import MisEstudios from "./views/Pages/MyStudies.tsx";
 import Models from "./views/Pages/Models.tsx";
 import FilesPage from "./views/Pages/FileView.tsx";
 import CalendarPage from "./views/Pages/CalendarView.tsx";
+import DocumentationPage from "./views/Pages/Docs.tsx";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -84,7 +85,8 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
           <Route path="/signup" element={<Signup />} />
-
+          <Route path="/docs" element={<DocumentationPage />} />
+          
           {/* privadas */}
           <Route path="/dashboard" element={<AuthRoute><HomePage /></AuthRoute>} />
           <Route path="/dashboard-patient" element={<AuthRoute><HomePagePatient /></AuthRoute>} />
