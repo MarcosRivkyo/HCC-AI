@@ -85,7 +85,7 @@ root.render(
           <Route path="/" element={<App />} />
           <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
           <Route path="/signup" element={<Signup />} />
-          <Route path="/docs" element={<DocumentationPage />} />
+          <Route path="/documentation" element={<DocumentationPage />} />
           
           {/* privadas */}
           <Route path="/dashboard" element={<AuthRoute><HomePage /></AuthRoute>} />
