@@ -14,8 +14,8 @@ const pdfUrls = [
 ];
 
 const externalLinks = [
-  { name: "Documentación del Backend", url: "https://hcc-ai-backend-1084523848624.europe-west2.run.app/docs" },
-  { name: "Documentación del Frontend", url: "/docs/index.html" },
+  { name: "Documentación Técnica del Backend", url: "https://hcc-ai-backend-1084523848624.europe-west2.run.app/docs" },
+  { name: "Documentación Técnica del Frontend", url: "/docs/index.html" },
 ];
 
 const DocumentationPage: React.FC = () => {
@@ -23,23 +23,23 @@ const DocumentationPage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white">
       {/* Contenido principal */}
       <div className="flex-grow p-8">
-        <h1 className="text-4xl font-bold text-center mb-10">Documentación Técnica</h1>
+        <h1 className="text-4xl font-bold text-center mb-10">Documentación</h1>
 
-        <div className="flex justify-center gap-12 mb-8 flex-wrap text-lg">
-          {externalLinks.map((link, idx) => (
-            <div key={idx} className="flex items-center gap-2">
-              <FiExternalLink size={20} />
-              <a
+            <div className="flex justify-center gap-6 mb-8 flex-wrap">
+            {externalLinks.map((link, idx) => (
+                <a
+                key={idx}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:underline"
-              >
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition"
+                >
+                <FiExternalLink size={18} />
                 {link.name}
-              </a>
+                </a>
+            ))}
             </div>
-          ))}
-        </div>
+
 
         <hr className="border-t border-gray-300 dark:border-gray-600 my-12" />
 
