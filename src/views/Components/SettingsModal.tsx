@@ -613,7 +613,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               <button
                 onClick={() =>
                   window.open(
-                    "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FHCC-AI_ManualDeUsuario.pdf?alt=media&token=0b548417-2aa1-4456-8424-32de08edd448",
+                    "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20de%20Usuario.pdf?alt=media&token=f38dbfef-710a-4d5d-8603-6bd35cb4694c",
                     "_blank",
                   )
                 }

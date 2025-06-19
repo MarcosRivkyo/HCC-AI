@@ -293,6 +293,17 @@ export const FileDAO = {
     await uploadBytesResumable(storageRef, fileBlob);
     return await getDownloadURL(storageRef);
   },
+  
+  async downloadImage(storagePath: string): Promise<string> {
+    try {
+      const fileRef = ref(storage, storagePath);
+      const downloadURL = await getDownloadURL(fileRef);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error al obtener la URL de descarga:", error);
+      throw error;
+    }
+  },
 
   async saveMaskMetadata({
     imageUrl,
