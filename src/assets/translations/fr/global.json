@@ -22,7 +22,8 @@
     "view_profile": "Voir le profil",
     "settings": "Paramètres",
     "logout": "Se déconnecter",
-    "calendar": "CALENDRIER"
+    "calendar": "CALENDRIER",
+    "documentation": "DOCUMENTATION"
   },
 
   "main": {
@@ -445,7 +446,24 @@
   },
   "warning": {
     "pc_optimization": "⚠️ Cette application est optimisée pour les écrans d’ordinateur. Certaines interfaces peuvent se chevaucher sur les appareils mobiles. Pour une meilleure expérience, veuillez y accéder depuis un PC ou un ordinateur portable."
+  },
+
+  "documentation": {
+    "documentation": "Documentation",
+    "go_back": "Retour à l'accueil",
+    "view_doc": "Voir le document",
+    "TFG_Report": "Rapport du Projet de Fin d'Études",
+    "Annex_I": "Annexe I – Plan de Projet Logiciel",
+    "Annex_II": "Annexe II – Spécification des Exigences Logicielles",
+    "Annex_III": "Annexe III – Analyse du Système Logiciel",
+    "Annex_IV": "Annexe IV – Conception du Système Logiciel",
+    "Annex_V": "Annexe V – Documentation du Code Source",
+    "Annex_VI": "Annexe VI – Manuel de l'Utilisateur",
+    "Annex_VII": "Annexe VII – Développement de l'Intelligence Artificielle",
+    "Backend_Docs": "Documentation Technique du Backend",
+    "Frontend_Docs": "Documentation Technique du Frontend"
   }
+
 
 
 

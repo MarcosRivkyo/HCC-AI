@@ -21,7 +21,9 @@
     "editor": "EDITOR",
     "view_profile": "View Profile",
     "settings": "Settings",
-    "calendar": "CALENDAR"
+    "calendar": "CALENDAR",
+    "documentation": "DOCUMENTATION"
+
   },
 
   "main": {
@@ -448,5 +450,24 @@
   },
   "warning": {
     "pc_optimization": "⚠️ This application is optimized for desktop screens. Some interfaces may overlap on mobile devices. For the best experience, please access from a PC or laptop."
+  },
+
+  "documentation": {
+    "documentation": "Documentation",
+    "go_back": "Back to home",
+    "view_doc": "View document",
+    "TFG_Report": "Final Degree Project Report",
+    "Annex_I": "Annex I – Software Project Plan",
+    "Annex_II": "Annex II – Software Requirements Specification",
+    "Annex_III": "Annex III – Software System Analysis",
+    "Annex_IV": "Annex IV – Software System Design",
+    "Annex_V": "Annex V – Source Code Documentation",
+    "Annex_VI": "Annex VI – User Manual",
+    "Annex_VII": "Annex VII – Artificial Intelligence Development",
+    "Backend_Docs": "Backend Technical Documentation",
+    "Frontend_Docs": "Frontend Technical Documentation"
   }
+
+
+
 }
