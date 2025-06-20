@@ -22,7 +22,8 @@
     "view_profile": "Profil anzeigen",
     "assistant": "ASSISTENT",
     "settings": "Einstellungen",
-    "calendar": "KALENDER"
+    "calendar": "KALENDER",
+    "documentation": "DOKUMENTATION"
   },
 
 
@@ -455,7 +456,23 @@
     },
     "warning": {
         "pc_optimization": "⚠️ Diese Anwendung ist für Desktop-Bildschirme optimiert. Einige Oberflächen können sich auf Mobilgeräten überlappen. Für das beste Erlebnis greifen Sie bitte über einen PC oder Laptop zu."
+    },
+    "documentation": {
+        "documentation": "Dokumentation",
+        "go_back": "Zurück zur Startseite",
+        "view_doc": "Dokument anzeigen",
+        "TFG_Report": "Abschlussarbeitsbericht",
+        "Annex_I": "Anhang I – Softwareprojektplan",
+        "Annex_II": "Anhang II – Lastenheft",
+        "Annex_III": "Anhang III – Systemanalyse",
+        "Annex_IV": "Anhang IV – Systementwurf",
+        "Annex_V": "Anhang V – Quellcodedokumentation",
+        "Annex_VI": "Anhang VI – Benutzerhandbuch",
+        "Annex_VII": "Anhang VII – Entwicklung der Künstlichen Intelligenz",
+        "Backend_Docs": "Technische Dokumentation des Backends",
+        "Frontend_Docs": "Technische Dokumentation des Frontends"
     }
+
 
 
 }

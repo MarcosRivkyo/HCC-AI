@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
             <li key={item.id}>
               <button
                 onClick={() => scrollToSection(item.id)}
-                className={`ml-20 transition-all duration-200 ${
+                className={`ml-10 transition-all duration-200 ${
                   selectedSection === item.id
                     ? "text-red-400 font-bold"
                     : "hover:text-gray-300"
@@ -54,6 +54,20 @@ const Navbar: React.FC = () => {
               </button>
             </li>
           ))}
+
+          {/* DOCUMENTACIÓN como botón de navegación */}
+          <li>
+            <button
+              onClick={() => navigate("/documentation")}
+              className={`ml-10 transition-all duration-200 ${
+                location.pathname === "/documentation"
+                  ? "text-red-400 font-bold"
+                  : "hover:text-gray-300"
+              }`}
+            >
+              {t("navbar.documentation")}
+            </button>
+          </li>          
         </ul>
 
         {/* Logo central */}
