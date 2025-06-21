@@ -63,7 +63,7 @@
     "technologies": "Technologien",
     "ai_description": "Dieses Projekt basiert auf künstlicher Intelligenz mit Deep Learning für den klinischen Einsatz.",
 
-    "ai_python_description": "Ich habe Python zusammen mit PyTorch und TensorFlow verwendet, um Modelle zur Erkennung medizinischer Bilder zu trainieren.",
+    "ai_python_description": "Ich habe Python zusammen mit TensorFlow verwendet, um Modelle zur Erkennung medizinischer Bilder zu trainieren.",
     "opencv_title": "Computer Vision",
     "opencv_description": "OpenCV wurde für die Vorverarbeitung und Analyse von Ultraschallbildern eingesetzt.",
     "frontend_title": "Frontend-Entwicklung",

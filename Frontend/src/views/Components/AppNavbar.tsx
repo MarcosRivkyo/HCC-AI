@@ -175,28 +175,35 @@ const Navbar: React.FC = () => {
       {/* Menú móvil */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-4 space-y-4 bg-gray-900 p-4 rounded-lg shadow-lg">
-          {[
-            { id: "home", label: t("navbar.home") },
-            { id: "objectives", label: t("navbar.objective") },
-            { id: "services", label: t("navbar.services") },
-            { id: "technology", label: t("navbar.technologies") },
-          ].map((item) => (
-            <div key={item.id}>
-              <button
-                onClick={() => {
+        {[
+          { id: "home", label: t("navbar.home"), type: "scroll" },
+          { id: "objectives", label: t("navbar.objective"), type: "scroll" },
+          { id: "services", label: t("navbar.services"), type: "scroll" },
+          { id: "technology", label: t("navbar.technologies"), type: "scroll" },
+          { id: "/documentation", label: t("navbar.documentation"), type: "link" },
+        ].map((item) => (
+          <div key={item.id}>
+            <button
+              onClick={() => {
+                if (item.type === "scroll") {
                   scrollToSection(item.id);
-                  setIsOpen(false);
-                }}
-                className={`block w-full text-left text-sm ${
-                  selectedSection === item.id
-                    ? "text-red-400 font-bold"
-                    : "text-white"
-                }`}
-              >
-                {item.label}
-              </button>
-            </div>
-          ))}
+                } else {
+                  navigate(item.id);
+                }
+                setMobileMenuOpen(false);
+                setIsOpen(false);
+              }}
+              className={`block w-full text-left text-sm ${
+                selectedSection === item.id
+                  ? "text-red-400 font-bold"
+                  : "text-white"
+              }`}
+            >
+              {item.label}
+            </button>
+          </div>
+        ))}
+
 
           <div className="border-t border-gray-700 pt-4">
             {user && user.emailVerified ? (

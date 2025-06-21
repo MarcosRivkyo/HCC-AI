@@ -59,7 +59,7 @@
     "technologies": "Technologies",
     "ai_description": "Ce projet repose sur l'intelligence artificielle et l'apprentissage profond pour des applications cliniques réelles.",
 
-    "ai_python_description": "J'ai utilisé Python avec PyTorch et TensorFlow pour entraîner des modèles de détection d'images médicales.",
+    "ai_python_description": "J'ai utilisé Python avec TensorFlow pour entraîner des modèles de détection d'images médicales.",
     "opencv_title": "Vision par Ordinateur",
     "opencv_description": "OpenCV a été utilisé pour le traitement et l’analyse préalable des images échographiques.",
     "frontend_title": "Développement Frontend",

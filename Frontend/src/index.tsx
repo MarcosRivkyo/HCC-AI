@@ -98,10 +98,11 @@ root.render(
           <Route path="/models" element={<AuthRoute><Models /></AuthRoute>} />
           <Route path="/files" element={<AuthRoute><FilesPage/></AuthRoute>}/>
           <Route path="/calendar" element={<AuthRoute><CalendarPage/></AuthRoute>}/>
+
           {/* fallback */}
           <Route path="*" element={<Navigate to="/" />} />
           
-          </Routes>
+        </Routes>
       </Router>
     </I18nextProvider>
   </React.StrictMode>,

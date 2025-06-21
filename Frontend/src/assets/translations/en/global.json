@@ -60,7 +60,7 @@
     "technologies": "Technologies",
     "ai_description": "This project is based on deep learning techniques to enhance diagnostic accuracy in medical imaging.",
 
-    "ai_python_description": "I used Python with PyTorch and TensorFlow to train advanced medical image detection models.",
+    "ai_python_description": "I used Python with TensorFlow to train advanced medical image detection models.",
     "opencv_title": "Computer Vision",
     "opencv_description": "OpenCV was used for pre-processing and analyzing ultrasound images.",
     "frontend_title": "Frontend Development",

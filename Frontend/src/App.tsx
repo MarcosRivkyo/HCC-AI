@@ -369,11 +369,10 @@ const Technology: React.FC = () => {
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
           <div className="flex justify-center items-center space-x-6 mb-4">
             <FaPython className="text-yellow-400 text-5xl" />
-            <SiPytorch className="text-red-500 text-5xl" />
             <SiTensorflow className="text-orange-500 text-5xl" />
           </div>
           <h3 className="text-xl font-semibold">
-            Python, PyTorch & TensorFlow
+            Python & TensorFlow
           </h3>
           <p className="text-sm mt-2 text-gray-300">
             {t("sections.ai_python_description")}

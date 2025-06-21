@@ -33,7 +33,7 @@ const externalLinks = [
   {
     name: "Frontend_Docs",
     url: "/docs/index.html",
-    icon: <FaReact size={22} className="text-cyan-400 animate-spin-slow" />
+    icon: <FaReact size={22} className="text-cyan-400 " />
   },
 ];
 
