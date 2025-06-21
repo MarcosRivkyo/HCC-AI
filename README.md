@@ -1,4 +1,14 @@
+
 # HCC-AI
+
+<div align="center">
+
+<img src="Frontend/src/assets/images/logo_hcc_ai.jpg" alt="Logo del sistema HCC-AI" width="400"/>
+
+<p><strong>Figura 1.</strong> Logo del sistema HCC-AI</p>
+
+</div>
+
 ## Autor: 
 Marcos Rivas Kyoguro
 
@@ -16,11 +26,17 @@ En las últimas décadas, el uso de la inteligencia artificial, y en particular 
 
 En este contexto, el cáncer de hígado, específicamente el carcinoma hepatocelular (HCC), representa un desafío prioritario. El HCC es la forma más común de tumor hepático maligno, con una elevada tasa de mortalidad, agravada por la dificultad de su detección temprana. La mayoría de los casos se diagnostican en etapas avanzadas, donde las opciones terapéuticas son limitadas y menos efectivas. Por ello, el desarrollo de herramientas de apoyo al diagnóstico que mejoren la sensibilidad y especificidad es crucial para la práctica médica.
 
-Tal como se muestra en la Figura 1, el lazo verde se ha consolidado como el símbolo internacional de la concienciación sobre el cáncer de hígado. Este emblema busca visibilizar la enfermedad, fomentar la prevención y apoyar a los pacientes y familiares que la enfrentan.
+Tal como se muestra en la Figura 2, el lazo verde se ha consolidado como el símbolo internacional de la concienciación sobre el cáncer de hígado. Este emblema busca visibilizar la enfermedad, fomentar la prevención y apoyar a los pacientes y familiares que la enfrentan.
 
-![Concienciación sobre el cáncer de hígado](/Frontend/src/assets/images/logo_hcc_ai.jpg)
 
-> **Figura 1.** Símbolo de la concienciación del cáncer de hígado
+
+<div align="center">
+
+<img src="Frontend/src/assets/images/smbolo_cancer_higado.jpg" alt="Símbolo de la concienciación del cáncer de hígado" width="150"/>
+
+<p><strong>Figura 2.</strong> Símbolo de la concienciación del cáncer de hígado</p>
+
+</div>
 
 El presente Trabajo de Fin de Grado aborda esta problemática desde una perspectiva tecnológica, mediante la aplicación de modelos de inteligencia artificial sobre imágenes médicas, en concreto, imágenes de ecografía hepática. El objetivo principal es desarrollar un sistema capaz de identificar automáticamente la presencia de hepatocarcinomas, evaluar su grado de evolución y delimitar con precisión las áreas afectadas. Este enfoque busca no solo agilizar el proceso diagnóstico, sino también reducir la dependencia de pruebas invasivas como biopsias o de técnicas más costosas como la resonancia magnética o el TAC.
 
