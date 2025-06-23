@@ -146,7 +146,45 @@
     "gemini_description": "Generative model, optimized through prompt engineering techniques, tailored for assistance in liver health."
   },
   
-  
+  "files": {
+    "title": "Files",
+    "no_reports": "No reports available.",
+    "no_images": "No images available.",
+    "view": "View",
+    "edit": "Edit",
+    "info": "Info",
+    "confirm_delete_title": "Confirm deletion",
+    "confirm_delete_text": "Are you sure you want to delete {{fileName}}? This action cannot be undone.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "page": "Page",
+    "of": "of",
+    "prev": "Previous",
+    "next": "Next",
+    "image_info_title": "Image Information",
+    "report_info_title": "Report Information",
+    "copied": "ID copied",
+    "fields": {
+      "study_id": "Study ID",
+      "uploaded_by": "Uploaded by",
+      "upload_date": "Upload date",
+      "resolution": "Resolution",
+      "size": "Size",
+      "type": "Type",
+      "prediction_id": "Prediction ID",
+      "predicted_class": "Predicted class",
+      "creation_date": "Creation date",
+      "doctor": "Doctor",
+      "patient": "Patient"
+    },
+    "folders": {
+      "ecografias": "Ultrasounds",
+      "masks": "Masks",
+      "informes": "Reports"
+    }
+
+  },
+
 
   "dashboard": {
     "create_studie": "Create Study",
@@ -227,6 +265,7 @@
       "delete_title": "Delete this study?",
       "delete_warning": "This action cannot be undone.",
       "id_study": "Study ID",
+      "delete_success": "Study successfully deleted",
       "doctor_name": "Doctor",
       "upload_image": "Uploading image...",
       "drag_or_drop": "Drag or click to upload",
@@ -361,7 +400,8 @@
       "role": "Role",
       "no_photo": "No photo",
       "previsualization": "Photo preview",
-      "loading": "Loading profile..."
+      "loading": "Loading profile...",
+      "upload_image": "Upload Image"
     }, 
     "preferences": {
       "theme": "Theme:",

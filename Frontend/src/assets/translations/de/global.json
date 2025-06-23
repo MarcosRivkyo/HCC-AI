@@ -146,6 +146,44 @@
     },
     "gemini_description": "Generatives Modell, optimiert mit Prompt-Engineering-Techniken, angepasst zur Unterstützung der Lebergesundheit."
     },
+    "files": {
+        "title": "Dateien",
+        "no_reports": "Keine Berichte verfügbar.",
+        "no_images": "Keine Bilder verfügbar.",
+        "view": "Ansehen",
+        "edit": "Bearbeiten",
+        "info": "Info",
+        "confirm_delete_title": "Löschen bestätigen",
+        "confirm_delete_text": "Möchten Sie {{fileName}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "delete": "Löschen",
+        "cancel": "Abbrechen",
+        "page": "Seite",
+        "of": "von",
+        "prev": "Zurück",
+        "next": "Weiter",
+        "image_info_title": "Bildinformationen",
+        "report_info_title": "Berichtsinformationen",
+        "copied": "ID kopiert",
+        "fields": {
+            "study_id": "Studien-ID",
+            "uploaded_by": "Hochgeladen von",
+            "upload_date": "Hochladedatum",
+            "resolution": "Auflösung",
+            "size": "Größe",
+            "type": "Typ",
+            "prediction_id": "Vorhersage-ID",
+            "predicted_class": "Vorhergesagte Klasse",
+            "creation_date": "Erstellungsdatum",
+            "doctor": "Arzt",
+            "patient": "Patient"
+        },
+        "folders": {
+            "ecografias": "Ultraschallbilder",
+            "masks": "Masken",
+            "informes": "Berichte"
+        }
+
+    },
 
     "dashboard": {
         "create_studie": "Studie erstellen",
@@ -220,8 +258,8 @@
         "no_date": "Kein Datum",
         "delete_title": "Diese Studie löschen?",
         "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
-        
         "id_study": "Studien-ID",
+        "delete_success": "Studie erfolgreich gelöscht",
         "doctor_name": "Arzt",
         "upload_image": "Bild wird hochgeladen...",
         "drag_or_drop": "Ziehen oder klicken zum Hochladen",
@@ -356,7 +394,8 @@
             "role": "Rolle",
             "no_photo": "Kein Foto",
             "previsualization": "Foto-Vorschau",
-            "loading": "Profil wird geladen..."
+            "loading": "Profil wird geladen...",
+            "upload_image": "Bild hochladen"
         },
         "preferences": {
             "theme": "Design:",

@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-calendar/dist/Calendar.css";
 
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import MobileWarning from "../Components/MobileWarning.tsx";
 
 const Dashboard = () => {
   const {
@@ -48,6 +49,7 @@ const Dashboard = () => {
     <div
       className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
     >
+
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -55,6 +57,7 @@ const Dashboard = () => {
         onAssistantClick={() => setShowAssistant(!showAssistant)}
         isPatientView={false}
       />
+      <MobileWarning /> 
 
       <ProfileModal
         isOpen={isProfileOpen}
@@ -78,7 +81,7 @@ const Dashboard = () => {
       />
 
       <div
-        className={`flex-1 flex-col h-screen pt-24 px-6 bg-gray-300 text-black dark:bg-gray-800 dark:text-white`}
+        className={`flex-1 flex-col h-screen pt-[7.5rem] px-6 bg-gray-300 text-black dark:bg-gray-800 dark:text-white`}
       >
         <div
           className={`flex pt-10 pb-10  px-6 h-full bg-gray-300 text-black dark:bg-gray-800 dark:text-white`}

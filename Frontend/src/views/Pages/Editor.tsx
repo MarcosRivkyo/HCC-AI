@@ -170,7 +170,7 @@ const PredictImage: React.FC = () => {
         canvas.setActiveObject(imageObj);
         toast.success("Imagen cargada correctamente");
 
-        // Si solo tenemos una imageUrl (no un File), la convertimos y la guardamos como File
+
         if (!image && imageUrl) {
           const res = await fetch(imageUrl);
           const blob = await res.blob();

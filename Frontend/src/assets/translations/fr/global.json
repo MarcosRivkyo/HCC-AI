@@ -142,6 +142,44 @@
     },
     "gemini_description": "Modèle génératif, optimisé par des techniques de prompt engineering, adapté à l'assistance en santé hépatique."
   },
+  "files": {
+    "title": "Fichiers",
+    "no_reports": "Aucun rapport disponible.",
+    "no_images": "Aucune image disponible.",
+    "view": "Voir",
+    "edit": "Modifier",
+    "info": "Info",
+    "confirm_delete_title": "Confirmer la suppression",
+    "confirm_delete_text": "Êtes-vous sûr de vouloir supprimer {{fileName}} ? Cette action est irréversible.",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "page": "Page",
+    "of": "de",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "image_info_title": "Informations sur l'image",
+    "report_info_title": "Informations du rapport",
+    "copied": "ID copié",
+    "fields": {
+      "study_id": "ID de l'étude",
+      "uploaded_by": "Téléversé par",
+      "upload_date": "Date de téléversement",
+      "resolution": "Résolution",
+      "size": "Taille",
+      "type": "Type",
+      "prediction_id": "ID de prédiction",
+      "predicted_class": "Classe prédite",
+      "creation_date": "Date de création",
+      "doctor": "Médecin",
+      "patient": "Patient"
+    },
+    "folders": {
+      "ecografias": "Échographies",
+      "masks": "Masques",
+      "informes": "Rapports"
+    }
+
+  },
 
     "dashboard": {
         "create_studie": "Créer une Étude",
@@ -223,8 +261,8 @@
       "no_date": "Pas de date",
       "delete_title": "Supprimer cette étude ?",
       "delete_warning": "Cette action est irréversible.",
-
       "id_study": "ID de l'étude",
+      "delete_success": "Étude supprimée avec succès",
       "doctor_name": "Médecin",
       "upload_image": "Téléchargement de l'image...",
       "drag_or_drop": "Glissez ou cliquez pour télécharger",
@@ -355,7 +393,8 @@
       "role": "Rôle",
       "no_photo": "Pas de photo",
       "previsualization": "Aperçu de la photo",
-      "loading": "Chargement du profil..."
+      "loading": "Chargement du profil...",
+      "upload_image": "Téléverser une image"
     },
     "preferences": {
       "theme": "Thème :",

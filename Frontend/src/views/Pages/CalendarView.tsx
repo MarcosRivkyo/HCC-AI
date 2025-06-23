@@ -1,9 +1,10 @@
+import { useCalendarViewModel } from "../../viewmodels/useCalendarViewModel.ts";
+
 import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import NavbarSecond from "../Components/InsideNavbar.tsx";
 import ProfileModal from "../Components/ProfileModal.tsx";
 import SettingsModal from "../Components/SettingsModal.tsx";
-import { useCalendarViewModel } from "../../viewmodels/useCalendarViewModel.ts";
 import Footer from "../Components/InsideFooter.tsx";
 import usePreventZoom from "../Components/usePreventZoom.tsx";
 import TimePicker from "react-time-picker";
@@ -125,7 +126,7 @@ const CalendarPageView: React.FC = () => {
         <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-center gap-2 mb-6">
             <h2 className="text-3xl font-bold text-gray-800 dark:text-white text-center">
-              Calendario
+              {t("calendar.title")}
             </h2>
             <button
               onClick={() => setIsHelpOpen(true)}
@@ -164,7 +165,7 @@ const CalendarPageView: React.FC = () => {
           {selectedDate && (
             <div className="mt-6">
               <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                Añadir recordatorio para {selectedDate.toDateString()}
+                {t("calendar.add_reminder_for")} {selectedDate.toDateString()}
               </h3>
               <div className="flex items-center gap-3">
                 <input
@@ -172,7 +173,7 @@ const CalendarPageView: React.FC = () => {
                   value={newReminder}
                   onChange={(e) => setNewReminder(e.target.value)}
                   className="flex-grow px-4 py-2 rounded-md border dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                  placeholder="Escribe el recordatorio..."
+                  placeholder={t("calendar.reminder_placeholder")}
                 />
                 <TimePicker
                   onChange={(value) => setReminderTime(value ?? "")}
@@ -188,7 +189,7 @@ const CalendarPageView: React.FC = () => {
                   onClick={() => addReminder(reminderTime)}
                   className="bg-yellow-500 dark:bg-yellow-500 text-black px-4 py-2 rounded-md font-bold hover:bg-yellow-400"
                 >
-                  Añadir
+                  {t("calendar.add")}
                 </button>
               </div>
             </div>
@@ -196,7 +197,7 @@ const CalendarPageView: React.FC = () => {
 
           <div className="mt-8">
             <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-              Recordatorios
+              {t("calendar.reminders")}
             </h3>
             <ul className="space-y-2">
               {reminders

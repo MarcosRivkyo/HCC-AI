@@ -385,11 +385,11 @@ const MisEstudios: React.FC = () => {
         {/* Confirmación de eliminación */}
         {confirmarEliminacion && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full">
-              <h2 className="text-lg font-bold text-gray-800 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl max-w-sm w-full">
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
                 {t("my_studies.delete_title")}
               </h2>
-              <p className="text-sm text-gray-600 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
                 {t("my_studies.delete_warning")}
               </p>
               <div className="flex justify-end gap-4">
@@ -397,18 +397,20 @@ const MisEstudios: React.FC = () => {
                   onClick={() => eliminarEstudio(confirmarEliminacion)}
                   className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
                 >
-                  {t("common.delete")}
+                  {t("actions.delete")}
                 </button>
                 <button
                   onClick={() => setConfirmarEliminacion(null)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                  className="bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600"
                 >
-                  {t("common.cancel")}
+                  {t("actions.cancel")}
                 </button>
               </div>
             </div>
           </div>
         )}
+
+
         <div className="flex justify-between mt-6">
           <button
             onClick={() => setPaginaActual((p) => Math.max(p - 1, 1))}
@@ -517,32 +519,7 @@ const MisEstudios: React.FC = () => {
         </div>
       )}
 
-      {confirmarEliminacion && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
-              ¿Eliminar este estudio?
-            </h2>
-            <p className="text-sm text-gray-600 mb-6">
-              Esta acción no se puede deshacer.
-            </p>
-            <div className="flex justify-end gap-4">
-              <button
-                onClick={() => eliminarEstudio(confirmarEliminacion)}
-                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
-              >
-                {t("actions.delete")}
-              </button>
-              <button
-                onClick={() => setConfirmarEliminacion(null)}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-              >
-                {t("actions.cancel")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       <Footer />
     </div>

@@ -82,9 +82,8 @@ const DocumentationPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
-      {/* Navbar */}
       <nav className="bg-black py-4 px-6 shadow-md flex items-center justify-between">
-        {/* Volver */}
+
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded-full shadow transition duration-300"
@@ -93,7 +92,7 @@ const DocumentationPage: React.FC = () => {
           {t("documentation.go_back")}
         </button>
 
-        {/* Logo */}
+
         <img
           src={logoHCC_AI}
           alt="HCC-AI Logo"
@@ -101,15 +100,15 @@ const DocumentationPage: React.FC = () => {
           onClick={() => navigate("/")}
         />
 
-        {/* Selector de idioma */}
+
         <LanguageSelector />
       </nav>
 
-      {/* Contenido principal */}
+
       <div className="flex-grow p-8">
         <h1 className="text-5xl font-bold text-center my-12">{t("documentation.documentation")}</h1>
 
-        {/* Enlaces externos */}
+
         <div className="flex justify-center gap-6 flex-wrap mb-12">
           {externalLinks.map((link, idx) => (
             <a
@@ -129,7 +128,7 @@ const DocumentationPage: React.FC = () => {
 
         <hr className="border-gray-600 my-12" />
 
-        {/* PDFs */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {pdfUrls.map((doc, idx) => (
             <div key={idx} className="bg-gray-800 rounded-2xl p-5 shadow hover:shadow-2xl transition-all">

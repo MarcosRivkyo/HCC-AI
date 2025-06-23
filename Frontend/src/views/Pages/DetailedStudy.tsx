@@ -529,7 +529,6 @@ const EstudioDetalle = () => {
             </div>
           )}
 
-
           {/* Mostrar los parámetros del análisis */}
           {parametersVisible && (
             <div className="mt-6 flex justify-center">
@@ -622,11 +621,11 @@ const EstudioDetalle = () => {
                   {/* Submodelo desplegable solo si selecciona SEGMENTADOHEPATICO-AI */}
                   {selectedSegmentationModel === "SegmentadorHepático-AI" && (
                     <div className="mt-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Umbral de Confianza */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start w-full">
+                        <div className="w-full flex flex-col items-center justify-center gap-6 mt-6">
+
                           {/* Umbral de Confianza */}
-                          <div className="w-full">
+                          <div className="text-center w-full max-w-sm">
                             <label
                               htmlFor="confidenceThreshold"
                               className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
@@ -641,43 +640,35 @@ const EstudioDetalle = () => {
                               step={1}
                               value={confidenceThreshold * 100}
                               onChange={(e) =>
-                                setConfidenceThreshold(
-                                  parseFloat(e.target.value) / 100,
-                                )
+                                setConfidenceThreshold(parseFloat(e.target.value) / 100)
                               }
-                              className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                              className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-center"
                             />
                             <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
                               {t("my_studies.threshold_explanation")}
                             </p>
                           </div>
 
-                          {/* Checkbox + ayuda */}
-                          <div className="w-full">
-                            <div className="flex items-start gap-3">
-                              <input
-                                type="checkbox"
-                                id="usarExplicacionIA"
-                                checked={usarExplicacionIA}
-                                onChange={() =>
-                                  setUsarExplicacionIA(!usarExplicacionIA)
-                                }
-                                className="mt-1 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <div>
-                                <label
-                                  htmlFor="usarExplicacionIA"
-                                  className="block text-sm font-medium text-gray-700 dark:text-white"
-                                >
-                                  {t("my_studies.generate_ai_explanation")}
-                                </label>
-
-                              </div>
-                            </div>
+                          {/* Checkbox */}
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="usarExplicacionIA"
+                              checked={usarExplicacionIA}
+                              onChange={() => setUsarExplicacionIA(!usarExplicacionIA)}
+                              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label
+                              htmlFor="usarExplicacionIA"
+                              className="text-sm font-medium text-gray-700 dark:text-white"
+                            >
+                              {t("my_studies.generate_ai_explanation")}
+                            </label>
                           </div>
                         </div>
+
+
                       </div>
-                    </div>
                   )}
                 </div>
 
@@ -1157,11 +1148,11 @@ const EstudioDetalle = () => {
 
       {confirmarEliminacion && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-xl max-w-sm w-full">
-            <h2 className="text-lg font-bold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md relative">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
               {t("my_studies.delete_title")}
             </h2>
-            <p className="text-sm text-gray-600 mb-6">
+            <p className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               {t("my_studies.delete_warning")}
             </p>
             <div className="flex justify-end gap-4">

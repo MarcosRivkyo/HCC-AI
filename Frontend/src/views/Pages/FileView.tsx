@@ -19,6 +19,7 @@ import {
   FiTrash2,
   FiEye,
   FiInfo,
+  FiEdit  
 } from "react-icons/fi";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
@@ -156,7 +157,7 @@ const FilesPage: React.FC = () => {
           <main className="w-full max-w-7xl mx-auto px-6 pt-20 flex-grow">
             <h2 className="text-4xl mt-8 font-bold text-center text-gray-800 dark:text-white mb-16 flex items-center justify-center gap-2">
               {" "}
-              Archivos
+              {t("files.title")}
             </h2>
             <div className="space-y-6">
               {Object.entries(groupedFiles).map(([folderName, files]) => {
@@ -182,7 +183,8 @@ const FilesPage: React.FC = () => {
                         ) : (
                           <FiImage size={20} />
                         )}
-                        {folderName}
+                        {t(`files.folders.${folderName}`)}
+
                       </div>
                       <div className="flex items-center gap-3">
                         {isOpen ? (
@@ -198,8 +200,8 @@ const FilesPage: React.FC = () => {
                         {paginatedFiles.length === 0 ? (
                           <div className="px-5 py-4 text-center text-gray-500 dark:text-gray-400 italic">
                             {folderName === "informes"
-                              ? "No hay informes disponibles."
-                              : "No hay imágenes disponibles."}
+                            ? t("files.no_reports")
+                            : t("files.no_images")}
                           </div>
                         ) : (
                           <div className="px-5 pb-6 pt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
@@ -258,7 +260,8 @@ const FilesPage: React.FC = () => {
                                       rel="noopener noreferrer"
                                       className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1 hover:underline"
                                     >
-                                      <FiEye /> Ver
+                                      <FiEye /> {t("files.view")}
+
                                     </a>
 
                                     {folderName !== "informes" &&
@@ -270,9 +273,9 @@ const FilesPage: React.FC = () => {
                                             handleImageClick(file.url, e)
                                           }
                                           className="text-sm text-yellow-600 dark:text-yellow-400 flex items-center gap-1 hover:underline"
-                                          title="Editar imagen"
+                                          title={t("files.edit")}
                                         >
-                                          ✏️ Editar
+                                          <FiEdit /> {t("files.edit")}
                                         </button>
                                       )}
 
@@ -284,7 +287,7 @@ const FilesPage: React.FC = () => {
                                         className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1 hover:underline"
                                         title="Ver información del informe"
                                       >
-                                        <FiInfo /> Info
+                                        <FiInfo /> {t("files.info")}
                                       </button>
                                     ) : (
                                       <button
@@ -294,7 +297,7 @@ const FilesPage: React.FC = () => {
                                         className="text-sm text-green-600 dark:text-green-400 flex items-center gap-1 hover:underline"
                                         title="Ver información de la imagen"
                                       >
-                                        <FiInfo /> Info
+                                        <FiInfo /> {t("files.info")}
                                       </button>
                                     )}
                                   </div>
@@ -310,10 +313,10 @@ const FilesPage: React.FC = () => {
                               disabled={currentPage === 1}
                               className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded disabled:opacity-50"
                             >
-                              Anterior
+                              {t("files.prev")}
                             </button>
                             <span className="text-sm text-gray-700 dark:text-gray-200">
-                              Página {currentPage} de{" "}
+                              {t("files.page")} {currentPage} {t("files.of")}{" "}
                               {Math.ceil(files.length / filesPerPage)}
                             </span>
                             <button
@@ -321,7 +324,7 @@ const FilesPage: React.FC = () => {
                               disabled={endIndex >= files.length}
                               className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded disabled:opacity-50"
                             >
-                              Siguiente
+                              {t("files.next")}
                             </button>
                           </div>
                         )}
@@ -339,7 +342,7 @@ const FilesPage: React.FC = () => {
               >
                 <div className="bg-gradient-to-br from-gray-900 via-gray-700 to-gray-700 p-6 rounded-xl text-white shadow-lg">
                   <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                    Información de Imagen
+                    {t("files.image_info_title")}
                   </h2>
 
                   <img
@@ -351,50 +354,50 @@ const FilesPage: React.FC = () => {
                   <ul className="space-y-2 text-sm">
                     <li className="flex justify-between items-center">
                       <span>
-                        <span className="font-semibold">Estudio ID:</span>{" "}
+                        <span className="font-semibold">{t("files.fields.study_id")}:</span>{" "}
                         {imageInfo.estudioId}
                       </span>
                       <button
                         onClick={() => {
                           navigator.clipboard.writeText(imageInfo.estudioId);
-                          toast.success("ID copiado");
+                          toast.success(t("files.copied"));
                         }}
                         className="ml-2 px-2 py-1 text-xs bg-white text-gray-800 rounded hover:bg-gray-100"
                       >
-                        Copiar
+                        {t("files.copy")}
                       </button>
                     </li>
 
                     <li>
-                      <span className="font-semibold">Subido por:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.uploaded_by")}:</span>{" "}
                       {imageInfo.subidoPorDoctorId}
                     </li>
                     <li>
-                      <span className="font-semibold">Fecha de subida:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.upload_date")}:</span>{" "}
                       {new Date(
                         imageInfo.fechaSubida.seconds * 1000,
                       ).toLocaleString()}
                     </li>
 
                     <li>
-                      <span className="font-semibold">Resolución:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.resolution")}:</span>{" "}
                       {imageInfo.resolucion}
                     </li>
                     <li>
-                      <span className="font-semibold">Peso:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.size")}:</span>{" "}
                       {imageInfo.pesoKB} KB
                     </li>
                     <li>
-                      <span className="font-semibold">Tipo:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.type")}:</span>{" "}
                       {imageInfo.tipo}
                     </li>
                     <li>
-                      <span className="font-semibold">ID de predicción:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.prediction_id")}:</span>{" "}
                       {imageInfo.idPrediccion || "Aún sin analizar"}
                     </li>
 
                     <li>
-                      <span className="font-semibold">Clase predicha:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.predicted_class")}:</span>{" "}
                       {typeof imageInfo.clasePredicha === "number"
                         ? imageInfo.clasePredicha
                         : "Aún sin analizar"}
@@ -414,27 +417,27 @@ const FilesPage: React.FC = () => {
               >
                 <div className="bg-gradient-to-br from-gray-900 via-gray-700 to-gray-700 p-6 rounded-xl text-white shadow-lg">
                   <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                    Información del Informe
+                    {t("files.report_info_title")}
                   </h2>
 
                   <ul className="space-y-2 text-sm">
                     <li>
-                      <span className="font-semibold">Estudio ID:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.study_id")}:</span>{" "}
                       {documentInfo.estudioId}
                     </li>
                     <li>
-                      <span className="font-semibold">Fecha de creación:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.upload_date")}:</span>{" "}
                       {new Date(
                         documentInfo.fechaCreacion.seconds * 1000,
                       ).toLocaleString()}
                     </li>
 
                     <li>
-                      <span className="font-semibold">Médico autor:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.doctor")}:</span>{" "}
                       {documentInfo.doctorId}
                     </li>
                     <li>
-                      <span className="font-semibold">Paciente:</span>{" "}
+                      <span className="font-semibold">{t("files.fields.patient")}:</span>{" "}
                       {documentInfo.pacienteId}
                     </li>
                   </ul>
@@ -449,25 +452,24 @@ const FilesPage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl max-w-sm w-full">
             <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
-              Confirmar eliminación
+              {t("files.confirm_delete_title")}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
-              ¿Estás seguro de que deseas eliminar{" "}
-              <strong>{fileToDelete.fileName}</strong>? Esta acción no se puede
-              deshacer.
+              {t("files.confirm_delete_text", { fileName: fileToDelete.fileName })}{" "}
+              <strong>{fileToDelete.fileName}</strong>
             </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={confirmarEliminarArchivo}
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
               >
-                Eliminar
+                {t("files.delete")}
               </button>
               <button
                 onClick={() => setFileToDelete(null)}
                 className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
               >
-                Cancelar
+                {t("files.cancel")}
               </button>
             </div>
           </div>

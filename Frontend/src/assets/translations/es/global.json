@@ -144,6 +144,47 @@
     "gemini_description": "Modelo generativo, optimizado mediante técnicas de prompt engineering, adaptado a la asistencia en la salud hepática."
   },
 
+
+  "files": {
+    "title": "Archivos",
+    "no_reports": "No hay informes disponibles.",
+    "no_images": "No hay imágenes disponibles.",
+    "view": "Ver",
+    "edit": "Editar",
+    "info": "Info",
+    "copy": "Copiar",
+    "confirm_delete_title": "Confirmar eliminación",
+    "confirm_delete_text": "¿Estás seguro de que deseas eliminar {{fileName}}? Esta acción no se puede deshacer.",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "page": "Página",
+    "of": "de",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "image_info_title": "Información de Imagen",
+    "report_info_title": "Información del Informe",
+    "copied": "ID copiado",
+    "fields": {
+      "study_id": "Estudio ID",
+      "uploaded_by": "Subido por",
+      "upload_date": "Fecha de subida",
+      "resolution": "Resolución",
+      "size": "Peso",
+      "type": "Tipo",
+      "prediction_id": "ID de predicción",
+      "predicted_class": "Clase predicha",
+      "creation_date": "Fecha de creación",
+      "doctor": "Médico autor",
+      "patient": "Paciente"
+    },
+    "folders": {
+      "ecografias": "Ecografías",
+      "masks": "Segmentadas",
+      "informes": "Informes"
+    }
+  },
+
+
   "dashboard": {
     "create_studie": "Crear Estudio",
     "recent_studies": "Estudios Recientes",
@@ -219,6 +260,7 @@
       "filter_mine": "Propios",
       "filter_shared": "Compartidos",
       "id_study": "ID del estudio",
+      "delete_success": "Estudio eliminado con éxito",
       "doctor_name": "Médico",
       "upload_image": "Subiendo imagen...",
       "drag_or_drop": "Arrastra o haz clic para subir",
@@ -359,7 +401,8 @@
       "role": "Rol",
       "no_photo": "Sin foto",
       "previsualization": "Previsualización de la foto",
-      "loading": "Cargando perfil..."
+      "loading": "Cargando perfil...",
+      "upload_image": "Subir Imagen"
     },
     "preferences": {
       "theme": "Tema:",

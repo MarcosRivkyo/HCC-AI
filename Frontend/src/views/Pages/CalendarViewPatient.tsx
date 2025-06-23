@@ -1,7 +1,8 @@
 // components/UI/CalendarWithReminders.tsx
 import React, { useState } from "react";
-import Calendar from "react-calendar";
 import { useCalendarViewModel } from "../../viewmodels/useCalendarViewModel";
+
+import Calendar from "react-calendar";
 import { useTranslation } from "react-i18next";
 import TimePicker from "react-time-picker";
 import "react-calendar/dist/Calendar.css";

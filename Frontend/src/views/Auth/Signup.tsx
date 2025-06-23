@@ -36,30 +36,31 @@ export default function Signup() {
     setShowConfirmPassword,
     signUpWithEmail,
   } = useSignupViewModel();
- 
-  usePreventZoom(true, true);
 
+  usePreventZoom(true, true);
   const { t } = useTranslation("global");
 
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-1/2 h-full flex flex-col bg-[#282c34]">
+    <div className="w-full h-screen flex flex-col md:flex-row">
+      {/* Slider (oculto en móviles) */}
+      <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
 
-      <div className="w-1/2 h-full bg-black flex flex-col p-20 justify-center">
+      {/* Formulario */}
+      <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
           <div className="w-full flex flex-col mb-10 text-white">
             <img
               src={logoHCC_AI}
               alt="Logo HCC-AI"
-              className="w-80 rounded-md center mx-auto mb-10 cursor-pointer"
+              className="w-60 md:w-80 rounded-md mx-auto mb-10 cursor-pointer"
               onClick={() => (window.location.href = "/")}
             />
-            <h3 className="text-4xl font-bold mb-2 text-center">
+            <h3 className="text-2xl md:text-4xl font-bold mb-2 text-center">
               {t("signup.title")}
             </h3>
-            <p className="text-lg mb-4 text-center">{t("signup.subtitle")}</p>
+            <p className="text-md md:text-lg mb-4 text-center">{t("signup.subtitle")}</p>
           </div>
 
           <input
@@ -70,7 +71,7 @@ export default function Signup() {
             onChange={(e) => setUserName(e.target.value)}
           />
 
-          <div className="w-full flex flex-wrap gap-4 mb-6">
+          <div className="w-full flex flex-col md:flex-row gap-4 mb-6">
             <input
               type="text"
               placeholder={t("signup.firstname")}
@@ -95,7 +96,7 @@ export default function Signup() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          <div className="w-full flex flex-wrap gap-4 mb-6">
+          <div className="w-full flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <input
                 type={showPassword ? "text" : "password"}
@@ -106,7 +107,7 @@ export default function Signup() {
               />
               <button
                 type="button"
-                className="absolute right-0 top-2 text-white"
+                className="absolute right-2 top-2 text-white"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -123,7 +124,7 @@ export default function Signup() {
               />
               <button
                 type="button"
-                className="absolute right-0 top-2 text-white"
+                className="absolute right-2 top-2 text-white"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
@@ -131,7 +132,7 @@ export default function Signup() {
             </div>
           </div>
 
-          <div className="w-full flex flex-wrap gap-4 mb-6">
+          <div className="w-full flex flex-col md:flex-row gap-4 mb-6">
             <select
               className="flex-1 text-white bg-black appearance-none py-2 border-b border-gray-500 focus:outline-none focus:border-white"
               value={rol}
@@ -161,9 +162,9 @@ export default function Signup() {
             onChange={(e) => setPhone(e.target.value)}
           />
 
-          {error && <div className="text-red-500 mb-4">{error}</div>}
+          {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
           {verificationMessage && (
-            <div className="text-green-500 mb-4">{verificationMessage}</div>
+            <div className="text-green-500 mb-4 text-center">{verificationMessage}</div>
           )}
 
           <div className="w-full flex flex-col mb-4">
@@ -178,17 +179,17 @@ export default function Signup() {
 
           <div className="w-full flex items-center justify-center relative py-4">
             <div className="w-full h-[1px] bg-gray-500"></div>
-            <p className="text-lg absolute text-gray-500 bg-black px-2">OR</p>
+            <p className="text-sm md:text-lg absolute text-gray-500 bg-black px-2">OR</p>
           </div>
-        </div>
 
-        <div className="w-full flex items-center justify-center mt-10">
-          <p className="text-sm font-normal text-gray-400">
-            {t("signup.have_account")}{" "}
-            <span className="font-semibold text-white cursor-pointer underline">
-              <Link to="/login">{t("signup.login_link")}</Link>
-            </span>
-          </p>
+          <div className="w-full flex items-center justify-center mt-10">
+            <p className="text-sm font-normal text-gray-400 text-center">
+              {t("signup.have_account")}{" "}
+              <span className="font-semibold text-white cursor-pointer underline">
+                <Link to="/login">{t("signup.login_link")}</Link>
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </div>

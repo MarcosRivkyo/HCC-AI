@@ -123,6 +123,7 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
   } = useNavbarSecondViewModel();
 
   const { t, i18n } = useTranslation("global");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = isPatientView
     ? []
@@ -159,8 +160,63 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
             />
           </div>
 
+          {/* Botón de menú para móviles */}
+          <div className="lg:hidden ml-4">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-white focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+          {/* Menú móvil colapsable */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden absolute top-20 left-0 w-full bg-black border-t border-gray-700 z-40">
+              <ul className="flex flex-col p-4 space-y-4 text-sm">
+                {navItems.map(({ path, label, icon }) => (
+                  <li key={path}>
+                    <button
+                      onClick={() => {
+                        navigate(path);
+                        setActivePath(path);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center gap-3 py-2 px-4 w-full text-left ${
+                        activePath === path ? "text-red-500 font-bold" : "text-white hover:text-gray-300"
+                      }`}
+                    >
+                      <span className="text-xl">{icon}</span>
+                      {label}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() => {
+                      navigate("/predict");
+                      setActivePath("/predict");
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-3 py-2 px-4 w-full text-left font-bold rounded-md shadow-md ${
+                      activePath === "/predict"
+                        ? "bg-red-700 text-white"
+                        : "bg-yellow-500 hover:bg-yellow-600 text-black"
+                    }`}
+                  >
+                    <FiChevronRight className="text-xl" />
+                    {t("navbar.editor")}
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+
+
           {/* Nav buttons */}
-          <div className="flex-1 flex justify-center ml-12">
+          <div className="hidden lg:flex flex-1 justify-center ml-12">
+
             <ul className="flex items-center flex-wrap gap-x-12 text-sm">
               {navItems.map(({ path, label, icon }) => (
                 <li key={path}>
@@ -218,7 +274,9 @@ const NavbarSecond: React.FC<NavbarSecondProps> = ({
 
       {/* RIGHT SIDE: Clock + Profile */}
       <div className="ml-auto flex items-center gap-4" ref={menuRef}>
-        <Clock reminders={reminders} />
+        <div className="hidden lg:block">
+          <Clock reminders={reminders} />
+        </div>
         <div
           className={`inline-flex items-center gap-3 px-3 py-2 cursor-pointer bg-gray-800 hover:bg-gray-700 rounded-xl transition duration-300 shadow-md ${
             isOpen ? "ring-2 ring-pink-500" : ""

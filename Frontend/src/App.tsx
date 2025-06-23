@@ -551,7 +551,6 @@ function App() {
 
       <Navbar />
       <MobileWarning /> 
-
       <Home />
       <About />
       <Services />
