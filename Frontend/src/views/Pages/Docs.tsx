@@ -39,7 +39,7 @@ const externalLinks = [
   },
     {
     name: "Source_Code",
-    url: "https://gitlab.com/HP-SCDS/public/usal-hcc-ai/", 
+    url: "https://gitlab.com/HP-SCDS/public/usal-hcc-ai/-/tree/reorganizacion-frontend-backend2?ref_type=heads", 
     icon: <FaGitlab size={22} className="text-orange-500" />
   }
 ];
