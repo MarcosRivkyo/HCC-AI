@@ -134,12 +134,13 @@ async def startup_event():
 
 
 
-async def preprocess_image(img: UploadFile):
+async def preprocess_image(img: UploadFile, model_name: str):
     """
     Preprocesa la imagen para ser compatible con los modelos de IA.
 
     - Redimensiona a 224x224.
     - Convierte a array numpy con batch dimension.
+    - Normaliza según el modelo.
 
     Retorna numpy array listo para inferencia.
     """
@@ -148,11 +149,15 @@ async def preprocess_image(img: UploadFile):
         img_pil = Image.open(io.BytesIO(image_data)).convert("RGB")
         img_pil = img_pil.resize((224, 224))
         img_array = image.img_to_array(img_pil)
+
+        if model_name == "efficient_net":
+            img_array = img_array / 255.0  
+
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al procesar la imagen: {e}")
-    
+
 
 
 @app.post("/predict/")
@@ -184,7 +189,7 @@ async def predict(
             raise HTTPException(status_code=400, detail="Modelo no cargado correctamente")
 
         model = loaded_models[model_name]
-        img_array = await preprocess_image(file)
+        img_array = await preprocess_image(file, model_name)
         prediction = model.predict(img_array)
         predicted_class = np.argmax(prediction, axis=1)
         probabilities = prediction[0]
