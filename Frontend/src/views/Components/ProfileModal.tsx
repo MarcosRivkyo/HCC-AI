@@ -1,3 +1,5 @@
+// src/views/Components/ProfileModal.tsx
+
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
 import logo_user from "../../assets/images/logo_user.png";

@@ -1,3 +1,5 @@
+// src/viewmodels/useSettingsViewModel.ts
+
 import { useState, useEffect } from "react";
 import { auth } from "../config/firebase";
 import { UserDAO } from "../data/dao/UserDAO";

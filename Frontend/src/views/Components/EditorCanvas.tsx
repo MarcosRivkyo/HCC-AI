@@ -1,3 +1,5 @@
+// src/views/Components/EditorCanvas.tsx
+
 import React, { useEffect, useRef, ForwardedRef } from "react";
 import * as fabric from "fabric";
 

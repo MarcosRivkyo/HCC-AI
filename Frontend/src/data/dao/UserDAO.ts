@@ -76,12 +76,11 @@ export const UserDAO = {
       photoURL,
     });
 
-    // Preparamos el objeto a enviar a Firestore
     const dataToUpdate = { ...data };
     if (photoURL === undefined) {
-      delete dataToUpdate.profilePicture;  // evita enviar undefined
+      delete dataToUpdate.profilePicture;  
     } else {
-      dataToUpdate.profilePicture = photoURL; // asegúrate que está definido
+      dataToUpdate.profilePicture = photoURL; 
     }
 
     await updateDoc(doc(db, "hcc_ai_users", user.uid), dataToUpdate);

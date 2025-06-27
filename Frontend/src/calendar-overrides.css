@@ -5,29 +5,27 @@
   padding: 1rem;
 }
 
-/* Modo oscuro */
 .dark .react-calendar {
-  background-color: #1f2937; /* gray-800 */
+  background-color: #1f2937; 
   color: white;
 }
 
 .dark .react-calendar__tile--active,
 .dark .react-calendar__tile--now {
-  background-color: #4b5563 !important; /* gray-600 */
+  background-color: #4b5563 !important;
   color: white;
 }
 
 .dark .react-calendar__tile:enabled:hover {
-  background-color: #374151 !important; /* gray-700 */
+  background-color: #374151 !important;
 }
 
-/* Highlight clases */
 .highlight-complete {
-  background-color: #10b981 !important; /* emerald-500 */
+  background-color: #10b981 !important;
   color: white !important;
 }
 
 .highlight-reminder {
-  background-color: #f59e0b !important; /* amber-500 */
+  background-color: #f59e0b !important; 
   color: black !important;
 }

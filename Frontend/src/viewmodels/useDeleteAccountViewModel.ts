@@ -1,3 +1,5 @@
+// src/viewmodels/useDeleteAccountViewModel.ts
+
 import { useState } from "react";
 import { getAuth, deleteUser, signInWithEmailAndPassword } from "firebase/auth";
 import { getStorage, ref, listAll, deleteObject } from "firebase/storage";

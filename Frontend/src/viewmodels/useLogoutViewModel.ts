@@ -1,3 +1,5 @@
+// src/viewmodels/useLogoutViewModel.ts
+
 import { useNavigate } from "react-router-dom";
 import { AuthDAO } from "../data/dao/AuthDAO";
 

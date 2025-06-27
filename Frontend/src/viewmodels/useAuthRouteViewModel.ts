@@ -1,3 +1,5 @@
+// src/viewmodels/useAuthRouteViewModel.ts
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AuthDAO } from "../data/dao/AuthDAO";

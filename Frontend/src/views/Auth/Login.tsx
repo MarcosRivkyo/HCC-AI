@@ -1,3 +1,5 @@
+// src/views/Auth/Login.tsx
+
 import { useLoginViewModel } from "../../viewmodels/useLoginViewModel";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -32,15 +34,13 @@ const Login = () => {
 
 return (
   <div className="w-full h-screen flex flex-col md:flex-row">
-    {/* Sección del slider (oculta en pantallas pequeñas) */}
     <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
       <ImageSlider />
     </div>
 
-    {/* Sección del formulario */}
     <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
       <div className="w-full flex flex-col max-w-[450px] mx-auto">
-        {/* Logo y textos */}
+
         <div className="w-full flex flex-col mb-10 text-white">
           <img
             src={logoHCC_AI}
@@ -56,7 +56,7 @@ return (
           </p>
         </div>
 
-        {/* Campos de entrada */}
+
         <div className="w-full flex flex-col mb-6">
           <input
             type="email"
@@ -83,7 +83,7 @@ return (
           </div>
         </div>
 
-        {/* Botón login */}
+
         <div className="w-full flex flex-col mb-4">
           <button
             className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
@@ -94,13 +94,13 @@ return (
           </button>
         </div>
 
-        {/* Mensajes */}
+
         {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
         {successMessage && (
           <div className="text-green-500 mb-4 text-center">{successMessage}</div>
         )}
 
-        {/* Recuperar contraseña */}
+
         {!showResetInput ? (
           <div className="text-center">
             <button
@@ -136,13 +136,13 @@ return (
           </div>
         )}
 
-        {/* Divider */}
+
         <div className="w-full flex items-center justify-center relative py-4">
           <div className="w-full h-[1px] bg-gray-500"></div>
           <p className="text-sm md:text-lg absolute text-gray-500 bg-black px-2">OR</p>
         </div>
 
-        {/* Enlace a registro */}
+
         <div className="w-full flex items-center justify-center mt-10">
           <p className="text-sm font-normal text-gray-400 text-center">
             {t("login.no_account")}

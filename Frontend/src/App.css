@@ -179,12 +179,12 @@
 }
 
 .react-calendar__tile--weekend {
-  background-color: #e53e3e; /* Rojo */
+  background-color: #e53e3e; 
   color: black;
 }
 
 .react-calendar {
-  background-color: #1a202c; /* Fondo oscuro */
+  background-color: #1a202c; 
   color: black;
 }
 
@@ -225,12 +225,12 @@ body.dark-theme {
 }
 
 .react-calendar__tile.highlight-reminder {
-  background: #facc15; /* amarillo */
+  background: #facc15; 
   border-radius: 0.5rem;
 }
 
 .react-calendar__tile.highlight-complete {
-  background: #4ade80; /* verde */
+  background: #4ade80;
   border-radius: 0.5rem;
   color: white;
 }

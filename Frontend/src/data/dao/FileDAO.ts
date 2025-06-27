@@ -219,12 +219,10 @@ export const FileDAO = {
       console.log("Eliminando imagen de Firebase Storage:", imageUrl);
       await deleteObject(storageRef);
 
-      // Eliminar referencia en estudio
       await updateDoc(doc(db, "hcc_ai_studies", studyId), {
         imagenUrl: null,
       });
 
-      // Borrar entrada en hcc_ai_images
       const q = query(
         collection(db, "hcc_ai_images"),
         where("url", "==", imageUrl),

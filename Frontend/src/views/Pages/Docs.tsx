@@ -1,10 +1,12 @@
+// src/views/Pages/Docs.tsx
+
 import React from "react";
 import { FiFileText, FiExternalLink, FiArrowLeft  } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Components/AppFooter";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import usePreventZoom from "../Components/usePreventZoom";
-import { FaServer, FaReact } from "react-icons/fa";
+import { FaServer, FaReact, FaGitlab  } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
@@ -14,7 +16,7 @@ import frenchFlag from "../../assets/images/french_language.jpg";
 import germanFlag from "../../assets/images/german_language.png";
 
 const pdfUrls = [
-  { name: "TFG_Report", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FHCC-AI_ManualDeUsuario.pdf?alt=media&token=0b548417-2aa1-4456-8424-32de08edd448" },
+  { name: "TFG_Report", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FMarcosRivasKyoguro.pdf?alt=media&token=ecd1cfa8-36bc-4c16-a5f3-856709534758" },
   { name: "Annex_I", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20I.%20Plan%20de%20Proyecto%20Software.pdf?alt=media&token=cbffcc6a-41ab-44eb-aa1b-8caeea609ca6" },
   { name: "Annex_II", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20II.%20Especificaci%C3%B3n%20de%20Requisitos%20Software.pdf?alt=media&token=323bbb2e-7c35-4f99-b28c-2be515b48a78" },
   { name: "Annex_III", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=df3178e9-30b6-4b84-a4a5-c944528933e4" },
@@ -35,6 +37,11 @@ const externalLinks = [
     url: "/docs/index.html",
     icon: <FaReact size={22} className="text-cyan-400 " />
   },
+    {
+    name: "Source_Code",
+    url: "https://gitlab.com/HP-SCDS/public/usal-hcc-ai/", 
+    icon: <FaGitlab size={22} className="text-orange-500" />
+  }
 ];
 
 const languages = [

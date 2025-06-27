@@ -1,3 +1,5 @@
+// src/viewmodels/useImageCarouselViewModel.ts
+
 import { useEffect, useState } from "react";
 import { FileDAO } from "../data/dao/FileDAO";
 

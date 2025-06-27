@@ -1,3 +1,5 @@
+// src/views/Pages/MyStudies.tsx
+
 import { useMisEstudios } from "../../viewmodels/useMyStudieViewModel.ts";
 
 import React, { useState, useEffect } from "react";

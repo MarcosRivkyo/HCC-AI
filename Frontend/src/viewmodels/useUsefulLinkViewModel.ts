@@ -1,6 +1,6 @@
-// ViewModel: useUsefulLinksViewModel.ts
+// src/viewmodels/useUsefulLinksViewModel.ts
+
 import { useEffect, useRef, useState } from "react";
-import { doc, getDoc, updateDoc, getFirestore } from "firebase/firestore";
 import { UserDAO } from "../data/dao/UserDAO";
 
 export interface Link {

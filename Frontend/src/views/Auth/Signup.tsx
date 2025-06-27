@@ -1,3 +1,5 @@
+// src/views/Auth/Signup.tsx
+
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -42,12 +44,12 @@ export default function Signup() {
 
   return (
     <div className="w-full h-screen flex flex-col md:flex-row">
-      {/* Slider (oculto en móviles) */}
+
       <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
 
-      {/* Formulario */}
+
       <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
           <div className="w-full flex flex-col mb-10 text-white">

@@ -1,3 +1,5 @@
+// src/viewmodels/useNavbarSecondViewModel.ts
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthDAO } from "../data/dao/AuthDAO";

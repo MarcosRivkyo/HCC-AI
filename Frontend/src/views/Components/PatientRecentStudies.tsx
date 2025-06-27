@@ -1,4 +1,5 @@
-// src/components/EstudiosRecientesPaciente.tsx
+// src/views/Components/EstudiosRecientesPaciente.tsx
+
 import React, { useState, useEffect, useRef } from "react";
 import { FaDownload } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";

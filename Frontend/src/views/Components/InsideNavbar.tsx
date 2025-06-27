@@ -1,3 +1,5 @@
+// src/views/Components/InsideNavbar.tsx
+
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";

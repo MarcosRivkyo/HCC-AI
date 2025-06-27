@@ -1,4 +1,5 @@
-// components/UI/CalendarWithReminders.tsx
+// src/views/Pages/CalendarViewPatient.tsx
+
 import React, { useState } from "react";
 import { useCalendarViewModel } from "../../viewmodels/useCalendarViewModel";
 

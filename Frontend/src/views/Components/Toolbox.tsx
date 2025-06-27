@@ -1,3 +1,5 @@
+// src/views/Components/Toolbox.tsx
+
 import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Image, IText, PencilBrush, FabricImage, Line, Text } from "fabric";
@@ -49,15 +51,15 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
 
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const [history, setHistory] = useState<any[]>([]); // Para guardar el historial de acciones
-  const [historyIndex, setHistoryIndex] = useState<number>(-1); // Para llevar un índice en el historial
+  const [history, setHistory] = useState<any[]>([]); 
+  const [historyIndex, setHistoryIndex] = useState<number>(-1); 
 
-  const [brushType, setBrushType] = useState("pen"); // Estado para el tipo de pincel
+  const [brushType, setBrushType] = useState("pen");
 
   const [isDrawingRect, setIsDrawingRect] = useState(false);
   const [isDrawingCircle, setIsDrawingCircle] = useState(false);
 
-  const [isDrawing, setIsDrawing] = useState(false); // Para saber si estamos dibujando
+  const [isDrawing, setIsDrawing] = useState(false); 
 
   const [isDrawingLine, setIsDrawingLine] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(
@@ -195,45 +197,6 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [historyIndex, history]);
 
-  // useEffect(() => {
-  //   if (!canvas) return;
-
-  //   const loadImage = async () => {
-  //     const imageUrl = ejemplo; // La URL de la imagen que quieras cargar
-  //     const image = await Image.fromURL(imageUrl);
-
-  //     // Escalado proporcional para que quepa dentro de 500x500 sin deformarse
-  //     const maxWidth = 500;
-  //     const maxHeight = 500;
-  //     const scaleX = maxWidth / image.width!;
-  //     const scaleY = maxHeight / image.height!;
-  //     const scale = Math.min(scaleX, scaleY); // Escala uniforme
-
-  //     image.scale(scale);
-  //     image.set({
-  //       left: 100,
-  //       top: 100,
-  //       selectable: false, // Hacemos que la imagen no sea seleccionable
-  //       lockMovementX: true, // Bloqueamos el movimiento en el eje X
-  //       lockMovementY: true, // Bloqueamos el movimiento en el eje Y
-  //       hasControls: false,
-  //       lockRotation: true,
-  //       lockScalingX: true,
-  //       lockScalingY: true,
-  //     });
-
-  //     canvas.add(image);
-  //     canvas.centerObject(image); // Centramos la imagen en el lienzo
-  //     canvas.setActiveObject(image); // Establecemos la imagen como el objeto activo
-  //     saveStateToHistory();
-
-  //   };
-
-  //   loadImage();
-
-  // }, [canvas]); // Solo se ejecuta cuando se monta el componente o se cambia el canvas
-
-  // Función para activar/desactivar el modo de medición
   const toggleLineDrawing = () => {
     setIsDrawingLine(!isDrawingLine);
   };
@@ -499,7 +462,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
           canvas.remove(distanceText);
           distanceText = null;
         }
-        canvas.remove(shape); // la línea
+        canvas.remove(shape); 
         setIsDrawingLine(false);
       }
 
@@ -577,20 +540,10 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
 
         const scaleX = maxWidth / image.width!;
         const scaleY = maxHeight / image.height!;
-        const scale = Math.min(scaleX, scaleY); // Escala uniforme
+        const scale = Math.min(scaleX, scaleY); 
 
         image.scale(scale);
-        // image.set({
-        //   left: 100,
-        //   top: 100,
-        //   selectable: false, // Hacemos que la imagen no sea seleccionable
-        //   lockMovementX: true, // Bloqueamos el movimiento en el eje X
-        //   lockMovementY: true, // Bloqueamos el movimiento en el eje Y
-        //   hasControls: false,
-        //   lockRotation: true,
-        //   lockScalingX: true,
-        //   lockScalingY: true,
-        // });
+
 
         image.set({
           selectable: false,
@@ -604,17 +557,17 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
           hasControls: false,
         });
 
-        image.set("id", "backgroundImage"); // ID custom para identificarla luego
+        image.set("id", "backgroundImage"); 
 
         canvas.add(image);
-        canvas.centerObject(image); // Centramos la imagen en el lienzo
+        canvas.centerObject(image); 
         saveStateToHistory();
         canvas.renderAll();
       }
     };
 
-    reader.readAsDataURL(file); // Leemos la imagen como URL de datos base64
-    e.target.value = ""; // Reseteamos el valor del input para permitir seleccionar la misma imagen varias veces
+    reader.readAsDataURL(file); 
+    e.target.value = ""; 
   };
   const addText = () => {
     if (!canvas) return;
@@ -631,7 +584,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
       left: 100,
       top: 100,
       fontSize: 30,
-      fill: textColor, // ← usar color del estado
+      fill: textColor, 
     });
 
     canvas.add(text);
@@ -661,7 +614,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
     setBrushColor(e.target.value);
 
     if (canvas.isDrawingMode) {
-      canvas.freeDrawingBrush.color = e.target.value; // Actualizamos el color del pincel
+      canvas.freeDrawingBrush.color = e.target.value; 
     }
   };
 
@@ -670,7 +623,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
     setBrushWidth(parseInt(e.target.value, 10));
 
     if (canvas.isDrawingMode) {
-      canvas.freeDrawingBrush.width = parseInt(e.target.value, 10); // Actualizamos la anchura del pincel
+      canvas.freeDrawingBrush.width = parseInt(e.target.value, 10);
     }
   };
 
@@ -788,14 +741,13 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
       canvas.renderAll();
     };
 
-    // Puedes crear un botón fuera o aquí temporalmente:
     const cropBtn = document.createElement("button");
     cropBtn.innerText = "Confirmar recorte";
     cropBtn.onclick = () => {
       confirmCrop();
       cropBtn.remove();
     };
-    document.body.appendChild(cropBtn); // solo para pruebas
+    document.body.appendChild(cropBtn); 
     saveStateToHistory();
   };
 

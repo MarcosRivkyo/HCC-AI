@@ -1,3 +1,5 @@
+// src/viewmodels/useMyStudieViewModel.ts
+
 import { useEffect, useState } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDoc, doc, getFirestore } from "firebase/firestore";

@@ -1,3 +1,5 @@
+// src/views/Pages/DetailedStudy.tsx
+
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -302,8 +304,8 @@ const EstudioDetalle = () => {
                   <span className="text-gray-700 text-lg">
                     {new Date(
                       estudio?.studieDate?.seconds
-                        ? estudio.studieDate.seconds * 1000 // Timestamp
-                        : estudio?.studieDate, // Date o string
+                        ? estudio.studieDate.seconds * 1000 
+                        : estudio?.studieDate, 
                     ).toLocaleString()}
                   </span>
                 )}
@@ -605,7 +607,7 @@ const EstudioDetalle = () => {
                         key={model}
                         onClick={() => {
                           setSelectedSegmentationModel(model);
-                          setSelectedSegmentationSubModel(""); // Reiniciar submodelo
+                          setSelectedSegmentationSubModel(""); 
                         }}
                         className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
                           selectedSegmentationModel === model

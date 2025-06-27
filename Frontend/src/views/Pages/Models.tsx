@@ -1,3 +1,5 @@
+// src/views/Pages/Models.tsx
+
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";

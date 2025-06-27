@@ -1,4 +1,5 @@
-// Cambios en useCalendarViewModel.ts
+// src/viewmodels/useCalendarViewModel.ts
+
 import { useState, useEffect } from "react";
 import { AuthDAO } from "../data/dao/AuthDAO";
 import { UserDAO } from "../data/dao/UserDAO";

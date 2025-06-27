@@ -1,3 +1,5 @@
+// src/views/Components/ImageCarrousel.tsx
+
 import React from "react";
 import Slider from "react-slick";
 import { useNavigate } from "react-router-dom";

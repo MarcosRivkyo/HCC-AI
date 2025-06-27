@@ -1,3 +1,5 @@
+// src/views/Auth/AuthRoute.tsx
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useAuthRouteViewModel } from "../../viewmodels/useAuthRouteViewModel";

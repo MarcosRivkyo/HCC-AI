@@ -1,3 +1,5 @@
+// src/views/Components/UsefulLinks.tsx
+
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FaUpload } from "react-icons/fa";

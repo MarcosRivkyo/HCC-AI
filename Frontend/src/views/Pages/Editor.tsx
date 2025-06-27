@@ -1,3 +1,5 @@
+// src/views/Pages/Editor.tsx
+
 import React, { useRef, useEffect, useState } from "react";
 import Toolbox from "../Components/Toolbox.tsx";
 import EditorCanvas from "../Components/EditorCanvas.tsx";

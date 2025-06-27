@@ -1,3 +1,5 @@
+// src/views/Pages/HomePagePatient.tsx
+
 import { useHomePageViewModel } from "../../viewmodels/useHomePageViewModel.ts";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,5 @@
 // src/viewmodels/useRecentStudiesViewModel.ts
+
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { AuthDAO } from "../data/dao/AuthDAO";

@@ -1,4 +1,5 @@
 // src/viewmodels/useDetailedStudyViewModel.ts
+
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthDAO } from "../data/dao/AuthDAO";
@@ -97,8 +98,8 @@ export const useEstudioDetalleViewModel = () => {
     null,
   );
   const [explicacionGenerada, setExplicacionGenerada] = useState<string>("");
-  const [progress, setProgress] = useState<number>(0); // To show the countdown for tab change
-  const [showModal, setShowModal] = useState<boolean>(false); // To manage modal visibility
+  const [progress, setProgress] = useState<number>(0); 
+  const [showModal, setShowModal] = useState<boolean>(false); 
   const [usarExplicacionIA, setUsarExplicacionIA] = useState(true);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailToSend, setEmailToSend] = useState("");
@@ -106,7 +107,7 @@ export const useEstudioDetalleViewModel = () => {
   const [doctorsList, setDoctorsList] = useState<any[]>([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState("");
 
-  const [fileName, setFileName] = useState<string>(""); // si quieres usarlo como estado
+  const [fileName, setFileName] = useState<string>(""); 
   const isPatient = userData?.rol === "Paciente";
   const chartRef = useRef(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -312,11 +313,9 @@ export const useEstudioDetalleViewModel = () => {
       cursorX += textWidth;
     };
 
-    // Procesar negrita primero
     const parts = line.split(boldRegex);
     for (let i = 0; i < parts.length; i++) {
       if (i % 2 === 0) {
-        // texto normal o con cursiva
         const inner = parts[i].split(italicRegex);
         for (let j = 0; j < inner.length; j++) {
           if (j % 2 === 0) renderStyled(inner[j], "normal");
@@ -459,13 +458,13 @@ export const useEstudioDetalleViewModel = () => {
     if (estudio.imagenUrl || segmentationUrl) {
       const imgSize = 67.7;
       const spacing = 10;
-      const blockHeight = imgSize + 35; // altura extendida para títulos separados
+      const blockHeight = imgSize + 35; 
       y = drawSectionBox(y, blockHeight, "Imágenes del Estudio");
 
       const x1 = (pageWidth - imgSize * 2 - spacing) / 2;
       const x2 = x1 + imgSize + spacing;
 
-      const yTitles = y + 10; // espacio visual entre "Imágenes del Estudio" y títulos de imagen
+      const yTitles = y + 10; 
       const yImg = yTitles + 6;
 
       // Subtítulos centrados sobre las imágenes
@@ -513,7 +512,7 @@ export const useEstudioDetalleViewModel = () => {
       let y = 20;
       let startY = y;
       const textWidth = pageWidth - 2 * margin;
-      const lineHeight = 5; // más compacto
+      const lineHeight = 5;
       const fontSize = 9;
 
       // Preparar clase predicha
@@ -580,7 +579,7 @@ export const useEstudioDetalleViewModel = () => {
       const logoWidth = 12;
       const logoHeight = 6;
       const centerX = (pageWidth - logoWidth) / 2;
-      const logoY = 286; // un poco por encima del borde inferior
+      const logoY = 286;
 
       try {
         const logoBase64 = await getImageAsBase64(logoHCC_AI);
@@ -650,7 +649,7 @@ export const useEstudioDetalleViewModel = () => {
       console.error("Error al enviar informe por correo:", error);
       toast.error("Ocurrió un error al enviar el correo.");
     } finally {
-      setIsSendingEmail(false); // 🔁 Restablecer botón
+      setIsSendingEmail(false); 
     }
   };
 

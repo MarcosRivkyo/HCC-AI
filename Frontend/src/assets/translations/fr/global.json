@@ -500,7 +500,8 @@
     "Annex_VI": "Annexe VI – Manuel de l'Utilisateur",
     "Annex_VII": "Annexe VII – Développement de l'Intelligence Artificielle",
     "Backend_Docs": "Documentation Technique du Backend",
-    "Frontend_Docs": "Documentation Technique du Frontend"
+    "Frontend_Docs": "Documentation Technique du Frontend",
+    "Source_Code": "Dépôt avec le code source" 
   }
 
 

@@ -1,3 +1,5 @@
+// src/views/Components/DeleteAccountButton.tsx
+
 import { useDeleteAccountViewModel } from "../../viewmodels/useDeleteAccountViewModel";
 
 import React, { useState } from "react";

@@ -1,3 +1,5 @@
+// src/views/Auth/Logout.tsx
+
 import { useLogoutViewModel } from "../../viewmodels/useLogoutViewModel";
 import { useTranslation } from "react-i18next";
 import { FaSignOutAlt } from "react-icons/fa";

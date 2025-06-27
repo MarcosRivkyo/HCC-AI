@@ -1,3 +1,5 @@
+// src/views/Components/RecentStudiesCompact.tsx
+
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRecentStudiesViewModel } from "../../viewmodels/useRecentStudiesViewModel";

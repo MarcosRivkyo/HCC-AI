@@ -1,3 +1,5 @@
+// src/views/Components/SettingsModal.tsx
+
 import { useSettingsViewModel } from "../../viewmodels/useSettingsViewModel.ts";
 
 import React from "react";

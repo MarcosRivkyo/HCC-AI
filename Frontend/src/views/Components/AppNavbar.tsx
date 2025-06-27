@@ -1,3 +1,5 @@
+// src/views/Components/AppNavbar.tsx
+
 import { useTranslation } from "react-i18next";
 import { useAppNavbarViewModel } from "../../viewmodels/useAppNavbarViewModel";
 
@@ -55,7 +57,7 @@ const Navbar: React.FC = () => {
             </li>
           ))}
 
-          {/* DOCUMENTACIÓN como botón de navegación */}
+          {/* DOCUMENTACIÓN */}
           <li>
             <button
               onClick={() => navigate("/documentation")}

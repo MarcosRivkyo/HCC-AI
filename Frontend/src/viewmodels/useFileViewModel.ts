@@ -1,7 +1,4 @@
-// Correcciones realizadas:
-// - Se elimina el uso directo de Firestore en el ViewModel.
-// - Se usan las funciones getImageInfoByUrl y getDocumentInfoByUrl del DAO.
-// - Se elimina la función sin implementar setImageInfo.
+// src/viewmodels/useFilesViewModel.ts
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

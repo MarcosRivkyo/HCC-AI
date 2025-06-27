@@ -509,7 +509,8 @@
         "Annex_VI": "Anhang VI – Benutzerhandbuch",
         "Annex_VII": "Anhang VII – Entwicklung der Künstlichen Intelligenz",
         "Backend_Docs": "Technische Dokumentation des Backends",
-        "Frontend_Docs": "Technische Dokumentation des Frontends"
+        "Frontend_Docs": "Technische Dokumentation des Frontends",
+        "Source_Code": "Repository mit dem Quellcode"
     }
 
 

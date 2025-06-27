@@ -1,3 +1,5 @@
+// src/views/Components/ImageSlider2.tsx
+
 import { useState, useEffect } from "react";
 import aiHealth from "../../assets/images/hcc_img_liver.png";
 import aiHealth3 from "../../assets/images/hcc_img_2.png";

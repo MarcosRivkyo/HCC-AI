@@ -1,3 +1,5 @@
+// src/views/Pages/HomePage.tsx
+
 import { useHomePageViewModel } from "../../viewmodels/useHomePageViewModel.ts";
 
 import Assistant from "./AssistantView.tsx";

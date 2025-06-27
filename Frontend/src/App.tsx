@@ -1,3 +1,6 @@
+// src/App.tsx
+
+
 import React from "react";
 import "./index.css";
 
@@ -145,12 +148,10 @@ const Home: React.FC = () => {
         id="home"
         className="text-center text-2xl pt-16 p-10 relative h-screen"
       >
-        {/* Fondo de imágenes */}
         <div className="absolute inset-0 z-10">
           <ImageSlider />
         </div>
 
-        {/* Texto central (superior) */}
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black bg-opacity-50">
           <div className="bg-black bg-opacity-50 p-6 rounded-lg">
             <h1 className="text-[100px] font-bold mb-6">
@@ -163,7 +164,6 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* Logos debajo del texto */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center space-x-8">
           <a href="https://www.usal.es" target="_blank" rel="noopener noreferrer">
             <img src={logoUSALsinBG} alt="Logo USAL" className="w-64 cursor-pointer" />
@@ -275,9 +275,7 @@ const Services: React.FC = () => {
         {t("sections.services_description")}
       </p>
 
-      {/* Contenedor de Servicios */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-12 max-w-6xl mx-auto">
-        {/* Servicio 1 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaMicroscope className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -288,7 +286,6 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Servicio 2 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaBrain className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -299,7 +296,6 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Servicio 3 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaHospital className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -310,7 +306,6 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Servicio 4 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaLaptopMedical className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -321,7 +316,6 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Servicio 5 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaChartLine className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -332,7 +326,6 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Servicio 6 */}
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
           <FaSearch className="text-blue-400 text-5xl mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -364,7 +357,6 @@ const Technology: React.FC = () => {
         {t("sections.ai_description")}
       </p>
 
-      {/* Sección de tecnologías en tarjetas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg hover:scale-105 transition duration-300">
           <div className="flex justify-center items-center space-x-6 mb-4">
@@ -535,7 +527,6 @@ const Contact: React.FC = () => {
         </button>
       </form>
 
-      {/* Mensaje de respuesta */}
       {responseMessage && (
         <p className="mt-6 text-green-400">{responseMessage}</p>
       )}

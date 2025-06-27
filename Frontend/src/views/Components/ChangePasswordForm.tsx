@@ -1,3 +1,5 @@
+// src/views/Components/ChangePasswordForm.tsx
+
 import React from "react";
 import { useChangePasswordViewModel } from "../../viewmodels/useChangePasswordFormViewModel";
 import { useTranslation } from "react-i18next";

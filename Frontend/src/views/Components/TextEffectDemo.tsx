@@ -1,3 +1,5 @@
+// src/views/Components/TextEffectDemo.tsx
+
 "use client";
 import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";

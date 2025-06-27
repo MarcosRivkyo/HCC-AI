@@ -1,3 +1,5 @@
+// src/views/Pages/AssistantView.tsx
+
 import { useAssistantViewModel } from "../../viewmodels/useAssistantViewModel";
 import { useTranslation } from "react-i18next";
 

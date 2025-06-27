@@ -1,3 +1,5 @@
+// src/viewmodels/useSignupViewModel.ts
+
 import { useState } from "react";
 import { AuthDAO } from "../data/dao/AuthDAO";
 import { UserDAO } from "../data/dao/UserDAO";

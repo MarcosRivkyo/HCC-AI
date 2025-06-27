@@ -1,3 +1,5 @@
+// src/views/Components/Footer.tsx
+
 import React from "react";
 
 import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";

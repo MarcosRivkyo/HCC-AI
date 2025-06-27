@@ -1,3 +1,5 @@
+// src/viewmodels/useAssistantViewModel.ts
+
 import { useEffect, useRef, useState } from "react";
 import { marked } from "marked";
 import { ChatMessage } from "../models/Assistant";

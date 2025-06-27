@@ -1,3 +1,5 @@
+// src/views/Components/Footer.tsx
+
 import { FaLinkedin, FaEnvelope, FaGithub } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 

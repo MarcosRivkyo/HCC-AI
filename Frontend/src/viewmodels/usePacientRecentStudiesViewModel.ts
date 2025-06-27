@@ -1,10 +1,11 @@
+// src/viewmodels/useEstudiosRecientesPacienteViewModel.ts
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthDAO } from "../data/dao/AuthDAO";
 import { StudyDAO } from "../data/dao/StudyDAO";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { app } from "../config/firebase";
 
 export const useEstudiosRecientesPacienteViewModel = () => {
   const [estudios, setEstudios] = useState<any[]>([]);

@@ -1,3 +1,5 @@
+// src/views/Pages/FileView.tsx
+
 import { useFilesViewModel } from "../../viewmodels/useFileViewModel.ts";
 import React, { useEffect } from "react";
 
