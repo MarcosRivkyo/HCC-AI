@@ -1,7 +1,7 @@
 import {
   collection,
   deleteDoc,
-  doc, 
+  doc,
   getDoc,
   getDocs,
   serverTimestamp,
@@ -13,8 +13,6 @@ import { updateProfile, User } from "firebase/auth";
 import { db, storage } from "../../config/firebase";
 
 export const UserDAO = {
-
-
   async getAll(): Promise<any[]> {
     try {
       const querySnapshot = await getDocs(collection(db, "hcc_ai_users"));
@@ -44,7 +42,7 @@ export const UserDAO = {
       throw error;
     }
   },
-  
+
   async getUserRole(uid: string): Promise<string | null> {
     const docRef = doc(db, "hcc_ai_users", uid);
     const docSnap = await getDoc(docRef);
@@ -78,9 +76,9 @@ export const UserDAO = {
 
     const dataToUpdate = { ...data };
     if (photoURL === undefined) {
-      delete dataToUpdate.profilePicture;  
+      delete dataToUpdate.profilePicture;
     } else {
-      dataToUpdate.profilePicture = photoURL; 
+      dataToUpdate.profilePicture = photoURL;
     }
 
     await updateDoc(doc(db, "hcc_ai_users", user.uid), dataToUpdate);

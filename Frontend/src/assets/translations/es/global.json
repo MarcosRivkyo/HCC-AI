@@ -24,13 +24,11 @@
     "calendar": "CALENDARIO",
     "documentation": "DOCUMENTACIÓN"
   },
-  
 
   "main": {
     "slogan": "IA aplicada al diagnóstico del carcinoma hepatocelular",
     "description": "El carcinoma hepatocelular (HCC) es una de las principales causas de mortalidad por cáncer a nivel mundial. Este Trabajo de Fin de Grado presenta el desarrollo de una herramienta basada en inteligencia artificial para apoyar el diagnóstico temprano del HCC mediante ecografías hepáticas, buscando mejorar la práctica clínica con tecnología accesible y eficaz."
   },
-
 
   "sections": {
     "objectives": "Objetivos",
@@ -144,7 +142,6 @@
     "gemini_description": "Modelo generativo, optimizado mediante técnicas de prompt engineering, adaptado a la asistencia en la salud hepática."
   },
 
-
   "files": {
     "title": "Archivos",
     "no_reports": "No hay informes disponibles.",
@@ -183,7 +180,6 @@
       "informes": "Informes"
     }
   },
-
 
   "dashboard": {
     "create_studie": "Crear Estudio",
@@ -240,71 +236,93 @@
   },
 
   "my_studies": {
-      "title": "Sus Estudios",
-      "select_patient": "-- Seleccionar Paciente --",
-      "create_study": "Crear Estudio",
-      "search_by_name": "Buscar por nombre",
-      "filter_all": "Todos",
-      "status_in_progress": "En Progreso",
-      "status_done": "Finalizado",
-      "sort_newest": "Más recientes",
-      "sort_oldest": "Más antiguos",
-      "no_studies": "No hay estudios",
-      "new_study": "Nuevo Estudio",
-      "study_name": "Nombre del estudio",
-      "patient_name": "Nombre del paciente",
-      "clinical_description": "Descripción clínica",
-      "no_date": "Sin fecha",
-      "delete_title": "¿Eliminar este estudio?",
-      "delete_warning": "Esta acción no se puede deshacer.",
-      "filter_mine": "Propios",
-      "filter_shared": "Compartidos",
-      "id_study": "ID del estudio",
-      "delete_success": "Estudio eliminado con éxito",
-      "doctor_name": "Médico",
-      "upload_image": "Subiendo imagen...",
-      "drag_or_drop": "Arrastra o haz clic para subir",
-      "start_analysis": "Iniciar Análisis",
-      "choose_parameters": "Elige los parámetros del análisis",
-      "classification_models": "Modelo de Clasificación",
-      "hcc_ai_description": "Modelo entrenado específicamente para clasificar etapas de fibrosis hepática HCC.",
-      "metavir_ai_description": "Modelo basado en la escala METAVIR (F0 a F4) para análisis de fibrosis hepática.",
-      "metavir_submodels": "Submodelo de METAVIR-AI",
-      "choose_submodel": "Selecciona un submodelo",
-      "segmentation_models": "Modelo de Segmentación",
-      "segmentation_submodels": "Submodelo de Segmentación",
-      "yolob8": "YOLOv8",
-      "yolov11": "YOLOv11",
-      "minimum_threshold": "Umbral mínimo de confianza",
-      "threshold_explanation": "Solo se mostrarán segmentaciones con confianza igual osuperior.",
-      "generate_ai_explanation": "Generar una explicación médica automática basada en losresultados",
-      "start_prediction": "Iniciar Predicción",
-      "used_parameters": "Parámetros Utilizados",
-      "tags_list": "Leyenda de Etiquetas",
-      "segmented_structures": {
-          "HCC": "Carcinoma hepatocelular",
-          "HV": "Vena hepática",
-          "IVC": "Vena cava inferior",
-          "K": "Riñón",
-          "K-C": "Corteza renal",
-          "K-M": "Médula renal",
-          "TRANS": "Corte transversal",
-          "LVR": "Hígado",
-          "PV": "Vena porta",
-          "SAG": "Corte sagital",
-          "SAG K": "Corte sagital renal",
-          "LT SAG": "Lóbulo izquierdo (sagital)",
-          "RT TRANS": "Lóbulo derecho (transversal)"
-      },
-      "predicted_class": "Clase Predicha",
-      "class_probabilities": "Probabilidades de cada clase",
-      "see_explanation":"Ver Explicación de los Resultados",
-      "medical_explanation": "Explicación Médica realizada por la IA",
-      "processing_image": "Procesando imagen con IA...",
-      "may_take_time": "Esto puede tardar unos segundos. Por favor, espera."
-
+    "title": "Sus Estudios",
+    "select_patient": "-- Seleccionar Paciente --",
+    "create_study": "Crear Estudio",
+    "search_by_name": "Buscar por nombre",
+    "filter_all": "Todos",
+    "status_in_progress": "En Progreso",
+    "status_done": "Finalizado",
+    "sort_newest": "Más recientes",
+    "sort_oldest": "Más antiguos",
+    "no_studies": "No hay estudios",
+    "no_pdf": "No se encontró el informe PDF para este estudio.",
+    "new_study": "Nuevo Estudio",
+    "study_name": "Nombre del estudio",
+    "patient_name": "Nombre del paciente",
+    "clinical_description": "Descripción clínica",
+    "no_date": "Sin fecha",
+    "delete_title": "¿Eliminar este estudio?",
+    "delete_warning": "Esta acción no se puede deshacer.",
+    "filter_mine": "Propios",
+    "filter_shared": "Compartidos",
+    "id_study": "ID del estudio",
+    "delete_success": "Estudio eliminado con éxito",
+    "doctor_name": "Médico",
+    "upload_image": "Subiendo imagen...",
+    "drag_or_drop": "Arrastra o haz clic para subir",
+    "start_analysis": "Iniciar Análisis",
+    "choose_parameters": "Elige los parámetros del análisis",
+    "classification_models": "Modelo de Clasificación",
+    "hcc_ai_description": "Modelo entrenado específicamente para clasificar etapas de fibrosis hepática HCC.",
+    "metavir_ai_description": "Modelo basado en la escala METAVIR (F0 a F4) para análisis de fibrosis hepática.",
+    "metavir_submodels": "Submodelo de METAVIR-AI",
+    "choose_submodel": "Selecciona un submodelo",
+    "segmentation_models": "Modelo de Segmentación",
+    "segmentation_submodels": "Submodelo de Segmentación",
+    "yolob8": "YOLOv8",
+    "yolov11": "YOLOv11",
+    "minimum_threshold": "Umbral mínimo de confianza",
+    "threshold_explanation": "Solo se mostrarán segmentaciones con confianza igual osuperior.",
+    "generate_ai_explanation": "Generar una explicación médica automática basada en losresultados",
+    "start_prediction": "Iniciar Predicción",
+    "used_parameters": "Parámetros Utilizados",
+    "tags_list": "Leyenda de Etiquetas",
+    "segmented_structures": {
+      "HCC": "Carcinoma hepatocelular",
+      "HV": "Vena hepática",
+      "IVC": "Vena cava inferior",
+      "K": "Riñón",
+      "K-C": "Corteza renal",
+      "K-M": "Médula renal",
+      "TRANS": "Corte transversal",
+      "LVR": "Hígado",
+      "PV": "Vena porta",
+      "SAG": "Corte sagital",
+      "SAG K": "Corte sagital renal",
+      "LT SAG": "Lóbulo izquierdo (sagital)",
+      "RT TRANS": "Lóbulo derecho (transversal)"
     },
-  
+    "predicted_class": "Clase Predicha",
+    "class_probabilities": "Probabilidades de cada clase",
+    "see_explanation": "Ver Explicación de los Resultados",
+    "medical_explanation": "Explicación Médica realizada por la IA",
+    "processing_image": "Procesando imagen con IA...",
+    "may_take_time": "Esto puede tardar unos segundos. Por favor, espera.",
+    "probabilities_graph": "Gráfico de Probabilidades",
+    "download_graph": "Descargar Gráfico",
+    "close_graph": "Cerrar Gráfico",
+    "sano": "El hígado tiene una apariencia normal sin signos de daño estructural ni acumulación de grasa. Función hepática conservada. Riesgo bajo.",
+    "esteatosis": "Se observa acumulación de grasa en el hígado (hígado graso), común en personas con obesidad, diabetes o consumo elevado de alcohol. Aunque puede ser reversible, puede evolucionar si no se trata. Riesgo medio.",
+    "cirrosis": "El hígado muestra cicatrices y nódulos regenerativos debido a daño crónico. Esto limita su función y puede conllevar complicaciones como hipertensión portal o insuficiencia hepática. Riesgo alto.",
+    "hepatocarcinoma": "Se detecta una masa compatible con un tumor maligno primario del hígado. Puede haber sospecha fuerte de hepatocarcinoma (HCC). Requiere evaluación inmediata por un especialista. Riesgo muy alto.",
+    "f0": "No hay signos de fibrosis. El tejido hepático se conserva íntegro. Riesgo bajo.",
+    "f1": "Fibrosis leve en áreas portales, sin afectación de la arquitectura hepática general. Puede ser reversible. Riesgo bajo-medio.",
+    "f2": "Fibrosis moderada con tabiques entre áreas portales. Señal de progresión. Puede evolucionar si no se trata. Riesgo medio.",
+    "f3": "Fibrosis avanzada con puentes fibrosos extensos. El hígado comienza a perder funcionalidad. Riesgo alto.",
+    "f4": "Cirrosis: distorsión severa del tejido hepático y pérdida significativa de la función. Puede conllevar a HCC o insuficiencia hepática. Riesgo muy alto.",
+
+    "send_email_explanation": "Enviar informe por correo",
+    "email_placeholder": "Correo del destinatario:",
+    "cancel_email": "Cancelar envío",
+    "send_email": "Enviar Informe",
+    "share_study": "Compartir estudio con otro doctor",
+    "select_doctor": "Selecciona un doctor: ",
+    "select": "-- Seleccionar --",
+    "cancel_share": "Cancelar",
+    "share_confirm": "Compartir"
+  },
+
   "pagination": {
     "page": "Página",
     "of": "de"
@@ -314,7 +332,7 @@
     "title": "Asistente HCC-AI",
     "send_query": "Escribe tu pregunta...",
     "send_button": "Preguntar"
-  },  
+  },
 
   "editor": {
     "title": "Editor de Imágenes",
@@ -328,7 +346,11 @@
     "image_uploaded": "Imagen subida con éxito.",
     "image_analysis_in_progress": "Análisis de la imagen en progreso...",
     "image_analysis_completed": "Análisis de la imagen completado.",
-    "image_analysis_failed": "Error en el análisis de la imagen."
+    "image_analysis_failed": "Error en el análisis de la imagen.",
+    "what_to_do": "¿Qué deseas hacer?",
+    "image_anonymized": "Imagen anonimizada con éxito.",
+    "download_image": "Descargar",
+    "edit_image": "Editar"
   },
 
   "profile": {
@@ -341,7 +363,13 @@
     "add_reminder_for": "Añadir Recordatorio",
     "reminders": "Recordatorios",
     "add": "Añadir",
-    "reminder_placeholder": "Escribe el recordatorio"
+    "reminder_placeholder": "Escribe el recordatorio",
+    "calendar_leyend": "Leyenda del calendario",
+    "days_with_tasks": "Días con tareas pendientes",
+    "all_tasks_completed": "Días con todas las tareas completadas",
+    "daily_email_info": "Cada día a las 7:00 AM se envía por correo una lista con las tareas pendientes del día. Para desactivar esta función, Configuración > Preferencias > Desctivar recepción diaria.",
+    "enable_daily_reminder": "Activar envío diario de recordatorios por correo",
+    "disable_daily_reminder": "Desactivar envío diario de recordatorios por correo"
   },
 
   "actions": {
@@ -358,8 +386,7 @@
     "next": "Siguiente"
   },
 
-  "settings":{
-    
+  "settings": {
     "title": "Configuración",
     "sections": {
       "account": "Cuenta",
@@ -391,7 +418,7 @@
       "confirm_word": "borrar",
       "confirm_error": "Por favor, escribe correctamente para confirmar.",
       "deleting": "Eliminando..."
-    }, 
+    },
     "profile": {
       "username": "Nombre de Usuario",
       "first_name": "Nombre",
@@ -416,7 +443,7 @@
       "active": "Activado",
       "desactive": "Desactivado",
       "reset": "Restaurar Preferencias",
-      "dark" : "Oscuro",
+      "dark": "Oscuro",
       "light": "Claro"
     },
     "help": {
@@ -434,9 +461,6 @@
       "answer2": "Ve a Configuración > Cuenta > Modificar Contraseña.",
       "answer3": "Una vez que el análisis finaliza, verás la imagen segmentada y los resultados en la vista del estudio.",
       "answer4": "Sí. Una vez generado, haz clic en Descargar Informe en el menú del estudio. Esto te abrirá el informe en una nueva pestaña, donde podrás descargarlo, modificarlo ..."
-      
-
-      
     },
     "admin": {
       "title": "Panel de Administración",
@@ -451,77 +475,90 @@
       "rol": "Puesto"
     },
 
-
-
     "common": {
       "save_changes": "Guardar Cambios",
-      "change_passwd": "Formulario para cambiar la contraseña:"
+      "change_passwd": "Formulario para cambiar la contraseña:",
+      "saving": "Guardando cambios...",
+      "changes_saved": "Cambios guardados con éxito."
     }
   },
 
-    "login":{
-      "login_text": "Iniciar Sesión",
-      "welcome_text": "¡Hola de nuevo! Introduce tus datos para entrar.",
-      "email_placeholder": "Email",
-      "passwd_placeholder": "Contraseña",
-      "forgot_passwd": "¿Olvidaste tu contraseña?",
-      "no_account": "¿No tienes cuenta?",
-      "register": "Regístrate",
-      "error_send_email": "Enviar correo de recuperación",
-      "error_remake": "Cancelar recuperación"
+  "login": {
+    "login_text": "Iniciar Sesión",
+    "welcome_text": "¡Hola de nuevo! Introduce tus datos para entrar.",
+    "email_placeholder": "Email",
+    "passwd_placeholder": "Contraseña",
+    "forgot_passwd": "¿Olvidaste tu contraseña?",
+    "no_account": "¿No tienes cuenta?",
+    "register": "Regístrate",
+    "error_send_email": "Enviar correo de recuperación",
+    "error_remake": "Cancelar recuperación"
+  },
 
-    },
-
-    "signup": {
-      "title": "Registrarse",
-      "subtitle": "¡Bienvenido! Introduce tus datos para registrarte.",
-      "username": "Nombre de Usuario",
-      "firstname": "Nombre",
-      "lastname": "Apellidos",
-      "email": "Email",
-      "password": "Contraseña",
-      "confirm_password": "Repetir Contraseña",
-      "access_code": "Código de acceso",
-      "phone": "Teléfono",
-      "button": "Registrarse",
-      "or": "O",
-      "have_account": "¿Ya tienes cuenta?",
-      "login_link": "Inicia Sesión",
-      "role":{
-        "doctor": "Médico",
-        "patient": "Paciente",
-        "admin": "Administrador"
-      }
-    },
-
-    "roles": {
-      "Paciente": "Paciente",
-      "Médico": "Médico",
-      "Administrador": "Administrador",
-      "registeredAs": "Registrado como:",
-      "fullName": "Nombre:",
-      "nameUnavailable": "Nombre no disponible"
-    },
-    "warning":{
-      "pc_optimitation": "⚠️ Esta aplicación está optimizada para pantallas de escritorio. Puede que algunas interfaces se solapen en dispositivos móviles. Para una mejor experiencia, acceda desde un PC o un portátil."
-    }, 
-
-    "documentation":{
-       "documentation": "Documentación",
-        "go_back": "Volver al inicio",
-        "view_doc": "Ver documento",
-        "TFG_Report": "Memoria del TFG",
-        "Annex_I": "Anexo I – Plan de Proyecto Software",
-        "Annex_II": "Anexo II – Especificación de Requisitos Software",
-        "Annex_III": "Anexo III – Análisis del Sistema Software",
-        "Annex_IV": "Anexo IV – Diseño del Sistema Software",
-        "Annex_V": "Anexo V – Documentación del Código Fuente",
-        "Annex_VI": "Anexo VI – Manual del Usuario",
-        "Annex_VII": "Anexo VII – Desarrollo de la Inteligencia Artificial",
-        "Backend_Docs": "Documentación Técnica del Backend",
-        "Frontend_Docs": "Documentación Técnica del Frontend",
-        "Source_Code": "Repositorio con el Código Fuente"
+  "signup": {
+    "title": "Registrarse",
+    "subtitle": "¡Bienvenido! Introduce tus datos para registrarte.",
+    "username": "Nombre de Usuario",
+    "firstname": "Nombre",
+    "lastname": "Apellidos",
+    "email": "Email",
+    "password": "Contraseña",
+    "confirm_password": "Repetir Contraseña",
+    "access_code": "Código de acceso",
+    "phone": "Teléfono",
+    "button": "Registrarse",
+    "or": "O",
+    "have_account": "¿Ya tienes cuenta?",
+    "login_link": "Inicia Sesión",
+    "role": {
+      "doctor": "Médico",
+      "patient": "Paciente",
+      "admin": "Administrador"
     }
+  },
 
+  "roles": {
+    "Paciente": "Paciente",
+    "Médico": "Médico",
+    "Administrador": "Administrador",
+    "registeredAs": "Registrado como:",
+    "fullName": "Nombre:",
+    "nameUnavailable": "Nombre no disponible"
+  },
+  "warning": {
+    "pc_optimitation": "⚠️ Esta aplicación está optimizada para pantallas de escritorio. Puede que algunas interfaces se solapen en dispositivos móviles. Para una mejor experiencia, acceda desde un PC o un portátil."
+  },
 
+  "documentation": {
+    "documentation": "Documentación",
+    "go_back": "Volver al inicio",
+    "view_doc": "Ver documento",
+    "TFG_Report": "Memoria del TFG",
+    "Annex_I": "Anexo I – Plan de Proyecto Software",
+    "Annex_II": "Anexo II – Especificación de Requisitos Software",
+    "Annex_III": "Anexo III – Análisis del Sistema Software",
+    "Annex_IV": "Anexo IV – Diseño del Sistema Software",
+    "Annex_V": "Anexo V – Documentación del Código Fuente",
+    "Annex_VI": "Anexo VI – Manual del Usuario",
+    "Annex_VII": "Anexo VII – Desarrollo de la Inteligencia Artificial",
+    "Backend_Docs": "Documentación Técnica del Backend",
+    "Frontend_Docs": "Documentación Técnica del Frontend",
+    "Source_Code": "Repositorio con el Código Fuente"
+  },
+
+  "toast": {
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información",
+    "image_uploaded": "Imagen cargada correctamente.",
+    "image_anonymized": "Imagen anonimizada correctamente.",
+    "image_downloaded": "Imagen descargada correctamente.",
+    "image_editing": "Editando imagen...",
+    "image_analysis_failed": "El análisis de la imagen falló. Por favor, inténtalo de nuevo.",
+    "study_created": "Estudio creado correctamente.",
+    "study_deleted": "Estudio eliminado correctamente.",
+    "study_updated": "Estudio actualizado correctamente.",
+    "study_not_found": "Estudio no encontrado."
+  }
 }

@@ -4,7 +4,6 @@
     "copyright": "HCC-AI. Entwickelt von Marcos Rivas Kyoguro."
   },
 
-
   "navbar": {
     "home": "STARTSEITE",
     "objective": "ZIELE",
@@ -26,13 +25,10 @@
     "documentation": "DOKUMENTATION"
   },
 
-
-
   "main": {
     "slogan": "KI zur Diagnose von hepatozellulärem Karzinom",
     "description": "Das hepatozelluläre Karzinom (HCC) ist weltweit eine der Hauptursachen für krebsbedingte Todesfälle. Diese Abschlussarbeit entwickelt ein KI-basiertes Werkzeug zur Früherkennung von HCC mittels Leberultraschall und zielt darauf ab, die klinische Praxis durch zugängliche und effektive Technologie zu verbessern."
   },
-
 
   "sections": {
     "objectives": "Ziele",
@@ -87,16 +83,15 @@
     "submiting": "Nachricht wird gesendet ..."
   },
 
-
-    "models": {
+  "models": {
     "title": "Verfügbare KI-Modelle",
     "classification": "Klassifikation",
     "segmentation": "Segmentierung",
     "generative": "Generativ",
     "types": {
-        "classification": "Klassifikation",
-        "segmentation": "Segmentierung",
-        "generative": "Generativ"
+      "classification": "Klassifikation",
+      "segmentation": "Segmentierung",
+      "generative": "Generativ"
     },
     "accuracy": "Genauigkeit",
     "trained_on": "Trainiert am",
@@ -109,112 +104,110 @@
     "provider": "Anbieter",
     "metavir_title": "METAVIR-Skala (F0 - F4):",
     "metavir": {
-        "f0": "Keine Fibrose",
-        "f1": "Portale Fibrose ohne Septen",
-        "f2": "Fibrose mit wenigen Septen",
-        "f3": "Viele Septen ohne Zirrhose",
-        "f4": "Zirrhose"
+      "f0": "Keine Fibrose",
+      "f1": "Portale Fibrose ohne Septen",
+      "f2": "Fibrose mit wenigen Septen",
+      "f3": "Viele Septen ohne Zirrhose",
+      "f4": "Zirrhose"
     },
     "submodels": {
-        "title": "Submodelle",
-        "resnet": "Extraktion tiefer Merkmale",
-        "vgg": "Erkennung fibröser Muster"
+      "title": "Submodelle",
+      "resnet": "Extraktion tiefer Merkmale",
+      "vgg": "Erkennung fibröser Muster"
     },
     "hcc_ai_description": "Klassifikationsmodell zur Analyse von Ultraschallbildern zur Vorhersage des Leberzustands: gesunde Leber, Steatose, Zirrhose oder hepatozelluläres Karzinom (HCC).",
     "metavir_ai_description": "Klassifiziert Leberultraschallbilder gemäß der METAVIR-Skala (F0 bis F4), die den Fibrosegrad der Leber bewertet.",
     "segmentator_ai_description": "Lebersegmentierung mit YOLO-Technologie. Erkennt Strukturen wie Leber, Gefäße, Nieren und Läsionen (HCC).",
     "segmented_structures_title": "Segmentierte Strukturen:",
     "segmented_structures": {
-        "HCC": "Hepatozelluläres Karzinom",
-        "HV": "Lebervene",
-        "IVC": "Vena cava inferior",
-        "K": "Niere",
-        "K-C": "Nierenrinde",
-        "K-M": "Nierenmark",
-        "TRANS": "Querschnitt",
-        "LVR": "Leber",
-        "PV": "Pfortader",
-        "SAG": "Sagittalschnitt",
-        "SAG K": "Sagittalschnitt Niere",
-        "LT SAG": "Linker Lappen (sagittal)",
-        "RT TRANS": "Rechter Lappen (transversal)"
+      "HCC": "Hepatozelluläres Karzinom",
+      "HV": "Lebervene",
+      "IVC": "Vena cava inferior",
+      "K": "Niere",
+      "K-C": "Nierenrinde",
+      "K-M": "Nierenmark",
+      "TRANS": "Querschnitt",
+      "LVR": "Leber",
+      "PV": "Pfortader",
+      "SAG": "Sagittalschnitt",
+      "SAG K": "Sagittalschnitt Niere",
+      "LT SAG": "Linker Lappen (sagittal)",
+      "RT TRANS": "Rechter Lappen (transversal)"
     },
     "used_submodels_title": "Verwendete Submodelle:",
     "used_submodels": {
-        "YOLOv8": "Grundlegende anatomische Segmentierung",
-        "YOLOv11": "Erweiterte Optimierung für Gefäß- und Tumorstrukturen"
+      "YOLOv8": "Grundlegende anatomische Segmentierung",
+      "YOLOv11": "Erweiterte Optimierung für Gefäß- und Tumorstrukturen"
     },
     "gemini_description": "Generatives Modell, optimiert mit Prompt-Engineering-Techniken, angepasst zur Unterstützung der Lebergesundheit."
+  },
+  "files": {
+    "title": "Dateien",
+    "no_reports": "Keine Berichte verfügbar.",
+    "no_images": "Keine Bilder verfügbar.",
+    "view": "Ansehen",
+    "edit": "Bearbeiten",
+    "info": "Info",
+    "confirm_delete_title": "Löschen bestätigen",
+    "confirm_delete_text": "Möchten Sie {{fileName}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "page": "Seite",
+    "of": "von",
+    "prev": "Zurück",
+    "next": "Weiter",
+    "image_info_title": "Bildinformationen",
+    "report_info_title": "Berichtsinformationen",
+    "copied": "ID kopiert",
+    "fields": {
+      "study_id": "Studien-ID",
+      "uploaded_by": "Hochgeladen von",
+      "upload_date": "Hochladedatum",
+      "resolution": "Auflösung",
+      "size": "Größe",
+      "type": "Typ",
+      "prediction_id": "Vorhersage-ID",
+      "predicted_class": "Vorhergesagte Klasse",
+      "creation_date": "Erstellungsdatum",
+      "doctor": "Arzt",
+      "patient": "Patient"
     },
-    "files": {
-        "title": "Dateien",
-        "no_reports": "Keine Berichte verfügbar.",
-        "no_images": "Keine Bilder verfügbar.",
-        "view": "Ansehen",
-        "edit": "Bearbeiten",
-        "info": "Info",
-        "confirm_delete_title": "Löschen bestätigen",
-        "confirm_delete_text": "Möchten Sie {{fileName}} wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-        "delete": "Löschen",
-        "cancel": "Abbrechen",
-        "page": "Seite",
-        "of": "von",
-        "prev": "Zurück",
-        "next": "Weiter",
-        "image_info_title": "Bildinformationen",
-        "report_info_title": "Berichtsinformationen",
-        "copied": "ID kopiert",
-        "fields": {
-            "study_id": "Studien-ID",
-            "uploaded_by": "Hochgeladen von",
-            "upload_date": "Hochladedatum",
-            "resolution": "Auflösung",
-            "size": "Größe",
-            "type": "Typ",
-            "prediction_id": "Vorhersage-ID",
-            "predicted_class": "Vorhergesagte Klasse",
-            "creation_date": "Erstellungsdatum",
-            "doctor": "Arzt",
-            "patient": "Patient"
-        },
-        "folders": {
-            "ecografias": "Ultraschallbilder",
-            "masks": "Masken",
-            "informes": "Berichte"
-        }
+    "folders": {
+      "ecografias": "Ultraschallbilder",
+      "masks": "Masken",
+      "informes": "Berichte"
+    }
+  },
 
-    },
+  "dashboard": {
+    "create_studie": "Studie erstellen",
+    "recent_studies": "Kürzliche Studien",
+    "study_name": "Studienname",
+    "study_date": "Studiendatum",
+    "patient_name": "Patientenname",
+    "clinical_description": "Klinische Beschreibung",
+    "image_editor": "Analysierte Ultraschallbilder",
+    "available_models": "Verfügbare Modelle",
+    "all_statuses": "Alle Status",
+    "finished": "Abgeschlossen",
+    "pending": "Ausstehend",
+    "status": "Status",
+    "study": "Studie",
+    "no_date": "Kein Datum verfügbar",
+    "download": "Studie herunterladen",
+    "delete": "Studie löschen",
+    "no_recent_studies": "Keine aktuellen Studien vorhanden.",
+    "search_by_name": "Nach Namen suchen...",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite",
+    "of": "von",
+    "confirm_delete": "Möchten Sie diese Studie wirklich löschen?",
+    "cancel": "Abbrechen",
+    "no_pdf_found": "Kein PDF-Bericht für diese Studie gefunden."
+  },
 
-    "dashboard": {
-        "create_studie": "Studie erstellen",
-        "recent_studies": "Kürzliche Studien",
-        "study_name": "Studienname",
-        "study_date": "Studiendatum",
-        "patient_name": "Patientenname",
-        "clinical_description": "Klinische Beschreibung",
-        "image_editor": "Analysierte Ultraschallbilder",
-        "available_models": "Verfügbare Modelle",
-        "all_statuses": "Alle Status",
-        "finished": "Abgeschlossen",
-        "pending": "Ausstehend",
-        "status": "Status",
-        "study": "Studie",
-        "no_date": "Kein Datum verfügbar",
-        "download": "Studie herunterladen",
-        "delete": "Studie löschen",
-        "no_recent_studies": "Keine aktuellen Studien vorhanden.",
-        "search_by_name": "Nach Namen suchen...",
-        "previous": "Zurück",
-        "next": "Weiter",
-        "page": "Seite",
-        "of": "von",
-        "confirm_delete": "Möchten Sie diese Studie wirklich löschen?",
-        "cancel": "Abbrechen",
-        "no_pdf_found": "Kein PDF-Bericht für diese Studie gefunden."
-    },
-
-
-    "models_disponibles": {
+  "models_disponibles": {
     "search": "Nach Namen suchen...",
     "all": "Alle",
     "model": "Modell",
@@ -229,290 +222,330 @@
     "next": "Weiter",
     "page": "Seite",
     "of": "von"
-    },
+  },
 
-    "links": {
+  "links": {
     "title": "Nützliche Links",
     "name_placeholder": "Name des Links",
     "url_placeholder": "URL",
     "add": "Hinzufügen",
     "remove": "Entfernen",
     "upload_icon": "Symbol hochladen"
-    },
+  },
 
-    "my_studies": {
-        "title": "Ihre Studien",
-        "create_study": "Studie erstellen",
-        "select_patient": "-- Patient auswählen --",
-        "search_by_name": "Nach Namen suchen",
-        "filter_all": "Alle",
-        "status_in_progress": "In Bearbeitung",
-        "status_done": "Abgeschlossen",
-        "sort_newest": "Neueste zuerst",
-        "sort_oldest": "Älteste zuerst",
-        "no_studies": "Keine Studien vorhanden",
-        "new_study": "Neue Studie",
-        "study_name": "Studienname",
-        "patient_name": "Patientenname",
-        "clinical_description": "Klinische Beschreibung",
-        "no_date": "Kein Datum",
-        "delete_title": "Diese Studie löschen?",
-        "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
-        "id_study": "Studien-ID",
-        "delete_success": "Studie erfolgreich gelöscht",
-        "doctor_name": "Arzt",
-        "upload_image": "Bild wird hochgeladen...",
-        "drag_or_drop": "Ziehen oder klicken zum Hochladen",
-        "start_analysis": "Analyse starten",
-        "choose_parameters": "Analyseparameter wählen",
-        "classification_models": "Klassifikationsmodell",
-        "hcc_ai_description": "Modell speziell trainiert zur Klassifikation von HCC-Leberfibrosestufen.",
-        "metavir_ai_description": "Modell basierend auf der METAVIR-Skala (F0 bis F4) zur Analyse der Leberfibrose.",
-        "metavir_submodels": "METAVIR-AI-Submodell",
-        "choose_submodel": "Ein Submodell auswählen",
-        "segmentation_models": "Segmentierungsmodell",
-        "segmentation_submodels": "Segmentierungs-Submodell",
-        "yolob8": "YOLOv8",
-        "yolov11": "YOLOv11",
-        "minimum_threshold": "Minimale Vertrauensschwelle",
-        "threshold_explanation": "Nur Segmentierungen mit gleicher oder höherer Zuverlässigkeit werden angezeigt.",
-        "generate_ai_explanation": "Automatische medizinische Erklärung basierend auf den Ergebnissen generieren",
-        "start_prediction": "Vorhersage starten",
-        "used_parameters": "Verwendete Parameter",
-        "tags_list": "Legende der Beschriftungen",
-        "segmented_structures": {
-            "HCC": "Hepatozelluläres Karzinom",
-            "HV": "Lebervene",
-            "IVC": "Untere Hohlvene",
-            "K": "Niere",
-            "K-C": "Nierenrinde",
-            "K-M": "Nierenmark",
-            "TRANS": "Querschnitt",
-            "LVR": "Leber",
-            "PV": "Pfortader",
-            "SAG": "Sagittalschnitt",
-            "SAG K": "Sagittalschnitt der Niere",
-            "LT SAG": "Linker Lappen (sagittal)",
-            "RT TRANS": "Rechter Lappen (transversal)"
-        },
-        "predicted_class": "Vorhergesagte Klasse",
-        "class_probabilities": "Wahrscheinlichkeiten je Klasse",
-        "see_explanation": "Erklärung der Ergebnisse anzeigen",
-        "medical_explanation": "Medizinische Erklärung durch KI",
-        "processing_image": "Bild wird mit KI verarbeitet...",
-        "may_take_time": "Dies kann einige Sekunden dauern. Bitte warten."
+  "my_studies": {
+    "title": "Ihre Studien",
+    "create_study": "Studie erstellen",
+    "select_patient": "-- Patient auswählen --",
+    "search_by_name": "Nach Namen suchen",
+    "filter_all": "Alle",
+    "status_in_progress": "In Bearbeitung",
+    "status_done": "Abgeschlossen",
+    "sort_newest": "Neueste zuerst",
+    "sort_oldest": "Älteste zuerst",
+    "no_studies": "Keine Studien vorhanden",
+    "new_study": "Neue Studie",
+    "study_name": "Studienname",
+    "patient_name": "Patientenname",
+    "no_pdf": "Kein PDF-Bericht für diese Studie verfügbar.",
+    "clinical_description": "Klinische Beschreibung",
+    "no_date": "Kein Datum",
+    "delete_title": "Diese Studie löschen?",
+    "delete_warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "id_study": "Studien-ID",
+    "delete_success": "Studie erfolgreich gelöscht",
+    "doctor_name": "Arzt",
+    "upload_image": "Bild wird hochgeladen...",
+    "drag_or_drop": "Ziehen oder klicken zum Hochladen",
+    "start_analysis": "Analyse starten",
+    "choose_parameters": "Analyseparameter wählen",
+    "classification_models": "Klassifikationsmodell",
+    "hcc_ai_description": "Modell speziell trainiert zur Klassifikation von HCC-Leberfibrosestufen.",
+    "metavir_ai_description": "Modell basierend auf der METAVIR-Skala (F0 bis F4) zur Analyse der Leberfibrose.",
+    "metavir_submodels": "METAVIR-AI-Submodell",
+    "choose_submodel": "Ein Submodell auswählen",
+    "segmentation_models": "Segmentierungsmodell",
+    "segmentation_submodels": "Segmentierungs-Submodell",
+    "yolob8": "YOLOv8",
+    "yolov11": "YOLOv11",
+    "minimum_threshold": "Minimale Vertrauensschwelle",
+    "threshold_explanation": "Nur Segmentierungen mit gleicher oder höherer Zuverlässigkeit werden angezeigt.",
+    "generate_ai_explanation": "Automatische medizinische Erklärung basierend auf den Ergebnissen generieren",
+    "start_prediction": "Vorhersage starten",
+    "used_parameters": "Verwendete Parameter",
+    "tags_list": "Legende der Beschriftungen",
+    "segmented_structures": {
+      "HCC": "Hepatozelluläres Karzinom",
+      "HV": "Lebervene",
+      "IVC": "Untere Hohlvene",
+      "K": "Niere",
+      "K-C": "Nierenrinde",
+      "K-M": "Nierenmark",
+      "TRANS": "Querschnitt",
+      "LVR": "Leber",
+      "PV": "Pfortader",
+      "SAG": "Sagittalschnitt",
+      "SAG K": "Sagittalschnitt der Niere",
+      "LT SAG": "Linker Lappen (sagittal)",
+      "RT TRANS": "Rechter Lappen (transversal)"
     },
+    "predicted_class": "Vorhergesagte Klasse",
+    "class_probabilities": "Wahrscheinlichkeiten je Klasse",
+    "see_explanation": "Erklärung der Ergebnisse anzeigen",
+    "medical_explanation": "Medizinische Erklärung durch KI",
+    "processing_image": "Bild wird mit KI verarbeitet...",
+    "may_take_time": "Dies kann einige Sekunden dauern. Bitte warten.",
+    "probabilities_graph": "Wahrscheinlichkeitsdiagramm",
+    "download_graph": "Diagramm herunterladen",
+    "close_graph": "Diagramm schließen",
+    "sano": "Die Leber sieht normal aus, ohne Anzeichen struktureller Schäden oder Fettansammlungen. Leberfunktion erhalten. Geringes Risiko.",
+    "esteatosis": "Fettansammlungen werden in der Leber beobachtet (Fettleber), häufig bei Menschen mit Fettleibigkeit, Diabetes oder hohem Alkoholkonsum. Kann reversibel sein, aber sich ohne Behandlung verschlechtern. Mittleres Risiko.",
+    "cirrosis": "Die Leber zeigt Narben und regenerative Knoten infolge chronischer Schäden. Dies beeinträchtigt die Funktion und kann Komplikationen wie portale Hypertension oder Leberversagen verursachen. Hohes Risiko.",
+    "hepatocarcinoma": "Eine Masse, die mit einem primären bösartigen Lebertumor übereinstimmt, wird festgestellt. Starker Verdacht auf hepatozelluläres Karzinom (HCC). Erfordert sofortige Abklärung durch einen Spezialisten. Sehr hohes Risiko.",
+    "f0": "Keine Anzeichen von Fibrose. Lebergewebe ist intakt. Geringes Risiko.",
+    "f1": "Leichte Fibrose in den Portalbereichen, ohne Beeinträchtigung der allgemeinen Leberarchitektur. Kann reversibel sein. Gering-mittleres Risiko.",
+    "f2": "Mäßige Fibrose mit Septen zwischen Portalbereichen. Anzeichen für Fortschreiten. Kann sich ohne Behandlung verschlechtern. Mittleres Risiko.",
+    "f3": "Fortgeschrittene Fibrose mit ausgedehnten Faserbrücken. Die Leber beginnt, an Funktion zu verlieren. Hohes Risiko.",
+    "f4": "Zirrhose: starke Verformung des Lebergewebes und erheblicher Funktionsverlust. Kann zu HCC oder Leberversagen führen. Sehr hohes Risiko.",
+    "send_email_explanation": "Bericht per E-Mail senden",
+    "email_placeholder": "E-Mail des Empfängers:",
+    "cancel_email": "Versand abbrechen",
+    "send_email": "Bericht senden",
+    "share_study": "Studie mit einem anderen Arzt teilen",
+    "select_doctor": "Arzt auswählen:",
+    "select": "-- Auswählen --",
+    "cancel_share": "Abbrechen",
+    "share_confirm": "Teilen"
+  },
 
-  
   "pagination": {
     "page": "Página",
     "of": "de"
   },
 
-    "assistant": {
-        "title": "HCC-AI Assistent",
-        "send_query": "Stellen Sie Ihre Frage...",
-        "send_button": "Fragen"
+  "assistant": {
+    "title": "HCC-AI Assistent",
+    "send_query": "Stellen Sie Ihre Frage...",
+    "send_button": "Fragen"
+  },
+
+  "editor": {
+    "title": "Bildeditor",
+    "upload_image": "Bild hochladen",
+    "drop_image": "Bild hier ablegen",
+    "anonymize_image": "Anonymisieren der Ultraschalluntersuchung",
+    "segmented_image": "Segmentiertes Bild",
+    "loading_image": "Bild wird anonymisiert...",
+    "image_analysis_results": "Analyseergebnisse des Bildes",
+    "no_image_uploaded": "Kein Bild hochgeladen.",
+    "image_uploaded": "Bild erfolgreich hochgeladen.",
+    "image_analysis_in_progress": "Analyse des Bildes läuft...",
+    "image_analysis_completed": "Bildanalyse abgeschlossen.",
+    "image_analysis_failed": "Fehler bei der Bildanalyse.",
+    "what_to_do": "Was möchten Sie tun?",
+    "image_anonymized": "Das Bild wurde erfolgreich anonymisiert.",
+    "download_image": "Herunterladen",
+    "edit_image": "Bearbeiten"
+  },
+
+  "profile": {
+    "registeredAt": "Registriert am",
+    "phoneNumber": "Telefonnummer"
+  },
+
+  "actions": {
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "upload": "Hochladen",
+    "download": "Herunterladen",
+    "view": "Ansehen",
+    "analyze": "Analysieren",
+    "previous": "Zurück",
+    "next": "Weiter"
+  },
+
+  "settings": {
+    "title": "Einstellungen",
+    "sections": {
+      "account": "Konto",
+      "preferences": "Einstellungen",
+      "help": "Hilfe"
     },
-
-    "editor": {
-        "title": "Bildeditor",
-        "upload_image": "Bild hochladen",
-        "drop_image": "Bild hier ablegen",
-        "anonymize_image": "Anonymisieren der Ultraschalluntersuchung",
-        "segmented_image": "Segmentiertes Bild",
-        "loading_image": "Bild wird anonymisiert...",
-        "image_analysis_results": "Analyseergebnisse des Bildes",
-        "no_image_uploaded": "Kein Bild hochgeladen.",
-        "image_uploaded": "Bild erfolgreich hochgeladen.",
-        "image_analysis_in_progress": "Analyse des Bildes läuft...",
-        "image_analysis_completed": "Bildanalyse abgeschlossen.",
-        "image_analysis_failed": "Fehler bei der Bildanalyse."
+    "account": {
+      "profile": "Profil",
+      "edit_data": "Daten bearbeiten",
+      "change_password": "Passwort ändern",
+      "delete_account": "Konto löschen",
+      "delete_warning": "Diese Aktion wird dein Konto dauerhaft löschen!",
+      "change_passwd": "Möchten Sie Ihr Passwort ändern?",
+      "sending": "Wird gesendet...",
+      "send": "Passwort-Wiederherstellung senden",
+      "success": "Eine Wiederherstellungs-E-Mail wurde gesendet. Bitte prüfen Sie Ihren Posteingang.",
+      "error": "Beim Senden der Wiederherstellungs-E-Mail ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "error_no_user": "Es ist keine E-Mail mit diesem Benutzer verknüpft.",
+      "error_no_auth": "Es ist kein authentifizierter Benutzer vorhanden.",
+      "delete_acount_warning": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion ist unwiderruflich.",
+      "delete_success": "Konto erfolgreich gelöscht.",
+      "reauth_required": "Sie müssen sich erneut anmelden, bevor Sie Ihr Konto löschen können.",
+      "reauth_prompt": "Um Ihr Konto zu löschen, müssen Sie sich erneut anmelden.",
+      "prompt_email": "Geben Sie Ihre E-Mail-Adresse ein:",
+      "prompt_password": "Geben Sie Ihr Passwort ein:",
+      "reauth_error": "Fehler bei der erneuten Anmeldung. Bitte versuchen Sie es erneut.",
+      "delete_error": "Beim Löschen des Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "confirm_label": "Geben Sie ein",
+      "confirm_word": "löschen",
+      "confirm_error": "Bitte geben Sie den Bestätigungstext korrekt ein.",
+      "deleting": "Wird gelöscht..."
     },
-
-
     "profile": {
-        "registeredAt": "Registriert am",
-        "phoneNumber": "Telefonnummer"
+      "username": "Benutzername",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "role": "Rolle",
+      "no_photo": "Kein Foto",
+      "previsualization": "Foto-Vorschau",
+      "loading": "Profil wird geladen...",
+      "upload_image": "Bild hochladen"
+    },
+    "preferences": {
+      "theme": "Design:",
+      "current_theme": "Aktuelles Design:",
+      "language": "Sprache:",
+      "ui_scale": "UI-Skalierung:",
+      "select_language": "Sprache auswählen:",
+      "current_zoom": "Aktueller Zoom:",
+      "high_contrast": "Hoher Kontrastmodus:",
+      "accessibility": "Barrierefreiheit",
+      "active": "Aktiviert",
+      "desactive": "Deaktiviert",
+      "reset": "Einstellungen zurücksetzen",
+      "dark": "Dunkel",
+      "light": "Hell"
+    },
+    "help": {
+      "system_status": "Status des Systems:",
+      "all_ok": "🟢 Alle Systeme funktionieren einwandfrei.",
+      "all_ko": "🔴 Der Dienst ist derzeit inaktiv.",
+      "download_manual": "Benutzerhandbuch herunterladen",
+      "faq": "Häufige Fragen",
+      "support": "Hast du Fragen? Schreib an:",
+      "question1": "Wie erstelle ich eine neue Studie?",
+      "question2": "Wie ändere ich mein Passwort?",
+      "question3": "Wo sehe ich die KI-Ergebnisse?",
+      "question4": "Kann ich einen PDF-Bericht herunterladen?",
+      "answer1": "Gehe zum Bereich 'Meine Studien' und klicke auf 'Studie erstellen'.",
+      "answer2": "Gehe zu Einstellungen > Konto > Passwort ändern.",
+      "answer3": "Nach Abschluss der Analyse siehst du das segmentierte Bild und die Ergebnisse in der Studienansicht.",
+      "answer4": "Ja. Nach der Generierung klicke im Studienmenü auf 'Bericht herunterladen'. Dies öffnet den Bericht in einem neuen Tab, wo du ihn herunterladen oder bearbeiten kannst."
     },
 
-    "actions": {
-        "delete": "Löschen",
-        "edit": "Bearbeiten",
-        "save": "Speichern",
-        "cancel": "Abbrechen",
-        "close": "Schließen",
-        "upload": "Hochladen",
-        "download": "Herunterladen",
-        "view": "Ansehen",
-        "analyze": "Analysieren",
-        "previous": "Zurück",
-        "next": "Weiter"
+    "admin": {
+      "title": "Administrationsbereich",
+      "system_status": "Systemstatus",
+      "system_active": "System aktiv",
+      "system_inactive": "System inaktiv",
+      "user_management": "Benutzerverwaltung",
+      "list_users": "Benutzer auflisten",
+      "no_users_found": "Keine Benutzer gefunden.",
+      "name": "Name",
+      "enail": "E-Mail",
+      "rol": "Rolle"
     },
+    "common": {
+      "save_changes": "Änderungen speichern",
+      "saving": "Änderungen werden gespeichert..."
+    }
+  },
 
-    "settings": {
-        "title": "Einstellungen",
-        "sections": {
-            "account": "Konto",
-            "preferences": "Einstellungen",
-            "help": "Hilfe"
-        },
-        "account": {
-            "profile": "Profil",
-            "edit_data": "Daten bearbeiten",
-            "change_password": "Passwort ändern",
-            "delete_account": "Konto löschen",
-            "delete_warning": "Diese Aktion wird dein Konto dauerhaft löschen!",
-            "change_passwd": "Möchten Sie Ihr Passwort ändern?",
-            "sending": "Wird gesendet...",
-            "send": "Passwort-Wiederherstellung senden",
-            "success": "Eine Wiederherstellungs-E-Mail wurde gesendet. Bitte prüfen Sie Ihren Posteingang.",
-            "error": "Beim Senden der Wiederherstellungs-E-Mail ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-            "error_no_user": "Es ist keine E-Mail mit diesem Benutzer verknüpft.",
-            "error_no_auth": "Es ist kein authentifizierter Benutzer vorhanden.",
-            "delete_acount_warning": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion ist unwiderruflich.",
-            "delete_success": "Konto erfolgreich gelöscht.",
-            "reauth_required": "Sie müssen sich erneut anmelden, bevor Sie Ihr Konto löschen können.",
-            "reauth_prompt": "Um Ihr Konto zu löschen, müssen Sie sich erneut anmelden.",
-            "prompt_email": "Geben Sie Ihre E-Mail-Adresse ein:",
-            "prompt_password": "Geben Sie Ihr Passwort ein:",
-            "reauth_error": "Fehler bei der erneuten Anmeldung. Bitte versuchen Sie es erneut.",
-            "delete_error": "Beim Löschen des Kontos ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-            "confirm_label": "Geben Sie ein",
-            "confirm_word": "löschen",
-            "confirm_error": "Bitte geben Sie den Bestätigungstext korrekt ein.",
-            "deleting": "Wird gelöscht..."
-
-
-        },
-        "profile": {
-            "username": "Benutzername",
-            "first_name": "Vorname",
-            "last_name": "Nachname",
-            "email": "E-Mail",
-            "phone": "Telefon",
-            "role": "Rolle",
-            "no_photo": "Kein Foto",
-            "previsualization": "Foto-Vorschau",
-            "loading": "Profil wird geladen...",
-            "upload_image": "Bild hochladen"
-        },
-        "preferences": {
-            "theme": "Design:",
-            "current_theme": "Aktuelles Design:",
-            "language": "Sprache:",
-            "ui_scale": "UI-Skalierung:",
-            "select_language": "Sprache auswählen:",
-            "current_zoom": "Aktueller Zoom:",
-            "high_contrast": "Hoher Kontrastmodus:",
-            "accessibility": "Barrierefreiheit",
-            "active": "Aktiviert",
-            "desactive": "Deaktiviert",
-            "reset": "Einstellungen zurücksetzen",
-            "dark": "Dunkel",
-            "light": "Hell"
- 
-
-        },
-        "help": {
-            "system_status": "Status des Systems:",
-            "all_ok": "🟢 Alle Systeme funktionieren einwandfrei.",
-            "all_ko": "🔴 Der Dienst ist derzeit inaktiv.",
-            "download_manual": "Benutzerhandbuch herunterladen",
-            "faq": "Häufige Fragen",
-            "support": "Hast du Fragen? Schreib an:",
-            "question1": "Wie erstelle ich eine neue Studie?",
-            "question2": "Wie ändere ich mein Passwort?",
-            "question3": "Wo sehe ich die KI-Ergebnisse?",
-            "question4": "Kann ich einen PDF-Bericht herunterladen?",
-            "answer1": "Gehe zum Bereich 'Meine Studien' und klicke auf 'Studie erstellen'.",
-            "answer2": "Gehe zu Einstellungen > Konto > Passwort ändern.",
-            "answer3": "Nach Abschluss der Analyse siehst du das segmentierte Bild und die Ergebnisse in der Studienansicht.",
-            "answer4": "Ja. Nach der Generierung klicke im Studienmenü auf 'Bericht herunterladen'. Dies öffnet den Bericht in einem neuen Tab, wo du ihn herunterladen oder bearbeiten kannst."
-        },
-
-        "admin": {
-        "title": "Administrationsbereich",
-        "system_status": "Systemstatus",
-        "system_active": "System aktiv",
-        "system_inactive": "System inaktiv",
-        "user_management": "Benutzerverwaltung",
-        "list_users": "Benutzer auflisten",
-        "no_users_found": "Keine Benutzer gefunden.",
-        "name": "Name",
-        "enail": "E-Mail",
-        "rol": "Rolle"
-        },        
-        "common": {
-            "save_changes": "Änderungen speichern"
-        }
-    },
-    
-    "calendar": {
+  "calendar": {
     "title": "Veranstaltungskalender",
     "add_reminder_for": "Erinnerung hinzufügen",
     "reminders": "Erinnerungen",
     "add": "Hinzufügen",
-    "reminder_placeholder": "Erinnerung eingeben"
-    },
+    "reminder_placeholder": "Erinnerung eingeben",
+    "calendar_leyend": "Kalenderlegende",
+    "days_with_tasks": "Tage mit ausstehenden Aufgaben",
+    "all_tasks_completed": "Tage mit allen erledigten Aufgaben",
+    "daily_email_info": "Täglich um 7:00 Uhr wird eine E-Mail mit den anstehenden Aufgaben des Tages versendet. Um dies zu deaktivieren: Einstellungen > Präferenzen > Tägliche Benachrichtigung deaktivieren.",
+    "enable_daily_reminder": "Tägliche Erinnerungs-E-Mails aktivieren",
+    "disable_daily_reminder": "Tägliche Erinnerungs-E-Mails deaktivieren"
+  },
 
-    "login": {
-        "login_text": "Anmelden",
-        "welcome_text": "Willkommen zurück! Gib deine Zugangsdaten ein, um dich anzumelden.",
-        "email_placeholder": "E-Mail",
-        "passwd_placeholder": "Passwort",
-        "forgot_passwd": "Passwort vergessen?",
-        "no_account": "Noch kein Konto?",
-        "register": "Registrieren",
-        "error_send_email": "Wiederherstellungs-E-Mail senden",
-        "error_remake": "Wiederherstellung abbrechen"
-    },
+  "login": {
+    "login_text": "Anmelden",
+    "welcome_text": "Willkommen zurück! Gib deine Zugangsdaten ein, um dich anzumelden.",
+    "email_placeholder": "E-Mail",
+    "passwd_placeholder": "Passwort",
+    "forgot_passwd": "Passwort vergessen?",
+    "no_account": "Noch kein Konto?",
+    "register": "Registrieren",
+    "error_send_email": "Wiederherstellungs-E-Mail senden",
+    "error_remake": "Wiederherstellung abbrechen"
+  },
 
-    "signup": {
-        "title": "Registrieren",
-        "subtitle": "Willkommen! Gib deine Daten ein, um dich zu registrieren.",
-        "username": "Benutzername",
-        "firstname": "Vorname",
-        "lastname": "Nachname",
-        "email": "E-Mail",
-        "password": "Passwort",
-        "confirm_password": "Passwort wiederholen",
-        "access_code": "Zugangscode",
-        "phone": "Telefon",
-        "button": "Registrieren",
-        "or": "ODER",
-        "have_account": "Du hast bereits ein Konto?",
-        "login_link": "Anmelden"
-    },
+  "signup": {
+    "title": "Registrieren",
+    "subtitle": "Willkommen! Gib deine Daten ein, um dich zu registrieren.",
+    "username": "Benutzername",
+    "firstname": "Vorname",
+    "lastname": "Nachname",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirm_password": "Passwort wiederholen",
+    "access_code": "Zugangscode",
+    "phone": "Telefon",
+    "button": "Registrieren",
+    "or": "ODER",
+    "have_account": "Du hast bereits ein Konto?",
+    "login_link": "Anmelden"
+  },
 
-    "roles": {
-        "Paciente": "Patient",
-        "Médico": "Arzt",
-        "Administrador": "Administrator",
-        "registeredAs": "Registriert als:",
-        "fullName": "Name:",
-        "nameUnavailable": "Name nicht verfügbar"
-    },
-    "warning": {
-        "pc_optimization": "⚠️ Diese Anwendung ist für Desktop-Bildschirme optimiert. Einige Oberflächen können sich auf Mobilgeräten überlappen. Für das beste Erlebnis greifen Sie bitte über einen PC oder Laptop zu."
-    },
-    "documentation": {
-        "documentation": "Dokumentation",
-        "go_back": "Zurück zur Startseite",
-        "view_doc": "Dokument anzeigen",
-        "TFG_Report": "Abschlussarbeitsbericht",
-        "Annex_I": "Anhang I – Softwareprojektplan",
-        "Annex_II": "Anhang II – Lastenheft",
-        "Annex_III": "Anhang III – Systemanalyse",
-        "Annex_IV": "Anhang IV – Systementwurf",
-        "Annex_V": "Anhang V – Quellcodedokumentation",
-        "Annex_VI": "Anhang VI – Benutzerhandbuch",
-        "Annex_VII": "Anhang VII – Entwicklung der Künstlichen Intelligenz",
-        "Backend_Docs": "Technische Dokumentation des Backends",
-        "Frontend_Docs": "Technische Dokumentation des Frontends",
-        "Source_Code": "Repository mit dem Quellcode"
-    }
+  "roles": {
+    "Paciente": "Patient",
+    "Médico": "Arzt",
+    "Administrador": "Administrator",
+    "registeredAs": "Registriert als:",
+    "fullName": "Name:",
+    "nameUnavailable": "Name nicht verfügbar"
+  },
+  "warning": {
+    "pc_optimitation": "⚠️ Diese Anwendung ist für Desktop-Bildschirme optimiert. Einige Oberflächen können sich auf Mobilgeräten überlappen. Für das beste Erlebnis greifen Sie bitte über einen PC oder Laptop zu."
+  },
+  "documentation": {
+    "documentation": "Dokumentation",
+    "go_back": "Zurück zur Startseite",
+    "view_doc": "Dokument anzeigen",
+    "TFG_Report": "Abschlussarbeitsbericht",
+    "Annex_I": "Anhang I – Softwareprojektplan",
+    "Annex_II": "Anhang II – Lastenheft",
+    "Annex_III": "Anhang III – Systemanalyse",
+    "Annex_IV": "Anhang IV – Systementwurf",
+    "Annex_V": "Anhang V – Quellcodedokumentation",
+    "Annex_VI": "Anhang VI – Benutzerhandbuch",
+    "Annex_VII": "Anhang VII – Entwicklung der Künstlichen Intelligenz",
+    "Backend_Docs": "Technische Dokumentation des Backends",
+    "Frontend_Docs": "Technische Dokumentation des Frontends",
+    "Source_Code": "Repository mit dem Quellcode"
+  },
 
-
-
+  "toast": {
+    "success": "Erfolg",
+    "error": "Fehler",
+    "warning": "Warnung",
+    "info": "Information",
+    "image_uploaded": "Bild erfolgreich hochgeladen.",
+    "image_anonymized": "Bild erfolgreich anonymisiert.",
+    "image_downloaded": "Bild erfolgreich heruntergeladen.",
+    "image_editing": "Bildbearbeitung läuft...",
+    "image_analysis_failed": "Bildanalyse fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "study_created": "Studie erfolgreich erstellt.",
+    "study_deleted": "Studie erfolgreich gelöscht.",
+    "study_updated": "Studie erfolgreich aktualisiert.",
+    "study_not_found": "Studie nicht gefunden."
+  }
 }

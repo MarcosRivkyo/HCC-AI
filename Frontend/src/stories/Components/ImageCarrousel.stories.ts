@@ -49,14 +49,15 @@ export default meta;
 type Story = StoryObj<typeof ImageCarrousel>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   args: {
     onImageSelect: (url: string) => console.log("Imagen seleccionada:", url),
   },
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto del carrusel con tres imágenes, incluyendo el logotipo del proyecto. No requiere mocks ni configuración adicional.",
+        story:
+          "Ejemplo por defecto del carrusel con tres imágenes, incluyendo el logotipo del proyecto. No requiere mocks ni configuración adicional.",
       },
     },
   },

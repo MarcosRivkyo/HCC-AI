@@ -18,7 +18,14 @@ const AssistantViewModelDemo: React.FC = () => {
   } = useAssistantViewModel();
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto", padding: 20, fontFamily: "Arial, sans-serif" }}>
+    <div
+      style={{
+        maxWidth: 600,
+        margin: "auto",
+        padding: 20,
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
       <h2>useAssistantViewModel Demo</h2>
 
       <div
@@ -50,7 +57,14 @@ const AssistantViewModelDemo: React.FC = () => {
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         rows={3}
-        style={{ width: "100%", padding: 8, marginBottom: 8, fontSize: 14, borderRadius: 4, borderColor: "#ccc" }}
+        style={{
+          width: "100%",
+          padding: 8,
+          marginBottom: 8,
+          fontSize: 14,
+          borderRadius: 4,
+          borderColor: "#ccc",
+        }}
         disabled={isLoading}
       />
 

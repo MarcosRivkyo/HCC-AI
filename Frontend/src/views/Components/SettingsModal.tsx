@@ -13,7 +13,6 @@ import { FaCog } from "react-icons/fa";
 import logoUSALsinBG from "../../assets/images/logo_usal_removebg.png";
 import logoHPsinBG from "../../assets/images/logoHP-removebg.png";
 
-
 interface SettingsModalProps {
   open: boolean;
   onClose: () => void;
@@ -25,7 +24,7 @@ interface SettingsModalProps {
   setScale: (scale: number) => void;
   highContrast: boolean;
   setHighContrast: (val: boolean) => void;
-  userData?: any; 
+  userData?: any;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -40,7 +39,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   setHighContrast,
   userData,
 }) => {
-
   const {
     uid,
     activeSection,
@@ -78,14 +76,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     dailyReminderEnabled,
     handleDailyReminderToggle,
   } = useSettingsViewModel(userData);
-  
-
 
   const { t, i18n } = useTranslation("global");
-
-
-
-
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLang = e.target.value;
@@ -99,9 +91,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     setScale(newScale);
     localStorage.setItem("uiScale", newScale.toString());
   };
-
-
-
 
   if (!open) return null;
 
@@ -504,8 +493,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="flex items-center justify-between">
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
                     {dailyReminderEnabled
-                      ? "Desactivar envío diario de recordatorios por correo"
-                      : "Activar envío diario de recordatorios por correo"}
+                      ? t("calendar.disable_daily_reminder")
+                      : t("calendar.enable_daily_reminder")}
                   </span>
                   <button
                     onClick={() => handleDailyReminderToggle(uid)}

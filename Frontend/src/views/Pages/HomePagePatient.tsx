@@ -76,9 +76,7 @@ const DashboardPatient = () => {
 
       <main className="flex-1 p-6 pt-28 bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
         <div className="max-w-7xl mx-auto space-y-8">
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
             <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-4 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-2xl">
               <h2 className="text-3xl font-extrabold text-center text-gray-800 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-2">
                 {t("dashboard.recent_studies")}
@@ -92,7 +90,6 @@ const DashboardPatient = () => {
               </h2>
               <CalendarViewPatient />
             </div>
-
           </div>
 
           {user?.uid && (
@@ -100,10 +97,8 @@ const DashboardPatient = () => {
               <UsefulLinks userId={user.uid} />
             </div>
           )}
-
         </div>
       </main>
-
 
       <Footer />
     </div>

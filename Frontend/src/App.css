@@ -56,7 +56,7 @@
 
 .toolbox {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
@@ -179,15 +179,14 @@
 }
 
 .react-calendar__tile--weekend {
-  background-color: #e53e3e; 
+  background-color: #e53e3e;
   color: black;
 }
 
 .react-calendar {
-  background-color: #1a202c; 
+  background-color: #1a202c;
   color: black;
 }
-
 
 body.high-contrast {
   background-color: black !important;
@@ -219,13 +218,12 @@ body.dark-theme {
   color: #ccc;
 }
 
-
 .animate-spin-slow {
   animation: spin 2s linear infinite;
 }
 
 .react-calendar__tile.highlight-reminder {
-  background: #facc15; 
+  background: #facc15;
   border-radius: 0.5rem;
 }
 
@@ -234,4 +232,3 @@ body.dark-theme {
   border-radius: 0.5rem;
   color: white;
 }
-

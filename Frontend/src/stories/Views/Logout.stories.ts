@@ -52,7 +52,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Renderiza el botón de cierre de sesión con icono e internacionalización activa. Recomendado para menús de usuario o barras de navegación.",
+        story:
+          "Renderiza el botón de cierre de sesión con icono e internacionalización activa. Recomendado para menús de usuario o barras de navegación.",
       },
     },
   },

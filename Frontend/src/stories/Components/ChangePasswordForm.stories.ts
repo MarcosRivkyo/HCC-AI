@@ -51,7 +51,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Vista por defecto del formulario de recuperación de contraseña. Permite al usuario iniciar el proceso de restablecimiento mediante correo electrónico.",
+        story:
+          "Vista por defecto del formulario de recuperación de contraseña. Permite al usuario iniciar el proceso de restablecimiento mediante correo electrónico.",
       },
     },
   },

@@ -6,7 +6,7 @@ import logo_user from "../../assets/images/logo_user.png";
  * Componente: ProfileModal
  *
  * Descripción:
- * `ProfileModal` es un componente modal diseñado para mostrar información resumida del perfil de usuario dentro de la plataforma. 
+ * `ProfileModal` es un componente modal diseñado para mostrar información resumida del perfil de usuario dentro de la plataforma.
  * Se utiliza como un elemento de consulta rápida accesible desde la navegación principal o desde secciones de configuración de cuenta.
  *
  * Dependencias:
@@ -55,7 +55,7 @@ export default meta;
 type Story = StoryObj<typeof ProfileModal>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   args: {
     isOpen: true,
     onClose: () => console.log("Modal cerrado"),
@@ -79,7 +79,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo de uso del modal de perfil, mostrando información simulada de un usuario autenticado con rol médico.",
+        story:
+          "Ejemplo de uso del modal de perfil, mostrando información simulada de un usuario autenticado con rol médico.",
       },
     },
   },

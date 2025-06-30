@@ -6,7 +6,7 @@ import Navbar from "../../views/Components/AppNavbar";
  * Componente: Navbar
  *
  * Descripción:
- * `Navbar` es el componente de navegación principal de la plataforma HCC-AI. 
+ * `Navbar` es el componente de navegación principal de la plataforma HCC-AI.
  * Proporciona acceso estructurado a las distintas secciones del sistema y se adapta dinámicamente según el estado de autenticación del usuario.
  *
  * Dependencias:
@@ -27,7 +27,7 @@ import Navbar from "../../views/Components/AppNavbar";
 const meta: Meta<typeof Navbar> = {
   title: "Components/Navbar",
   component: Navbar,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
@@ -57,11 +57,12 @@ export default meta;
 type Story = StoryObj<typeof Navbar>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Vista por defecto del componente de navegación. Presenta enlaces generales y opciones de inicio de sesión si el usuario no está autenticado.",
+        story:
+          "Vista por defecto del componente de navegación. Presenta enlaces generales y opciones de inicio de sesión si el usuario no está autenticado.",
       },
     },
   },

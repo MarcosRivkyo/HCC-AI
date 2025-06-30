@@ -1,6 +1,5 @@
 // src/App.tsx
 
-
 import React from "react";
 import "./index.css";
 
@@ -33,12 +32,7 @@ import logoUSALsinBG from "./assets/images/logo_usal_removebg.png";
 import logoHP from "./assets/images/logoHP.png";
 import logoHPsinBG from "./assets/images/logoHP-removebg.png";
 
-import {
-  FaPython,
-  FaReact,
-  FaCogs,
-  FaPhone,
-} from "react-icons/fa";
+import { FaPython, FaReact, FaCogs, FaPhone } from "react-icons/fa";
 import { SiPytorch, SiTensorflow, SiOpencv, SiSharp } from "react-icons/si";
 import {
   FaMicroscope,
@@ -60,7 +54,6 @@ const languages = [
   { code: "fr", label: "Français", flag: frenchFlag },
   { code: "de", label: "Deutsch", flag: germanFlag },
 ];
-
 
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
@@ -130,12 +123,12 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
-      setShowFirstTextEffect(true); 
-    }, 500); 
+      setShowFirstTextEffect(true);
+    }, 500);
 
     const timer2 = setTimeout(() => {
-      setShowSecondTextEffect(true); 
-    }, 3500); 
+      setShowSecondTextEffect(true);
+    }, 3500);
 
     return () => {
       clearTimeout(timer1);
@@ -144,36 +137,43 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-      <section
-        id="home"
-        className="text-center text-2xl pt-16 p-10 relative h-screen"
-      >
-        <div className="absolute inset-0 z-10">
-          <ImageSlider />
+    <section
+      id="home"
+      className="text-center text-2xl pt-16 p-10 relative h-screen"
+    >
+      <div className="absolute inset-0 z-10">
+        <ImageSlider />
+      </div>
+
+      <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-black bg-opacity-50 p-6 rounded-lg">
+          <h1 className="text-[100px] font-bold mb-6">
+            <span className="text-white">HCC-</span>
+            <span className="text-red-500">AI</span>
+          </h1>
+
+          {showFirstTextEffect && <TextEffectDemo lang="es" />}
+          {showSecondTextEffect && <TextEffectDemo lang="eng" />}
         </div>
+      </div>
 
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-black bg-opacity-50 p-6 rounded-lg">
-            <h1 className="text-[100px] font-bold mb-6">
-              <span className="text-white">HCC-</span>
-              <span className="text-red-500">AI</span>
-            </h1>
-
-            {showFirstTextEffect && <TextEffectDemo lang="es" />}
-            {showSecondTextEffect && <TextEffectDemo lang="eng" />}
-          </div>
-        </div>
-
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center space-x-8">
-          <a href="https://www.usal.es" target="_blank" rel="noopener noreferrer">
-            <img src={logoUSALsinBG} alt="Logo USAL" className="w-64 cursor-pointer" />
-          </a>
-          <a href="https://hpscds.com/" target="_blank" rel="noopener noreferrer">
-            <img src={logoHPsinBG} alt="Logo HP" className="w-64 cursor-pointer" />
-          </a>
-        </div>
-      </section>
-
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-row items-center space-x-8">
+        <a href="https://www.usal.es" target="_blank" rel="noopener noreferrer">
+          <img
+            src={logoUSALsinBG}
+            alt="Logo USAL"
+            className="w-64 cursor-pointer"
+          />
+        </a>
+        <a href="https://hpscds.com/" target="_blank" rel="noopener noreferrer">
+          <img
+            src={logoHPsinBG}
+            alt="Logo HP"
+            className="w-64 cursor-pointer"
+          />
+        </a>
+      </div>
+    </section>
   );
 };
 
@@ -363,9 +363,7 @@ const Technology: React.FC = () => {
             <FaPython className="text-yellow-400 text-5xl" />
             <SiTensorflow className="text-orange-500 text-5xl" />
           </div>
-          <h3 className="text-xl font-semibold">
-            Python & TensorFlow
-          </h3>
+          <h3 className="text-xl font-semibold">Python & TensorFlow</h3>
           <p className="text-sm mt-2 text-gray-300">
             {t("sections.ai_python_description")}
           </p>
@@ -437,8 +435,8 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); 
-    setResponseMessage(""); 
+    setIsLoading(true);
+    setResponseMessage("");
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -456,7 +454,7 @@ const Contact: React.FC = () => {
     } catch (error) {
       setResponseMessage("Hubo un error al enviar el mensaje.");
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -521,7 +519,7 @@ const Contact: React.FC = () => {
         <button
           type="submit"
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg text-lg font-semibold transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isLoading} 
+          disabled={isLoading}
         >
           {isLoading ? t("input.submiting") : t("input.submit")}
         </button>
@@ -539,9 +537,8 @@ function App() {
 
   return (
     <div className="bg-black text-white min-h-screen pt-16 sm:pt-20">
-
       <Navbar />
-      <MobileWarning /> 
+      <MobileWarning />
       <Home />
       <About />
       <Services />

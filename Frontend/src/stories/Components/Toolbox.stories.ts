@@ -9,7 +9,7 @@ const mockCanvas = new fabric.Canvas();
 const meta: Meta<typeof Toolbox> = {
   title: "Components/Toolbox",
   component: Toolbox,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     canvas: mockCanvas,
   },
@@ -65,11 +65,12 @@ export default meta;
 type Story = StoryObj<typeof Toolbox>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Demostración del panel de herramientas con una instancia simulada de lienzo. Incluye acciones de dibujo, formas, zoom, historial y gestión del canvas.",
+        story:
+          "Demostración del panel de herramientas con una instancia simulada de lienzo. Incluye acciones de dibujo, formas, zoom, historial y gestión del canvas.",
       },
     },
   },

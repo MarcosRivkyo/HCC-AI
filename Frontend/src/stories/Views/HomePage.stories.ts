@@ -65,7 +65,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Representación de la vista de inicio de sesión activa con usuario autenticado. Contiene accesos rápidos, enlaces útiles y estado general.",
+        story:
+          "Representación de la vista de inicio de sesión activa con usuario autenticado. Contiene accesos rápidos, enlaces útiles y estado general.",
       },
     },
   },

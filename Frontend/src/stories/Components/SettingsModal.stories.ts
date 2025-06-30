@@ -6,8 +6,8 @@ import SettingsModal from "../../views/Components/SettingsModal";
  * Componente: SettingsModal
  *
  * Descripción:
- * `SettingsModal` es un componente de configuración general para la plataforma HCC-AI. Se presenta como una ventana modal 
- * que agrupa todas las preferencias del usuario y opciones administrativas, permitiendo personalizar la experiencia de uso 
+ * `SettingsModal` es un componente de configuración general para la plataforma HCC-AI. Se presenta como una ventana modal
+ * que agrupa todas las preferencias del usuario y opciones administrativas, permitiendo personalizar la experiencia de uso
  * de forma integral.
  *
  * Dependencias:
@@ -27,7 +27,7 @@ import SettingsModal from "../../views/Components/SettingsModal";
 const meta: Meta<typeof SettingsModal> = {
   title: "Components/SettingsModal",
   component: SettingsModal,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     open: true,
     theme: "light",
@@ -87,14 +87,15 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto del modal de configuración, con un usuario administrador que tiene acceso a todas las secciones disponibles.",
+        story:
+          "Ejemplo por defecto del modal de configuración, con un usuario administrador que tiene acceso a todas las secciones disponibles.",
       },
     },
   },
 };
 
 export const UserNoAdmin: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   args: {
     userData: {
       rol: "Paciente",
@@ -108,7 +109,8 @@ export const UserNoAdmin: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Vista del modal de configuración para un usuario sin privilegios de administrador. Se omite la sección administrativa.",
+        story:
+          "Vista del modal de configuración para un usuario sin privilegios de administrador. Se omite la sección administrativa.",
       },
     },
   },

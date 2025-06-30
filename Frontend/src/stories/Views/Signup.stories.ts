@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import Signup from "../../views/Auth/Signup";
 import { MemoryRouter } from "react-router-dom";
 
-
 const meta: Meta<typeof Signup> = {
   title: "Views/Signup",
   component: Signup,
@@ -75,7 +74,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Renderiza el formulario de registro completo, incluyendo campos obligatorios, validaciones y estilos personalizados.",
+        story:
+          "Renderiza el formulario de registro completo, incluyendo campos obligatorios, validaciones y estilos personalizados.",
       },
     },
   },

@@ -9,7 +9,7 @@ import PredictImage from "../../views/Pages/Editor";
  *
  * Descripción:
  * `PredictImage` es una vista integral dedicada al procesamiento, edición y análisis de imágenes ecográficas dentro de la plataforma HCC-AI.
- * Está orientada a usuarios clínicos que requieren cargar imágenes médicas, realizar anonimización, aplicar herramientas gráficas 
+ * Está orientada a usuarios clínicos que requieren cargar imágenes médicas, realizar anonimización, aplicar herramientas gráficas
  * y enviar las imágenes a modelos de inteligencia artificial para su evaluación.
  *
  * Dependencias:
@@ -69,7 +69,8 @@ export const Default: Story = {
     backgrounds: { default: "light" },
     docs: {
       description: {
-        story: "Vista del editor de imágenes médicas con funcionalidad de predicción por IA. Solo útil en Storybook como vista estructural sin conexión real a servicios.",
+        story:
+          "Vista del editor de imágenes médicas con funcionalidad de predicción por IA. Solo útil en Storybook como vista estructural sin conexión real a servicios.",
       },
     },
   },

@@ -6,7 +6,7 @@ import EditorCanvas from "../Components/EditorCanvas.tsx";
 import "../../App.css";
 import * as fabric from "fabric";
 import { Canvas, PencilBrush } from "fabric";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -61,6 +61,7 @@ const PredictImage: React.FC = () => {
   const { t, i18n } = useTranslation("global");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const hasLoadedImageFromUrl = useRef(false);
 
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
@@ -170,20 +171,24 @@ const PredictImage: React.FC = () => {
         canvas.add(imageObj);
         canvas.centerObject(imageObj);
         canvas.setActiveObject(imageObj);
-        toast.success("Imagen cargada correctamente");
 
+        if (!hasLoadedImageFromUrl.current) {
+          toast.success(t("toast.image_uploaded"));
+        }
 
-        if (!image && imageUrl) {
+        if (!image && imageUrl && !hasLoadedImageFromUrl.current) {
           const res = await fetch(imageUrl);
           const blob = await res.blob();
           const filename = "imagen_url.jpg";
           const file = new File([blob], filename, { type: blob.type });
           setImage(file);
+          hasLoadedImageFromUrl.current = true;
         }
       } catch (error) {
         console.error("Error loading image:", error);
       }
     };
+
     loadImage();
   }, [image, canvas]);
 
@@ -225,7 +230,7 @@ const PredictImage: React.FC = () => {
 
       setAnonymizedImageUrl(url);
       setShowAnonChoice(true);
-      toast.success("Imagen anonimizada correctamente.");
+      toast.success(t("toast.image_anonymized"));
     } catch (error) {
       console.error("Error al anonimizar la imagen:", error);
       toast.error("Ocurrió un error al anonimizar la imagen.");
@@ -234,33 +239,21 @@ const PredictImage: React.FC = () => {
     }
   };
 
-  const resetCanvas = () => {
-    if (!canvas) return;
-
-    canvas.clear();
-
-    fabric.Image.fromURL(logoHCC_AI, { crossOrigin: "anonymous" }).then(
-      (img: fabric.Image) => {
-        img.set({
-          left: 250,
-          top: 250,
-          originX: "center",
-          originY: "center",
-          opacity: 0.1,
-          selectable: false,
-          evented: false,
-        });
-        canvas.backgroundImage = img;
-        canvas.renderAll();
-      },
-    );
-
-    setImage(null); // también reseteamos la imagen
-    toast.info("Canvas reiniciado.");
-  };
-
   return (
     <div className="flex flex-col min-h-screen transition-colors duration-500 bg-white text-black dark:bg-gray-600 dark:text-white">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -399,9 +392,11 @@ const PredictImage: React.FC = () => {
         {showAnonChoice && anonymizedImageUrl && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg p-6 shadow-xl w-96 space-y-6">
-              <h3 className="text-lg font-semibold">¿Qué deseas hacer?</h3>
+              <h3 className="text-lg font-semibold">
+                {t("editor.what_to_do")}
+              </h3>
               <p className="text-sm opacity-80">
-                La imagen ha sido anonimizada con éxito.
+                {t("editor.image_anonymized")}
               </p>
               <div className="flex justify-end gap-4">
                 <button
@@ -411,10 +406,11 @@ const PredictImage: React.FC = () => {
                     a.href = anonymizedImageUrl;
                     a.download = "ecografia_anonimizada.jpg";
                     a.click();
+                    toast.success(t("toast.image_downloaded"));
                   }}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                 >
-                  Descargar
+                  {t("editor.download_image")}
                 </button>
                 <button
                   onClick={async () => {
@@ -444,11 +440,11 @@ const PredictImage: React.FC = () => {
                     canvas.centerObject(img);
                     canvas.setActiveObject(img);
 
-                    toast.success("Imagen cargada para edición.");
+                    toast.success(t("toast.image_editing"));
                   }}
                   className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-4 py-2 rounded-md"
                 >
-                  Editar
+                  {t("editor.edit_image")}
                 </button>
               </div>
             </div>

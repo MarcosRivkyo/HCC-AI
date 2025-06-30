@@ -23,7 +23,6 @@
     "settings": "Settings",
     "calendar": "CALENDAR",
     "documentation": "DOCUMENTATION"
-
   },
 
   "main": {
@@ -145,7 +144,7 @@
 
     "gemini_description": "Generative model, optimized through prompt engineering techniques, tailored for assistance in liver health."
   },
-  
+
   "files": {
     "title": "Files",
     "no_reports": "No reports available.",
@@ -182,9 +181,7 @@
       "masks": "Masks",
       "informes": "Reports"
     }
-
   },
-
 
   "dashboard": {
     "create_studie": "Create Study",
@@ -230,7 +227,7 @@
     "page": "Page",
     "of": "of"
   },
-  
+
   "editor": {
     "title": "Image Editor",
     "upload_image": "Upload Image",
@@ -243,77 +240,103 @@
     "image_uploaded": "Image uploaded successfully.",
     "image_analysis_in_progress": "Image analysis in progress...",
     "image_analysis_completed": "Image analysis completed.",
-    "image_analysis_failed": "Image analysis failed."
+    "image_analysis_failed": "Image analysis failed.",
+    "what_to_do": "What would you like to do?",
+    "image_anonymized": "The image has been anonymized successfully.",
+    "download_image": "Download",
+    "edit_image": "Edit"
   },
 
   "my_studies": {
-      "title": "Your Studies",
-      "create_study": "Create Study",
-      "select_patient": "-- Select Patient --",
-      "search_by_name": "Search by name",
-      "filter_all": "All",
-      "status_in_progress": "In Progress",
-      "status_done": "Completed",
-      "sort_newest": "Newest",
-      "sort_oldest": "Oldest",
-      "no_studies": "No studies available",
-      "new_study": "New Study",
-      "study_name": "Study name",
-      "patient_name": "Patient name",
-      "clinical_description": "Clinical description",
-      "no_date": "No date",
-      "delete_title": "Delete this study?",
-      "delete_warning": "This action cannot be undone.",
-      "id_study": "Study ID",
-      "delete_success": "Study successfully deleted",
-      "doctor_name": "Doctor",
-      "upload_image": "Uploading image...",
-      "drag_or_drop": "Drag or click to upload",
-      "start_analysis": "Start Analysis",
-      "choose_parameters": "Choose analysis parameters",
-      "classification_models": "Classification Model",
-      "hcc_ai_description": "Model specifically trained to classify HCC liver fibrosis stages.",
-      "metavir_ai_description": "Model based on the METAVIR scale (F0 to F4) for liver fibrosis analysis.",
-      "metavir_submodels": "METAVIR-AI Submodel",
-      "choose_submodel": "Select a submodel",
-      "segmentation_models": "Segmentation Model",
-      "segmentation_submodels": "Segmentation Submodel",
-      "yolob8": "YOLOv8",
-      "yolov11": "YOLOv11",
-      "minimum_threshold": "Minimum confidence threshold",
-      "threshold_explanation": "Only segmentations with equal or higher confidence will be shown.",
-      "generate_ai_explanation": "Generate an automatic medical explanation based on results",
-      "start_prediction": "Start Prediction",
-      "used_parameters": "Used Parameters",
-      "tags_list": "Label Legend",
-      "segmented_structures": {
-        "HCC": "Hepatocellular carcinoma",
-        "HV": "Hepatic vein",
-        "IVC": "Inferior vena cava",
-        "K": "Kidney",
-        "K-C": "Renal cortex",
-        "K-M": "Renal medulla",
-        "TRANS": "Transverse section",
-        "LVR": "Liver",
-        "PV": "Portal vein",
-        "SAG": "Sagittal section",
-        "SAG K": "Renal sagittal section",
-        "LT SAG": "Left lobe (sagittal)",
-        "RT TRANS": "Right lobe (transverse)"
-      },
-      "predicted_class": "Predicted Class",
-      "class_probabilities": "Class Probabilities",
-      "see_explanation": "See Explanation of Results",
-      "medical_explanation": "Medical Explanation by AI",
-      "processing_image": "Processing image with AI...",
-      "may_take_time": "This may take a few seconds. Please wait."      
+    "title": "Your Studies",
+    "create_study": "Create Study",
+    "select_patient": "-- Select Patient --",
+    "search_by_name": "Search by name",
+    "filter_all": "All",
+    "status_in_progress": "In Progress",
+    "status_done": "Completed",
+    "sort_newest": "Newest",
+    "sort_oldest": "Oldest",
+    "no_studies": "No studies available",
+    "new_study": "New Study",
+    "no_pdf": "No PDF report available for this study.",
+    "study_name": "Study name",
+    "patient_name": "Patient name",
+    "clinical_description": "Clinical description",
+    "no_date": "No date",
+    "delete_title": "Delete this study?",
+    "delete_warning": "This action cannot be undone.",
+    "id_study": "Study ID",
+    "delete_success": "Study successfully deleted",
+    "doctor_name": "Doctor",
+    "upload_image": "Uploading image...",
+    "drag_or_drop": "Drag or click to upload",
+    "start_analysis": "Start Analysis",
+    "choose_parameters": "Choose analysis parameters",
+    "classification_models": "Classification Model",
+    "hcc_ai_description": "Model specifically trained to classify HCC liver fibrosis stages.",
+    "metavir_ai_description": "Model based on the METAVIR scale (F0 to F4) for liver fibrosis analysis.",
+    "metavir_submodels": "METAVIR-AI Submodel",
+    "choose_submodel": "Select a submodel",
+    "segmentation_models": "Segmentation Model",
+    "segmentation_submodels": "Segmentation Submodel",
+    "yolob8": "YOLOv8",
+    "yolov11": "YOLOv11",
+    "minimum_threshold": "Minimum confidence threshold",
+    "threshold_explanation": "Only segmentations with equal or higher confidence will be shown.",
+    "generate_ai_explanation": "Generate an automatic medical explanation based on results",
+    "start_prediction": "Start Prediction",
+    "used_parameters": "Used Parameters",
+    "tags_list": "Label Legend",
+    "segmented_structures": {
+      "HCC": "Hepatocellular carcinoma",
+      "HV": "Hepatic vein",
+      "IVC": "Inferior vena cava",
+      "K": "Kidney",
+      "K-C": "Renal cortex",
+      "K-M": "Renal medulla",
+      "TRANS": "Transverse section",
+      "LVR": "Liver",
+      "PV": "Portal vein",
+      "SAG": "Sagittal section",
+      "SAG K": "Renal sagittal section",
+      "LT SAG": "Left lobe (sagittal)",
+      "RT TRANS": "Right lobe (transverse)"
     },
+    "predicted_class": "Predicted Class",
+    "class_probabilities": "Class Probabilities",
+    "see_explanation": "See Explanation of Results",
+    "medical_explanation": "Medical Explanation by AI",
+    "processing_image": "Processing image with AI...",
+    "may_take_time": "This may take a few seconds. Please wait.",
+    "probabilities_graph": "Probability Chart",
+    "download_graph": "Download Chart",
+    "close_graph": "Close Chart",
+    "sano": "The liver appears normal with no signs of structural damage or fat accumulation. Liver function preserved. Low risk.",
+    "esteatosis": "Fat accumulation is observed in the liver (fatty liver), common in individuals with obesity, diabetes, or high alcohol intake. Although reversible, it can progress if untreated. Medium risk.",
+    "cirrosis": "The liver shows scarring and regenerative nodules due to chronic damage. This limits function and may cause complications like portal hypertension or liver failure. High risk.",
+    "hepatocarcinoma": "A mass compatible with a primary malignant liver tumor is detected. Strong suspicion of hepatocellular carcinoma (HCC). Requires immediate evaluation by a specialist. Very high risk.",
+    "f0": "No signs of fibrosis. Liver tissue is preserved. Low risk.",
+    "f1": "Mild fibrosis in portal areas without affecting general liver architecture. May be reversible. Low-medium risk.",
+    "f2": "Moderate fibrosis with septa between portal areas. Sign of progression. May worsen if untreated. Medium risk.",
+    "f3": "Advanced fibrosis with extensive fibrous bridges. Liver starts losing function. High risk.",
+    "f4": "Cirrhosis: severe distortion of liver tissue and significant loss of function. May lead to HCC or liver failure. Very high risk.",
+    "send_email_explanation": "Send report by email",
+    "email_placeholder": "Recipient's email:",
+    "cancel_email": "Cancel sending",
+    "send_email": "Send Report",
+    "share_study": "Share study with another doctor",
+    "select_doctor": "Select a doctor:",
+    "select": "-- Select --",
+    "cancel_share": "Cancel",
+    "share_confirm": "Share"
+  },
 
   "pagination": {
     "page": "Page",
     "of": "of"
   },
-  
+
   "profile": {
     "registeredAt": "Registered at",
     "phoneNumber": "Phone number"
@@ -323,7 +346,7 @@
     "title": "HCC-AI Assistant",
     "send_query": "Ask your question...",
     "send_button": "Ask"
-  },  
+  },
 
   "links": {
     "title": "Useful Links",
@@ -339,9 +362,15 @@
     "add_reminder_for": "Add Reminder",
     "reminders": "Reminders",
     "add": "Add",
-    "reminder_placeholder": "Write the reminder"
+    "reminder_placeholder": "Write the reminder",
+    "calendar_leyend": "Calendar Legend",
+    "days_with_tasks": "Days with pending tasks",
+    "all_tasks_completed": "Days with all tasks completed",
+    "daily_email_info": "Every day at 7:00 AM, an email is sent with the day's pending tasks. To disable this feature: Settings > Preferences > Disable daily email.",
+    "enable_daily_reminder": "Enable daily reminder emails",
+    "disable_daily_reminder": "Disable daily reminder emails"
   },
-  
+
   "actions": {
     "create": "Create",
     "delete": "Delete",
@@ -353,7 +382,6 @@
     "view": "View",
     "previous": "Previous",
     "next": "Next"
-
   },
 
   "settings": {
@@ -388,8 +416,6 @@
       "confirm_word": "delete",
       "confirm_error": "Please type correctly to confirm.",
       "deleting": "Deleting..."
-
-
     },
     "profile": {
       "username": "Username",
@@ -402,7 +428,7 @@
       "previsualization": "Photo preview",
       "loading": "Loading profile...",
       "upload_image": "Upload Image"
-    }, 
+    },
     "preferences": {
       "theme": "Theme:",
       "current_theme": "Current theme:",
@@ -415,7 +441,7 @@
       "active": "Active",
       "desactive": "Inactive",
       "reset": "Reset Preferences",
-      "dark" : "Dark",
+      "dark": "Dark",
       "light": "Light"
     },
     "help": {
@@ -447,7 +473,8 @@
       "rol": "Role"
     },
     "common": {
-      "save_changes": "Save Changes"
+      "save_changes": "Save Changes",
+      "saving": "Saving changes..."
     }
   },
 
@@ -489,7 +516,7 @@
     "nameUnavailable": "Name not available"
   },
   "warning": {
-    "pc_optimization": "⚠️ This application is optimized for desktop screens. Some interfaces may overlap on mobile devices. For the best experience, please access from a PC or laptop."
+    "pc_optimitation": "⚠️ This application is optimized for desktop screens. Some interfaces may overlap on mobile devices. For the best experience, please access from a PC or laptop."
   },
 
   "documentation": {
@@ -507,8 +534,21 @@
     "Backend_Docs": "Backend Technical Documentation",
     "Frontend_Docs": "Frontend Technical Documentation",
     "Source_Code": "Repository with the Source Code"
+  },
+
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "image_uploaded": "Image uploaded successfully.",
+    "image_anonymized": "Image anonymized successfully.",
+    "image_downloaded": "Image downloaded successfully.",
+    "image_editing": "Image editing in progress...",
+    "image_analysis_failed": "Image analysis failed. Please try again.",
+    "study_created": "Study created successfully.",
+    "study_deleted": "Study deleted successfully.",
+    "study_updated": "Study updated successfully.",
+    "study_not_found": "Study not found."
   }
-
-
-
 }

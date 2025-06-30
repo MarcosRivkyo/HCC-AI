@@ -19,6 +19,7 @@ import "react-calendar/dist/Calendar.css";
 import "../../calendar-overrides.css";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
+import { ToastContainer } from "react-toastify";
 
 const CalendarPageView: React.FC = () => {
   const {
@@ -63,6 +64,19 @@ const CalendarPageView: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -252,27 +266,30 @@ const CalendarPageView: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 max-w-sm w-full relative">
               <button
                 onClick={() => setIsHelpOpen(false)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white bg-blue"
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
               >
                 <XMarkIcon className="w-5 h-5" />
               </button>
               <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white">
-                Leyenda del calendario
+                {t("calendar.calendar_leyend")}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-3 text-sm mb-4">
                 <li className="flex items-center gap-3">
                   <span className="w-4 h-4 rounded bg-yellow-500 border border-gray-400"></span>
                   <span className="text-gray-700 dark:text-gray-200">
-                    Días con tareas pendientes
+                    {t("calendar.days_with_tasks")}
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="w-4 h-4 rounded bg-emerald-500 border border-gray-400"></span>
                   <span className="text-gray-700 dark:text-gray-200">
-                    Días con todas las tareas completadas
+                    {t("calendar.all_tasks_completed")}
                   </span>
                 </li>
               </ul>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                {t("calendar.daily_email_info")}
+              </p>
             </div>
           </div>
         )}

@@ -6,7 +6,7 @@ import { MemoryRouter } from "react-router-dom";
  * Vista: Assistant
  *
  * Descripción:
- * La vista `Assistant` implementa una interfaz de conversación tipo chatbot que actúa como asistente virtual dentro de la plataforma HCC-AI. 
+ * La vista `Assistant` implementa una interfaz de conversación tipo chatbot que actúa como asistente virtual dentro de la plataforma HCC-AI.
  * Está integrada con un modelo de lenguaje para ofrecer soporte contextual, guía interactiva y respuestas automáticas a consultas frecuentes de los usuarios.
  *
  * Dependencias:
@@ -61,7 +61,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Representación completa de la vista de asistente AI. Muestra el entorno de conversación y lógica de interacción básica con el usuario.",
+        story:
+          "Representación completa de la vista de asistente AI. Muestra el entorno de conversación y lógica de interacción básica con el usuario.",
       },
     },
   },

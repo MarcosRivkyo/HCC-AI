@@ -2,22 +2,22 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Documentación para el ViewModel `useCalendarViewModel`.
- * 
+ *
  * Este ViewModel gestiona la lógica y estado de la vista de calendario y recordatorios en la plataforma HCC-AI.
- * 
+ *
  * Funcionalidades principales:
  * - Gestión del usuario autenticado y sus datos.
  * - Carga y actualización de recordatorios según el mes y la fecha seleccionada.
  * - Añadir, eliminar y marcar recordatorios como completados.
  * - Sincronización con DAOs para persistencia y recuperación de datos.
- * 
+ *
  * Estados y métodos expuestos:
  * - user, userData: información del usuario.
  * - reminders: lista de recordatorios.
  * - selectedDate: fecha activa en el calendario.
  * - newReminder: texto del nuevo recordatorio.
  * - funciones para modificar estados y realizar acciones CRUD sobre recordatorios.
- * 
+ *
  * Uso:
  * Este ViewModel es utilizado por la vista de calendario para mantener sincronía entre UI y datos,
  * facilitando la gestión eficiente y reactiva de recordatorios personales.

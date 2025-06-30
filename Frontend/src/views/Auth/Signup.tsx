@@ -44,11 +44,9 @@ export default function Signup() {
 
   return (
     <div className="w-full h-screen flex flex-col md:flex-row">
-
       <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
-
 
       <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
@@ -62,7 +60,9 @@ export default function Signup() {
             <h3 className="text-2xl md:text-4xl font-bold mb-2 text-center">
               {t("signup.title")}
             </h3>
-            <p className="text-md md:text-lg mb-4 text-center">{t("signup.subtitle")}</p>
+            <p className="text-md md:text-lg mb-4 text-center">
+              {t("signup.subtitle")}
+            </p>
           </div>
 
           <input
@@ -164,9 +164,13 @@ export default function Signup() {
             onChange={(e) => setPhone(e.target.value)}
           />
 
-          {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+          {error && (
+            <div className="text-red-500 mb-4 text-center">{error}</div>
+          )}
           {verificationMessage && (
-            <div className="text-green-500 mb-4 text-center">{verificationMessage}</div>
+            <div className="text-green-500 mb-4 text-center">
+              {verificationMessage}
+            </div>
           )}
 
           <div className="w-full flex flex-col mb-4">
@@ -181,7 +185,9 @@ export default function Signup() {
 
           <div className="w-full flex items-center justify-center relative py-4">
             <div className="w-full h-[1px] bg-gray-500"></div>
-            <p className="text-sm md:text-lg absolute text-gray-500 bg-black px-2">OR</p>
+            <p className="text-sm md:text-lg absolute text-gray-500 bg-black px-2">
+              OR
+            </p>
           </div>
 
           <div className="w-full flex items-center justify-center mt-10">

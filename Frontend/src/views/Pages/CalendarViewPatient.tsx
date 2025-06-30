@@ -10,6 +10,7 @@ import "react-calendar/dist/Calendar.css";
 import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
 import "../../calendar-overrides.css";
+import { ToastContainer } from "react-toastify";
 
 const CalendarViewPatient: React.FC = () => {
   const {
@@ -29,6 +30,19 @@ const CalendarViewPatient: React.FC = () => {
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 border border-gray-300 dark:border-gray-700">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       <Calendar
         onChange={(date) => {
           setValue(date as Date);

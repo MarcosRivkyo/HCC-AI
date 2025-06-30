@@ -19,7 +19,9 @@ export function useDeleteAccountViewModel() {
     const dirRef = ref(storage, path);
     const listResult = await listAll(dirRef);
 
-    const deleteFilePromises = listResult.items.map((itemRef) => deleteObject(itemRef));
+    const deleteFilePromises = listResult.items.map((itemRef) =>
+      deleteObject(itemRef),
+    );
     const deleteFolderPromises = listResult.prefixes.map((folderRef) =>
       deleteAllUserFiles(folderRef.fullPath),
     );
@@ -27,8 +29,6 @@ export function useDeleteAccountViewModel() {
     await Promise.all([...deleteFilePromises, ...deleteFolderPromises]);
   };
 
-
-  
   const deleteUserStudiesAndPredictions = async (userId: string) => {
     const studies = await StudyDAO.getDoctorStudies(userId);
     for (const study of studies) {
@@ -49,7 +49,9 @@ export function useDeleteAccountViewModel() {
       return;
     }
 
-    const isConfirmed = window.confirm(t("settings.account.delete_acount_warning"));
+    const isConfirmed = window.confirm(
+      t("settings.account.delete_acount_warning"),
+    );
     if (!isConfirmed) return;
 
     try {

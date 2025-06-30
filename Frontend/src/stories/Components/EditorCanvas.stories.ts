@@ -7,8 +7,8 @@ import * as fabric from "fabric";
  * Componente: EditorCanvas
  *
  * Descripción:
- * `EditorCanvas` es un componente que encapsula un canvas interactivo utilizando la librería `fabric.js`. 
- * Está diseñado para permitir la creación y manipulación de objetos gráficos en tiempo real mediante eventos del usuario, 
+ * `EditorCanvas` es un componente que encapsula un canvas interactivo utilizando la librería `fabric.js`.
+ * Está diseñado para permitir la creación y manipulación de objetos gráficos en tiempo real mediante eventos del usuario,
  * como pulsaciones de teclado y acciones de arrastre.
  *
  * Dependencias:
@@ -50,11 +50,12 @@ export default meta;
 type Story = StoryObj<typeof EditorCanvas>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo básico del lienzo con un rectángulo añadido y soporte de teclado habilitado para pruebas de interacción.",
+        story:
+          "Ejemplo básico del lienzo con un rectángulo añadido y soporte de teclado habilitado para pruebas de interacción.",
       },
     },
   },

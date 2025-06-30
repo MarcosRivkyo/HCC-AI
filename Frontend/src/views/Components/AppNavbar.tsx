@@ -69,7 +69,7 @@ const Navbar: React.FC = () => {
             >
               {t("navbar.documentation")}
             </button>
-          </li>          
+          </li>
         </ul>
 
         {/* Logo central */}
@@ -114,15 +114,17 @@ const Navbar: React.FC = () => {
                 <div className="absolute top-full left-0 w-full bg-gray-900 rounded-xl shadow-xl mt-2 border border-gray-700 transition-all duration-300 ease-out animate-fade-in">
                   <button
                     onClick={async () => {
-
-                      navigate("/dashboard");                      
+                      navigate("/dashboard");
                       try {
                         await Promise.all([
-                          fetch(import.meta.env.VITE_BACKEND_URL + "/", { method: "GET" }),
-                          fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", { method: "GET" }),
+                          fetch(import.meta.env.VITE_BACKEND_URL + "/", {
+                            method: "GET",
+                          }),
+                          fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", {
+                            method: "GET",
+                          }),
                         ]);
-                      } catch (err) {
-                      }
+                      } catch (err) {}
                     }}
                     className="flex items-center px-4 py-3 w-full text-left hover:bg-gray-800 transition duration-200"
                   >
@@ -133,7 +135,6 @@ const Navbar: React.FC = () => {
                   <Logout />
                 </div>
               )}
-
             </div>
           ) : (
             <>
@@ -177,35 +178,42 @@ const Navbar: React.FC = () => {
       {/* Menú móvil */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-4 space-y-4 bg-gray-900 p-4 rounded-lg shadow-lg">
-        {[
-          { id: "home", label: t("navbar.home"), type: "scroll" },
-          { id: "objectives", label: t("navbar.objective"), type: "scroll" },
-          { id: "services", label: t("navbar.services"), type: "scroll" },
-          { id: "technology", label: t("navbar.technologies"), type: "scroll" },
-          { id: "/documentation", label: t("navbar.documentation"), type: "link" },
-        ].map((item) => (
-          <div key={item.id}>
-            <button
-              onClick={() => {
-                if (item.type === "scroll") {
-                  scrollToSection(item.id);
-                } else {
-                  navigate(item.id);
-                }
-                setMobileMenuOpen(false);
-                setIsOpen(false);
-              }}
-              className={`block w-full text-left text-sm ${
-                selectedSection === item.id
-                  ? "text-red-400 font-bold"
-                  : "text-white"
-              }`}
-            >
-              {item.label}
-            </button>
-          </div>
-        ))}
-
+          {[
+            { id: "home", label: t("navbar.home"), type: "scroll" },
+            { id: "objectives", label: t("navbar.objective"), type: "scroll" },
+            { id: "services", label: t("navbar.services"), type: "scroll" },
+            {
+              id: "technology",
+              label: t("navbar.technologies"),
+              type: "scroll",
+            },
+            {
+              id: "/documentation",
+              label: t("navbar.documentation"),
+              type: "link",
+            },
+          ].map((item) => (
+            <div key={item.id}>
+              <button
+                onClick={() => {
+                  if (item.type === "scroll") {
+                    scrollToSection(item.id);
+                  } else {
+                    navigate(item.id);
+                  }
+                  setMobileMenuOpen(false);
+                  setIsOpen(false);
+                }}
+                className={`block w-full text-left text-sm ${
+                  selectedSection === item.id
+                    ? "text-red-400 font-bold"
+                    : "text-white"
+                }`}
+              >
+                {item.label}
+              </button>
+            </div>
+          ))}
 
           <div className="border-t border-gray-700 pt-4">
             {user && user.emailVerified ? (

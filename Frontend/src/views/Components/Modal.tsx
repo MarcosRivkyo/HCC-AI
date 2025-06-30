@@ -1,8 +1,6 @@
 // src/views/Components/Modal.tsx
 
-
 import React from "react";
-
 
 type ModalProps = {
   open: boolean;

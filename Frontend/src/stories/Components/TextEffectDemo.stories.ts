@@ -6,8 +6,8 @@ import { TextEffectDemo } from "../../views/Components/TextEffectDemo";
  * Componente: TextEffectDemo
  *
  * Descripción:
- * `TextEffectDemo` es un componente de demostración que renderiza un título animado palabra por palabra, 
- * utilizando efectos visuales progresivos de entrada basados en opacidad y desenfoque. Está pensado para su uso en portadas, 
+ * `TextEffectDemo` es un componente de demostración que renderiza un título animado palabra por palabra,
+ * utilizando efectos visuales progresivos de entrada basados en opacidad y desenfoque. Está pensado para su uso en portadas,
  * secciones introductorias o encabezados destacados de la plataforma.
  *
  * Dependencias:
@@ -26,7 +26,7 @@ import { TextEffectDemo } from "../../views/Components/TextEffectDemo";
 const meta: Meta<typeof TextEffectDemo> = {
   title: "Components/TextEffectDemo",
   component: TextEffectDemo,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     lang: "es",
   },
@@ -74,21 +74,23 @@ export const Spanish: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo del componente mostrando un título animado en español, utilizado como introducción en la plataforma HCC-AI.",
+        story:
+          "Ejemplo del componente mostrando un título animado en español, utilizado como introducción en la plataforma HCC-AI.",
       },
     },
   },
 };
 
 export const English: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   args: {
     lang: "eng",
   },
   parameters: {
     docs: {
       description: {
-        story: "Versión en inglés del componente, con animación secuencial de palabras para la presentación del sistema HCC-AI.",
+        story:
+          "Versión en inglés del componente, con animación secuencial de palabras para la presentación del sistema HCC-AI.",
       },
     },
   },

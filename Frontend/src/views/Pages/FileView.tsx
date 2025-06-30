@@ -3,7 +3,7 @@
 import { useFilesViewModel } from "../../viewmodels/useFileViewModel.ts";
 import React, { useEffect } from "react";
 
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import NavbarSecond from "../Components/InsideNavbar.tsx";
 import ProfileModal from "../Components/ProfileModal.tsx";
 import SettingsModal from "../Components/SettingsModal.tsx";
@@ -21,7 +21,7 @@ import {
   FiTrash2,
   FiEye,
   FiInfo,
-  FiEdit  
+  FiEdit,
 } from "react-icons/fi";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useTranslation } from "react-i18next";
@@ -84,6 +84,19 @@ const FilesPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-100 via-white to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-all duration-300">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -186,7 +199,6 @@ const FilesPage: React.FC = () => {
                           <FiImage size={20} />
                         )}
                         {t(`files.folders.${folderName}`)}
-
                       </div>
                       <div className="flex items-center gap-3">
                         {isOpen ? (
@@ -202,8 +214,8 @@ const FilesPage: React.FC = () => {
                         {paginatedFiles.length === 0 ? (
                           <div className="px-5 py-4 text-center text-gray-500 dark:text-gray-400 italic">
                             {folderName === "informes"
-                            ? t("files.no_reports")
-                            : t("files.no_images")}
+                              ? t("files.no_reports")
+                              : t("files.no_images")}
                           </div>
                         ) : (
                           <div className="px-5 pb-6 pt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
@@ -263,7 +275,6 @@ const FilesPage: React.FC = () => {
                                       className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1 hover:underline"
                                     >
                                       <FiEye /> {t("files.view")}
-
                                     </a>
 
                                     {folderName !== "informes" &&
@@ -356,7 +367,9 @@ const FilesPage: React.FC = () => {
                   <ul className="space-y-2 text-sm">
                     <li className="flex justify-between items-center">
                       <span>
-                        <span className="font-semibold">{t("files.fields.study_id")}:</span>{" "}
+                        <span className="font-semibold">
+                          {t("files.fields.study_id")}:
+                        </span>{" "}
                         {imageInfo.estudioId}
                       </span>
                       <button
@@ -371,35 +384,49 @@ const FilesPage: React.FC = () => {
                     </li>
 
                     <li>
-                      <span className="font-semibold">{t("files.fields.uploaded_by")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.uploaded_by")}:
+                      </span>{" "}
                       {imageInfo.subidoPorDoctorId}
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.upload_date")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.upload_date")}:
+                      </span>{" "}
                       {new Date(
                         imageInfo.fechaSubida.seconds * 1000,
                       ).toLocaleString()}
                     </li>
 
                     <li>
-                      <span className="font-semibold">{t("files.fields.resolution")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.resolution")}:
+                      </span>{" "}
                       {imageInfo.resolucion}
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.size")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.size")}:
+                      </span>{" "}
                       {imageInfo.pesoKB} KB
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.type")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.type")}:
+                      </span>{" "}
                       {imageInfo.tipo}
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.prediction_id")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.prediction_id")}:
+                      </span>{" "}
                       {imageInfo.idPrediccion || "Aún sin analizar"}
                     </li>
 
                     <li>
-                      <span className="font-semibold">{t("files.fields.predicted_class")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.predicted_class")}:
+                      </span>{" "}
                       {typeof imageInfo.clasePredicha === "number"
                         ? imageInfo.clasePredicha
                         : "Aún sin analizar"}
@@ -424,22 +451,30 @@ const FilesPage: React.FC = () => {
 
                   <ul className="space-y-2 text-sm">
                     <li>
-                      <span className="font-semibold">{t("files.fields.study_id")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.study_id")}:
+                      </span>{" "}
                       {documentInfo.estudioId}
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.upload_date")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.upload_date")}:
+                      </span>{" "}
                       {new Date(
                         documentInfo.fechaCreacion.seconds * 1000,
                       ).toLocaleString()}
                     </li>
 
                     <li>
-                      <span className="font-semibold">{t("files.fields.doctor")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.doctor")}:
+                      </span>{" "}
                       {documentInfo.doctorId}
                     </li>
                     <li>
-                      <span className="font-semibold">{t("files.fields.patient")}:</span>{" "}
+                      <span className="font-semibold">
+                        {t("files.fields.patient")}:
+                      </span>{" "}
                       {documentInfo.pacienteId}
                     </li>
                   </ul>
@@ -457,7 +492,9 @@ const FilesPage: React.FC = () => {
               {t("files.confirm_delete_title")}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
-              {t("files.confirm_delete_text", { fileName: fileToDelete.fileName })}{" "}
+              {t("files.confirm_delete_text", {
+                fileName: fileToDelete.fileName,
+              })}{" "}
               <strong>{fileToDelete.fileName}</strong>
             </p>
             <div className="flex justify-end gap-4">

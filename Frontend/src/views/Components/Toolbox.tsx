@@ -51,15 +51,15 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
 
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const [history, setHistory] = useState<any[]>([]); 
-  const [historyIndex, setHistoryIndex] = useState<number>(-1); 
+  const [history, setHistory] = useState<any[]>([]);
+  const [historyIndex, setHistoryIndex] = useState<number>(-1);
 
   const [brushType, setBrushType] = useState("pen");
 
   const [isDrawingRect, setIsDrawingRect] = useState(false);
   const [isDrawingCircle, setIsDrawingCircle] = useState(false);
 
-  const [isDrawing, setIsDrawing] = useState(false); 
+  const [isDrawing, setIsDrawing] = useState(false);
 
   const [isDrawingLine, setIsDrawingLine] = useState(false);
   const [startPoint, setStartPoint] = useState<{ x: number; y: number } | null>(
@@ -462,7 +462,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
           canvas.remove(distanceText);
           distanceText = null;
         }
-        canvas.remove(shape); 
+        canvas.remove(shape);
         setIsDrawingLine(false);
       }
 
@@ -540,10 +540,9 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
 
         const scaleX = maxWidth / image.width!;
         const scaleY = maxHeight / image.height!;
-        const scale = Math.min(scaleX, scaleY); 
+        const scale = Math.min(scaleX, scaleY);
 
         image.scale(scale);
-
 
         image.set({
           selectable: false,
@@ -557,17 +556,17 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
           hasControls: false,
         });
 
-        image.set("id", "backgroundImage"); 
+        image.set("id", "backgroundImage");
 
         canvas.add(image);
-        canvas.centerObject(image); 
+        canvas.centerObject(image);
         saveStateToHistory();
         canvas.renderAll();
       }
     };
 
-    reader.readAsDataURL(file); 
-    e.target.value = ""; 
+    reader.readAsDataURL(file);
+    e.target.value = "";
   };
   const addText = () => {
     if (!canvas) return;
@@ -584,7 +583,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
       left: 100,
       top: 100,
       fontSize: 30,
-      fill: textColor, 
+      fill: textColor,
     });
 
     canvas.add(text);
@@ -614,7 +613,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
     setBrushColor(e.target.value);
 
     if (canvas.isDrawingMode) {
-      canvas.freeDrawingBrush.color = e.target.value; 
+      canvas.freeDrawingBrush.color = e.target.value;
     }
   };
 
@@ -747,7 +746,7 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
       confirmCrop();
       cropBtn.remove();
     };
-    document.body.appendChild(cropBtn); 
+    document.body.appendChild(cropBtn);
     saveStateToHistory();
   };
 

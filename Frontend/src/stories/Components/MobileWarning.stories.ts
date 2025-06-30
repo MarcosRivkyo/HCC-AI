@@ -50,11 +50,12 @@ export default meta;
 type Story = StoryObj<typeof MobileWarning>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto del componente de advertencia para dispositivos móviles. Visible únicamente si se simula un agente móvil.",
+        story:
+          "Ejemplo por defecto del componente de advertencia para dispositivos móviles. Visible únicamente si se simula un agente móvil.",
       },
     },
   },

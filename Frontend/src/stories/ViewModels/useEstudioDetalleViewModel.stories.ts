@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Documentación para el ViewModel `useEstudioDetalleViewModel`.
- * 
+ *
  * Este ViewModel gestiona toda la lógica relacionada con la vista detallada de un estudio clínico en la plataforma HCC-AI.
- * 
+ *
  * Funcionalidades principales:
  * - Carga y manejo de datos del estudio, usuario y permisos.
  * - Gestión de imágenes, predicciones y segmentaciones asociadas.
@@ -14,13 +14,13 @@ import type { Meta, StoryObj } from "@storybook/react";
  * - Control de modales para explicación, email, perfil, leyendas y compartición.
  * - Manejo de preferencias de usuario como tema, idioma, escala y contraste.
  * - Comunicación con múltiples DAOs y servicios externos (Firebase, backend IA, email).
- * 
+ *
  * Estados y métodos expuestos:
  * - Información detallada del estudio y sus predicciones.
  * - Estados de carga, edición, subida y visualización.
  * - Funciones para editar, eliminar, compartir, generar PDFs y enviar correos.
  * - Funciones auxiliares para procesamiento de imágenes y análisis IA.
- * 
+ *
  * Uso:
  * Este ViewModel es el núcleo lógico de la página detallada del estudio, proporcionando un API completa para la UI y gestionando sincronización con backend y servicios externos.
  */

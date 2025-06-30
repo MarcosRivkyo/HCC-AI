@@ -26,7 +26,6 @@ export function useLoginViewModel() {
       const userCredential = await AuthDAO.login(email, password);
       const user = userCredential.user;
 
-
       if (user.emailVerified) {
         navigate("/dashboard");
         setTransitioning(true);
@@ -36,10 +35,7 @@ export function useLoginViewModel() {
             fetch(import.meta.env.VITE_BACKEND_URL + "/", { method: "GET" }),
             fetch(import.meta.env.VITE_AI_BACKEND_URL + "/", { method: "GET" }),
           ]);
-        } catch (err) {
-        }
-
-
+        } catch (err) {}
       } else {
         await AuthDAO.logout();
         setError("Debes verificar tu correo antes de acceder.");
@@ -99,4 +95,3 @@ export function useLoginViewModel() {
     handlePasswordReset,
   };
 }
- 

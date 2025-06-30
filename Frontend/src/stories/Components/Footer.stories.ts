@@ -6,7 +6,7 @@ import Footer from "../../views/Components/AppFooter";
  * Componente: Footer
  *
  * Descripción:
- * `Footer` es el componente que representa el pie de página de la aplicación HCC-AI. 
+ * `Footer` es el componente que representa el pie de página de la aplicación HCC-AI.
  * Está diseñado para ofrecer información institucional, enlaces a entidades colaboradoras y datos de contacto personal/profesional.
  *
  * Dependencias:
@@ -25,7 +25,7 @@ import Footer from "../../views/Components/AppFooter";
 const meta: Meta<typeof Footer> = {
   title: "Components/Footer",
   component: Footer,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
     docs: {
       description: {
@@ -53,11 +53,12 @@ export default meta;
 type Story = StoryObj<typeof Footer>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Renderizado por defecto del pie de página institucional con enlaces de contacto y contenido traducido.",
+        story:
+          "Renderizado por defecto del pie de página institucional con enlaces de contacto y contenido traducido.",
       },
     },
   },

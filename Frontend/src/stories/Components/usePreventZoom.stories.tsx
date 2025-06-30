@@ -7,7 +7,7 @@ import usePreventZoom from "../../views/Components/usePreventZoom";
  * Componente: usePreventZoom (Demo)
  *
  * Descripción:
- * Este componente de demostración utiliza el hook personalizado `usePreventZoom` para desactivar los mecanismos de zoom 
+ * Este componente de demostración utiliza el hook personalizado `usePreventZoom` para desactivar los mecanismos de zoom
  * predeterminados del navegador. Resulta especialmente útil en aplicaciones donde el escalado visual puede interferir con la precisión del diseño,
  * como visores médicos, editores gráficos o interfaces con layouts fijos.
  *
@@ -28,11 +28,13 @@ const UsePreventZoomDemo: React.FC = () => {
     <div className="p-6 text-center">
       <h2 className="text-xl font-bold mb-4">Demo: usePreventZoom</h2>
       <p>
-        Prueba realizar <strong>Ctrl + Scroll</strong> o <strong>Ctrl + + / -</strong>. 
-        El navegador no responderá con zoom gracias a la acción del hook.
+        Prueba realizar <strong>Ctrl + Scroll</strong> o{" "}
+        <strong>Ctrl + + / -</strong>. El navegador no responderá con zoom
+        gracias a la acción del hook.
       </p>
       <p className="mt-4 text-gray-500">
-        Este comportamiento es útil en interfaces sensibles al escalado, como editores, dashboards o visores clínicos.
+        Este comportamiento es útil en interfaces sensibles al escalado, como
+        editores, dashboards o visores clínicos.
       </p>
     </div>
   );
@@ -76,11 +78,12 @@ export default meta;
 type Story = StoryObj<typeof UsePreventZoomDemo>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto que previene el zoom por scroll y combinaciones de teclado al activar el hook con ambos flags en true.",
+        story:
+          "Ejemplo por defecto que previene el zoom por scroll y combinaciones de teclado al activar el hook con ambos flags en true.",
       },
     },
   },

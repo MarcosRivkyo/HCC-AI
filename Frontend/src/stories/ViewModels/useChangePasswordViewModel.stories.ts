@@ -2,21 +2,21 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 /**
  * Documentación para el ViewModel `useChangePasswordViewModel`.
- * 
+ *
  * Este ViewModel gestiona la lógica relacionada con la solicitud de restablecimiento
  * de contraseña para usuarios autenticados en la plataforma HCC-AI.
- * 
+ *
  * Funcionalidades principales:
  * - Controla estados de carga, error y éxito en la petición.
  * - Utiliza el servicio AuthDAO para enviar el email de restablecimiento.
  * - Soporta internacionalización con `react-i18next`.
- * 
+ *
  * Estados y métodos expuestos:
  * - `loading`: indica si la solicitud está en proceso.
  * - `error`: mensaje de error si ocurre algún fallo.
  * - `successMessage`: mensaje de éxito tras enviar el email.
  * - `handlePasswordReset`: función para iniciar el proceso de restablecimiento.
- * 
+ *
  * Uso:
  * Integrar en formularios de cambio o recuperación de contraseña, mostrando
  * feedback adecuado según el resultado de la operación.

@@ -15,15 +15,15 @@ const MobileWarning: React.FC = () => {
     if (isMobile) {
       setVisible(true);
     }
-  }, []);
+  }, [i18n.language]);
 
   if (!visible) return null;
 
-return (
-  <div className="fixed top-[4.5rem] w-full z-[40] bg-yellow-100 text-yellow-900 p-3 text-sm text-center shadow-md">
-    {t("warning.pc_optimitation")}
-  </div>
-);
+  return (
+    <div className="fixed top-[4.5rem] w-full z-[40] bg-yellow-100 text-yellow-900 p-3 text-sm text-center shadow-md">
+      {t("warning.pc_optimitation")}
+    </div>
+  );
 };
 
 export default MobileWarning;

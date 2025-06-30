@@ -9,7 +9,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { useRecentStudiesViewModel } from "../../viewmodels/useRecentStudiesViewModel";
 
-
 interface EstudiosRecientesProps {
   onEstudiosActualizados?: () => void;
   mockData?: {
@@ -21,7 +20,6 @@ interface EstudiosRecientesProps {
 
 const EstudiosRecientes: React.FC<EstudiosRecientesProps> = ({ mockData }) => {
   const {
-
     setPaginaActual,
     busquedaNombre,
     setBusquedaNombre,
@@ -37,7 +35,6 @@ const EstudiosRecientes: React.FC<EstudiosRecientesProps> = ({ mockData }) => {
     setMenuActivo,
     menuRef,
   } = useRecentStudiesViewModel();
-
 
   const estudiosPaginados = mockData?.estudiosPaginados ?? [];
   const estudiosFiltrados = mockData?.estudiosFiltrados ?? [];

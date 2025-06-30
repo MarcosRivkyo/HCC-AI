@@ -1,12 +1,11 @@
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { ModelData } from "../../models/AiModels";
-import {auth, db} from "../../config/firebase"
+import { auth, db } from "../../config/firebase";
 
 export const ModelsDAO = {
-
   async getCurrentUser() {
     return new Promise((resolve) =>
-      auth.onAuthStateChanged((user) => resolve(user))
+      auth.onAuthStateChanged((user) => resolve(user)),
     );
   },
 
@@ -14,7 +13,6 @@ export const ModelsDAO = {
     const userDoc = await getDoc(doc(db, "hcc_ai_users", uid));
     return userDoc.exists() ? userDoc.data() : null;
   },
-
 
   async listModels(): Promise<ModelData[]> {
     const snapshot = await getDocs(collection(db, "hcc_ai_models"));
@@ -40,7 +38,5 @@ export const ModelsDAO = {
     };
 
     return [...modelsFromDb, geminiModel];
-  }
-
-
+  },
 };

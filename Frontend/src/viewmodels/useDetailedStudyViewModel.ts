@@ -98,8 +98,8 @@ export const useEstudioDetalleViewModel = () => {
     null,
   );
   const [explicacionGenerada, setExplicacionGenerada] = useState<string>("");
-  const [progress, setProgress] = useState<number>(0); 
-  const [showModal, setShowModal] = useState<boolean>(false); 
+  const [progress, setProgress] = useState<number>(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [usarExplicacionIA, setUsarExplicacionIA] = useState(true);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailToSend, setEmailToSend] = useState("");
@@ -107,9 +107,9 @@ export const useEstudioDetalleViewModel = () => {
   const [doctorsList, setDoctorsList] = useState<any[]>([]);
   const [selectedDoctorId, setSelectedDoctorId] = useState("");
 
-  const [fileName, setFileName] = useState<string>(""); 
+  const [fileName, setFileName] = useState<string>("");
   const isPatient = userData?.rol === "Paciente";
-  const chartRef = useRef(null);
+  const chartRef = useRef<HTMLDivElement | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState(
@@ -458,13 +458,13 @@ export const useEstudioDetalleViewModel = () => {
     if (estudio.imagenUrl || segmentationUrl) {
       const imgSize = 67.7;
       const spacing = 10;
-      const blockHeight = imgSize + 35; 
+      const blockHeight = imgSize + 35;
       y = drawSectionBox(y, blockHeight, "Imágenes del Estudio");
 
       const x1 = (pageWidth - imgSize * 2 - spacing) / 2;
       const x2 = x1 + imgSize + spacing;
 
-      const yTitles = y + 10; 
+      const yTitles = y + 10;
       const yImg = yTitles + 6;
 
       // Subtítulos centrados sobre las imágenes
@@ -649,7 +649,7 @@ export const useEstudioDetalleViewModel = () => {
       console.error("Error al enviar informe por correo:", error);
       toast.error("Ocurrió un error al enviar el correo.");
     } finally {
-      setIsSendingEmail(false); 
+      setIsSendingEmail(false);
     }
   };
 
@@ -821,10 +821,13 @@ export const useEstudioDetalleViewModel = () => {
       return "Error al conectar con el servicio de explicación médica.";
     }
   };
-  const handleDownloadChart = async () => {
+
+  const handleDownloadChart = () => {
     if (!chartRef.current) return;
 
-    const canvas = await html2canvas(chartRef.current);
+    const canvas = chartRef.current.querySelector("canvas");
+    if (!canvas) return;
+
     const link = document.createElement("a");
     link.download = `grafico_${selectedClassificationModel}_${new Date().toISOString().slice(0, 10)}.png`;
     link.href = canvas.toDataURL("image/png");

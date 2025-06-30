@@ -1,12 +1,12 @@
 // src/views/Pages/Docs.tsx
 
 import React from "react";
-import { FiFileText, FiExternalLink, FiArrowLeft  } from "react-icons/fi";
+import { FiFileText, FiExternalLink, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Components/AppFooter";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import usePreventZoom from "../Components/usePreventZoom";
-import { FaServer, FaReact, FaGitlab  } from "react-icons/fa";
+import { FaServer, FaReact, FaGitlab } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
@@ -16,32 +16,56 @@ import frenchFlag from "../../assets/images/french_language.jpg";
 import germanFlag from "../../assets/images/german_language.png";
 
 const pdfUrls = [
-  { name: "TFG_Report", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FMarcosRivasKyoguro.pdf?alt=media&token=ecd1cfa8-36bc-4c16-a5f3-856709534758" },
-  { name: "Annex_I", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20I.%20Plan%20de%20Proyecto%20Software.pdf?alt=media&token=48dd08f7-4613-4d5a-8470-59a34f963a28" },
-  { name: "Annex_II", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20II.%20Especificaci%C3%B3n%20de%20Requisitos%20Software.pdf?alt=media&token=cb7340a6-0fb2-4dc5-a9da-66755764ba6b" },
-  { name: "Annex_III", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=42ce5139-30a5-48e9-a6e0-b0f5bab7a608" },
-  { name: "Annex_IV", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=025d297f-ae4a-400e-ac81-ef6f7096857e" },
-  { name: "Annex_V", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20V.%20Documentaci%C3%B3n%20T%C3%A9cnica%20de%20Programaci%C3%B3n.pdf?alt=media&token=3d27fcef-de18-4df5-8be6-e2e59aca5b27" },
-  { name: "Annex_VI", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20de%20Usuario.pdf?alt=media&token=958c4932-5f6e-492c-ae29-d0e3cf3ce377" },
-  { name: "Annex_VII", url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VII.%20Desarrollo%20de%20la%20Inteligencia%20Artificial.pdf?alt=media&token=57143b72-0aa5-4c7a-835a-aef7f7506064" }
+  {
+    name: "TFG_Report",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FMarcosRivasKyoguro.pdf?alt=media&token=ecd1cfa8-36bc-4c16-a5f3-856709534758",
+  },
+  {
+    name: "Annex_I",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20I.%20Plan%20de%20Proyecto%20Software.pdf?alt=media&token=48dd08f7-4613-4d5a-8470-59a34f963a28",
+  },
+  {
+    name: "Annex_II",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20II.%20Especificaci%C3%B3n%20de%20Requisitos%20Software.pdf?alt=media&token=cb7340a6-0fb2-4dc5-a9da-66755764ba6b",
+  },
+  {
+    name: "Annex_III",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=42ce5139-30a5-48e9-a6e0-b0f5bab7a608",
+  },
+  {
+    name: "Annex_IV",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=025d297f-ae4a-400e-ac81-ef6f7096857e",
+  },
+  {
+    name: "Annex_V",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20V.%20Documentaci%C3%B3n%20T%C3%A9cnica%20de%20Programaci%C3%B3n.pdf?alt=media&token=3d27fcef-de18-4df5-8be6-e2e59aca5b27",
+  },
+  {
+    name: "Annex_VI",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20de%20Usuario.pdf?alt=media&token=958c4932-5f6e-492c-ae29-d0e3cf3ce377",
+  },
+  {
+    name: "Annex_VII",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VII.%20Desarrollo%20de%20la%20Inteligencia%20Artificial.pdf?alt=media&token=57143b72-0aa5-4c7a-835a-aef7f7506064",
+  },
 ];
 
 const externalLinks = [
   {
     name: "Backend_Docs",
     url: "https://hcc-ai-backend-1084523848624.europe-west2.run.app/docs",
-    icon: <FaServer size={22} />
+    icon: <FaServer size={22} />,
   },
   {
     name: "Frontend_Docs",
     url: "/docs/index.html",
-    icon: <FaReact size={22} className="text-cyan-400 " />
+    icon: <FaReact size={22} className="text-cyan-400 " />,
   },
-    {
+  {
     name: "Source_Code",
-    url: "https://gitlab.com/HP-SCDS/public/usal-hcc-ai/-/tree/reorganizacion-frontend-backend2?ref_type=heads", 
-    icon: <FaGitlab size={22} className="text-orange-500" />
-  }
+    url: "https://gitlab.com/HP-SCDS/public/usal-hcc-ai/-/tree/reorganizacion-frontend-backend2?ref_type=heads",
+    icon: <FaGitlab size={22} className="text-orange-500" />,
+  },
 ];
 
 const languages = [
@@ -74,7 +98,11 @@ const LanguageSelector: React.FC = () => {
             } rounded-full overflow-hidden transition-all duration-200 ease-in-out`}
             title={label}
           >
-            <img src={flag} alt={label} className="w-full h-full object-cover" />
+            <img
+              src={flag}
+              alt={label}
+              className="w-full h-full object-cover"
+            />
           </button>
         );
       })}
@@ -90,7 +118,6 @@ const DocumentationPage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       <nav className="bg-black py-4 px-6 shadow-md flex items-center justify-between">
-
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded-full shadow transition duration-300"
@@ -99,7 +126,6 @@ const DocumentationPage: React.FC = () => {
           {t("documentation.go_back")}
         </button>
 
-
         <img
           src={logoHCC_AI}
           alt="HCC-AI Logo"
@@ -107,14 +133,13 @@ const DocumentationPage: React.FC = () => {
           onClick={() => navigate("/")}
         />
 
-
         <LanguageSelector />
       </nav>
 
-
       <div className="flex-grow p-8">
-        <h1 className="text-5xl font-bold text-center my-12">{t("documentation.documentation")}</h1>
-
+        <h1 className="text-5xl font-bold text-center my-12">
+          {t("documentation.documentation")}
+        </h1>
 
         <div className="flex justify-center gap-6 flex-wrap mb-12">
           {externalLinks.map((link, idx) => (
@@ -135,11 +160,15 @@ const DocumentationPage: React.FC = () => {
 
         <hr className="border-gray-600 my-12" />
 
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {pdfUrls.map((doc, idx) => (
-            <div key={idx} className="bg-gray-800 rounded-2xl p-5 shadow hover:shadow-2xl transition-all">
-              <p className="font-semibold truncate mb-3">{t(`documentation.${doc.name}`)}</p>
+            <div
+              key={idx}
+              className="bg-gray-800 rounded-2xl p-5 shadow hover:shadow-2xl transition-all"
+            >
+              <p className="font-semibold truncate mb-3">
+                {t(`documentation.${doc.name}`)}
+              </p>
               <iframe
                 src={`${doc.url}#zoom=30`}
                 title={t(`documentation.${doc.name}`)}

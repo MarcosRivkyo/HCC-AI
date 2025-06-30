@@ -70,7 +70,8 @@ export const Default: Story = {
     backgrounds: { default: "light" },
     docs: {
       description: {
-        story: "Renderizado completo de la vista de modelos con navegación por categorías y soporte de traducción.",
+        story:
+          "Renderizado completo de la vista de modelos con navegación por categorías y soporte de traducción.",
       },
     },
   },

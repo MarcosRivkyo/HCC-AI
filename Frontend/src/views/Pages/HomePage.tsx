@@ -15,11 +15,11 @@ import UsefulLinks from "../Components/UsefulLinks.tsx";
 
 import { useTranslation } from "react-i18next";
 
-import "react-toastify/dist/ReactToastify.css";
 import "react-calendar/dist/Calendar.css";
 
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import MobileWarning from "../Components/MobileWarning.tsx";
+import { ToastContainer } from "react-toastify";
 
 const Dashboard = () => {
   const {
@@ -51,6 +51,18 @@ const Dashboard = () => {
     <div
       className={`flex flex-col min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
     >
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
 
       <NavbarSecond
         userData={userData}
@@ -59,7 +71,7 @@ const Dashboard = () => {
         onAssistantClick={() => setShowAssistant(!showAssistant)}
         isPatientView={false}
       />
-      <MobileWarning /> 
+      <MobileWarning />
 
       <ProfileModal
         isOpen={isProfileOpen}

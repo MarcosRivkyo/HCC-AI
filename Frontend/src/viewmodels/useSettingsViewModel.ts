@@ -14,7 +14,7 @@ export function useSettingsViewModel(userData: any) {
   const [activeSection, setActiveSection] = useState("Cuenta");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(
-    (localStorage.getItem("theme") as "light" | "dark") || "light"
+    (localStorage.getItem("theme") as "light" | "dark") || "light",
   );
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
@@ -29,7 +29,7 @@ export function useSettingsViewModel(userData: any) {
   const [filtroRol, setFiltroRol] = useState("Todos");
   const [busquedaNombre, setBusquedaNombre] = useState("");
   const [dailyReminderEnabled, setDailyReminderEnabled] = useState(
-    userData?.recepcionRecordatorio ?? true
+    userData?.recepcionRecordatorio ?? true,
   );
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export function useSettingsViewModel(userData: any) {
       const newPhotoURL = await UserDAO.updateUserProfile(
         currentUser,
         updatedData,
-        newProfileImage || undefined
+        newProfileImage || undefined,
       );
 
       toast.success("Datos actualizados correctamente.");
@@ -117,10 +117,9 @@ export function useSettingsViewModel(userData: any) {
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     try {
-      await UserDAO.updateUserProfile(
-        { uid: userId } as User,
-        { rol: newRole }
-      );
+      await UserDAO.updateUserProfile({ uid: userId } as User, {
+        rol: newRole,
+      });
       toast.success(`Rol actualizado a ${newRole}`);
       fetchFirestoreUsers();
     } catch (error) {
@@ -133,10 +132,9 @@ export function useSettingsViewModel(userData: any) {
     const newValue = !dailyReminderEnabled;
     setDailyReminderEnabled(newValue);
     try {
-      await UserDAO.updateUserProfile(
-        { uid: userId } as User,
-        { recepcionRecordatorio: newValue }
-      );
+      await UserDAO.updateUserProfile({ uid: userId } as User, {
+        recepcionRecordatorio: newValue,
+      });
       toast.success("Preferencia actualizada");
     } catch (error) {
       console.error("Error actualizando recordatorio:", error);

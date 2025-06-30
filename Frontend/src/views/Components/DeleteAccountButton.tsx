@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-
 const DeleteAccountButton: React.FC = () => {
   const {
     loading,
@@ -19,7 +18,6 @@ const DeleteAccountButton: React.FC = () => {
   const [confirmationText, setConfirmationText] = useState<string>("");
   const { t } = useTranslation("global");
   const navigate = useNavigate();
-
 
   return (
     <div>

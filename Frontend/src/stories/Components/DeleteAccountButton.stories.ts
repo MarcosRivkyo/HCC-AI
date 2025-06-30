@@ -53,11 +53,12 @@ export default meta;
 type Story = StoryObj<typeof DeleteAccountButton>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Botón que permite al usuario eliminar su cuenta previa confirmación textual. Se utiliza en secciones de configuración avanzada del perfil.",
+        story:
+          "Botón que permite al usuario eliminar su cuenta previa confirmación textual. Se utiliza en secciones de configuración avanzada del perfil.",
       },
     },
   },

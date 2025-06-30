@@ -72,7 +72,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Vista principal de gestión de archivos clínicos. Incluye funcionalidades de visualización, edición y soporte asistido por IA.",
+        story:
+          "Vista principal de gestión de archivos clínicos. Incluye funcionalidades de visualización, edición y soporte asistido por IA.",
       },
     },
   },

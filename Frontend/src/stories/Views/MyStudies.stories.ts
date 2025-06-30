@@ -67,7 +67,8 @@ export const Default: Story = {
     backgrounds: { default: "light" },
     docs: {
       description: {
-        story: "Render completo de la vista de estudios asignados al usuario con navegación simulada.",
+        story:
+          "Render completo de la vista de estudios asignados al usuario con navegación simulada.",
       },
     },
   },

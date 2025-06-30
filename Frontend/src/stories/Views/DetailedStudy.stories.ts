@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from "@storybook/react";
  *
  * Descripción:
  * `EstudioDetalle` es una vista dedicada a mostrar la información completa y detallada de un estudio clínico específico.
- * Está orientada a usuarios médicos o administrativos que requieren revisar los datos, resultados y recursos asociados a una exploración previa 
+ * Está orientada a usuarios médicos o administrativos que requieren revisar los datos, resultados y recursos asociados a una exploración previa
  * almacenada en la plataforma HCC-AI.
  *
  * Dependencias:
@@ -66,7 +66,8 @@ export const Default: Story = {
     backgrounds: { default: "light" },
     docs: {
       description: {
-        story: "Vista base del detalle de estudio clínico. Requiere simular el enrutamiento con parámetro de ID para funcionar completamente.",
+        story:
+          "Vista base del detalle de estudio clínico. Requiere simular el enrutamiento con parámetro de ID para funcionar completamente.",
       },
     },
   },

@@ -5,7 +5,7 @@ import ImageSlider from "../../views/Components/ImageSlider";
  * Componente: ImageSlider
  *
  * Descripción:
- * `ImageSlider` es un componente visual que permite mostrar una secuencia de imágenes con transiciones automáticas 
+ * `ImageSlider` es un componente visual que permite mostrar una secuencia de imágenes con transiciones automáticas
  * mediante efecto de desvanecimiento (fade in/out). Está orientado a presentar contenido gráfico de manera continua y fluida,
  * como imágenes representativas de estudios, resultados o campañas informativas.
  *
@@ -49,11 +49,12 @@ export default meta;
 type Story = StoryObj<typeof ImageSlider>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto del carrusel de imágenes con animación de desvanecimiento automático cada seis segundos.",
+        story:
+          "Ejemplo por defecto del carrusel de imágenes con animación de desvanecimiento automático cada seis segundos.",
       },
     },
   },

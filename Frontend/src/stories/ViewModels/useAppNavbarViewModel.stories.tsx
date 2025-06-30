@@ -24,9 +24,16 @@ const ViewModelDemo: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <h2>useAppNavbarViewModel Demo</h2>
-      <p><b>Usuario autenticado:</b> {user ? user.email : "No autenticado"}</p>
-      <p><b>Datos del usuario:</b> {userData ? JSON.stringify(userData) : "No cargados"}</p>
-      <p><b>Sección seleccionada:</b> {selectedSection}</p>
+      <p>
+        <b>Usuario autenticado:</b> {user ? user.email : "No autenticado"}
+      </p>
+      <p>
+        <b>Datos del usuario:</b>{" "}
+        {userData ? JSON.stringify(userData) : "No cargados"}
+      </p>
+      <p>
+        <b>Sección seleccionada:</b> {selectedSection}
+      </p>
       <p>
         <b>Menú desplegable abierto:</b>{" "}
         <button onClick={() => setIsOpen(!isOpen)}>
@@ -39,12 +46,17 @@ const ViewModelDemo: React.FC = () => {
           {mobileMenuOpen ? "Sí (Cerrar)" : "No (Abrir)"}
         </button>
       </p>
-      <div ref={dropdownRef} style={{ border: "1px solid #ccc", padding: 10, marginTop: 10 }}>
+      <div
+        ref={dropdownRef}
+        style={{ border: "1px solid #ccc", padding: 10, marginTop: 10 }}
+      >
         <p>Este div simula el dropdown (click afuera lo cierra).</p>
       </div>
       <div style={{ marginTop: 20 }}>
         <button onClick={() => scrollToSection("home")}>Ir a Home</button>{" "}
-        <button onClick={() => scrollToSection("technology")}>Ir a Tecnología</button>
+        <button onClick={() => scrollToSection("technology")}>
+          Ir a Tecnología
+        </button>
       </div>
     </div>
   );

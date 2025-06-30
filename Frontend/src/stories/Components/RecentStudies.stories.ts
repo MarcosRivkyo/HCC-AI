@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import EstudiosRecientes from "../../views/Components/RecentStudies_storybook";
 
-
 const meta: Meta<typeof EstudiosRecientes> = {
   title: "Components/EstudiosRecientes",
   component: EstudiosRecientes,
@@ -28,7 +27,7 @@ export default meta;
 type Story = StoryObj<typeof EstudiosRecientes>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   args: {
     mockData: {
       paginaActual: 1,
@@ -73,7 +72,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Estudios recientes simulados con opciones de filtro, acciones y eliminación.",
+        story:
+          "Estudios recientes simulados con opciones de filtro, acciones y eliminación.",
       },
     },
   },

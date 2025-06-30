@@ -6,7 +6,7 @@ import BarChart from "../../views/Components/BarChart";
  * Componente: BarChart
  *
  * Descripción:
- * El componente `BarChart` representa un gráfico de barras utilizado para visualizar probabilidades o distribuciones de clases, 
+ * El componente `BarChart` representa un gráfico de barras utilizado para visualizar probabilidades o distribuciones de clases,
  * típicamente generadas por un modelo de inteligencia artificial. Admite visualización adaptable a temas claros u oscuros.
  *
  * Dependencias:
@@ -68,7 +68,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Ejemplo por defecto del gráfico de barras en modo claro. Muestra la distribución de probabilidades entre cuatro clases.",
+        story:
+          "Ejemplo por defecto del gráfico de barras en modo claro. Muestra la distribución de probabilidades entre cuatro clases.",
       },
     },
   },
@@ -84,7 +85,8 @@ export const DarkTheme: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Gráfico de barras adaptado al tema oscuro. Ideal para interfaces con diseño nocturno o de bajo contraste.",
+        story:
+          "Gráfico de barras adaptado al tema oscuro. Ideal para interfaces con diseño nocturno o de bajo contraste.",
       },
     },
   },

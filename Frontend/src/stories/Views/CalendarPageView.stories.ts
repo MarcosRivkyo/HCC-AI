@@ -69,7 +69,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Visualización completa de la vista de calendario. Incluye gestión de recordatorios, accesibilidad, y asistencia AI contextual.",
+        story:
+          "Visualización completa de la vista de calendario. Incluye gestión de recordatorios, accesibilidad, y asistencia AI contextual.",
       },
     },
   },

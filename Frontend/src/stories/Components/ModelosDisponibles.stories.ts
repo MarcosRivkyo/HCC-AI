@@ -6,8 +6,8 @@ import ModelosDisponibles from "../../views/Components/AvailableModels";
  * Componente: ModelosDisponibles
  *
  * Descripción:
- * `ModelosDisponibles` es un componente encargado de mostrar al usuario una lista de modelos de inteligencia artificial disponibles 
- * en la plataforma, junto con información detallada sobre cada uno. Se utiliza como parte de la interfaz de gestión y selección 
+ * `ModelosDisponibles` es un componente encargado de mostrar al usuario una lista de modelos de inteligencia artificial disponibles
+ * en la plataforma, junto con información detallada sobre cada uno. Se utiliza como parte de la interfaz de gestión y selección
  * de modelos entrenados para tareas clínicas específicas.
  *
  * Dependencias:
@@ -54,11 +54,12 @@ export default meta;
 type Story = StoryObj<typeof ModelosDisponibles>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Visualización por defecto del componente con listado paginado de modelos disponibles y filtros aplicables.",
+        story:
+          "Visualización por defecto del componente con listado paginado de modelos disponibles y filtros aplicables.",
       },
     },
   },

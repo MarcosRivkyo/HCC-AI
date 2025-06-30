@@ -6,7 +6,7 @@ import UsefulLinks from "../../views/Components/UsefulLinks";
  * Componente: UsefulLinks
  *
  * Descripción:
- * `UsefulLinks` es un componente interactivo que permite a los usuarios añadir, visualizar y eliminar enlaces personalizados 
+ * `UsefulLinks` es un componente interactivo que permite a los usuarios añadir, visualizar y eliminar enlaces personalizados
  * considerados de utilidad dentro del contexto clínico, académico o informativo. Ofrece soporte para la carga de iconos y una experiencia visual clara y responsiva.
  *
  * Dependencias:
@@ -38,7 +38,7 @@ import UsefulLinks from "../../views/Components/UsefulLinks";
 const meta: Meta<typeof UsefulLinks> = {
   title: "Components/UsefulLinks",
   component: UsefulLinks,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   args: {
     userId: "123456", // ID simulado para pruebas en Storybook
   },
@@ -71,11 +71,12 @@ export default meta;
 type Story = StoryObj<typeof UsefulLinks>;
 
 export const Default: Story = {
-  name: "Vista por defecto",  
+  name: "Vista por defecto",
   parameters: {
     docs: {
       description: {
-        story: "Demostración del componente con controles activos para agregar, visualizar y eliminar enlaces útiles definidos por el usuario.",
+        story:
+          "Demostración del componente con controles activos para agregar, visualizar y eliminar enlaces útiles definidos por el usuario.",
       },
     },
   },

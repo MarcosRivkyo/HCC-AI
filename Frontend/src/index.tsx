@@ -34,19 +34,17 @@ import DocumentationPage from "./views/Pages/Docs.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-i18next
-  .use(initReactI18next)
-  .init({
-    interpolation: { escapeValue: false },
-    lng: localStorage.getItem("language") || "es", 
-    fallbackLng: "es", 
-    resources: {
-      es: { global: global_es },
-      en: { global: global_en },
-      fr: { global: global_fr },
-      de: { global: global_de },
-    },
-  });
+i18next.use(initReactI18next).init({
+  interpolation: { escapeValue: false },
+  lng: localStorage.getItem("language") || "es",
+  fallbackLng: "es",
+  resources: {
+    es: { global: global_es },
+    en: { global: global_en },
+    fr: { global: global_fr },
+    de: { global: global_de },
+  },
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -59,49 +57,108 @@ if (storedTheme === "dark") {
   document.documentElement.classList.remove("dark");
 }
 
-
-
 root.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18next}>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
-      />      
-
-      
       <Router>
         <Routes>
-
           {/* públicas */}
           <Route path="/" element={<App />} />
-          <Route path="/login" element={<AuthRoute><Login /></AuthRoute>}/>
+          <Route
+            path="/login"
+            element={
+              <AuthRoute>
+                <Login />
+              </AuthRoute>
+            }
+          />
           <Route path="/signup" element={<Signup />} />
           <Route path="/documentation" element={<DocumentationPage />} />
-          
+
           {/* privadas */}
-          <Route path="/dashboard" element={<AuthRoute><HomePage /></AuthRoute>} />
-          <Route path="/dashboard-patient" element={<AuthRoute><HomePagePatient /></AuthRoute>} />
-          <Route path="/assistant" element={<AuthRoute><Assistant /></AuthRoute>} />
-          <Route path="/editar-imagen" element={<AuthRoute><PredictImage /></AuthRoute>} />
-          <Route path="/estudio/:id" element={<AuthRoute><EstudioDetalle /></AuthRoute>} />
-          <Route path="/predict" element={<AuthRoute><PredictImage /></AuthRoute>} />
-          <Route path="/my-studies" element={<AuthRoute><MisEstudios /></AuthRoute>} />
-          <Route path="/models" element={<AuthRoute><Models /></AuthRoute>} />
-          <Route path="/files" element={<AuthRoute><FilesPage/></AuthRoute>}/>
-          <Route path="/calendar" element={<AuthRoute><CalendarPage/></AuthRoute>}/>
+          <Route
+            path="/dashboard"
+            element={
+              <AuthRoute>
+                <HomePage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/dashboard-patient"
+            element={
+              <AuthRoute>
+                <HomePagePatient />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/assistant"
+            element={
+              <AuthRoute>
+                <Assistant />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/editar-imagen"
+            element={
+              <AuthRoute>
+                <PredictImage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/estudio/:id"
+            element={
+              <AuthRoute>
+                <EstudioDetalle />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/predict"
+            element={
+              <AuthRoute>
+                <PredictImage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/my-studies"
+            element={
+              <AuthRoute>
+                <MisEstudios />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/models"
+            element={
+              <AuthRoute>
+                <Models />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/files"
+            element={
+              <AuthRoute>
+                <FilesPage />
+              </AuthRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <AuthRoute>
+                <CalendarPage />
+              </AuthRoute>
+            }
+          />
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/" />} />
-          
         </Routes>
       </Router>
     </I18nextProvider>

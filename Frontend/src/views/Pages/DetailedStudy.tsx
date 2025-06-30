@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import BarChart from "../Components/BarChart.tsx";
 
@@ -142,6 +142,19 @@ const EstudioDetalle = () => {
 
   return (
     <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex flex-col text-gray-800 dark:text-gray-100">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       {!mostrarEstudiosRecientes && userData?.rol !== "Paciente" && (
         <button
           onClick={() => setMostrarEstudiosRecientes(true)}
@@ -304,8 +317,8 @@ const EstudioDetalle = () => {
                   <span className="text-gray-700 text-lg">
                     {new Date(
                       estudio?.studieDate?.seconds
-                        ? estudio.studieDate.seconds * 1000 
-                        : estudio?.studieDate, 
+                        ? estudio.studieDate.seconds * 1000
+                        : estudio?.studieDate,
                     ).toLocaleString()}
                   </span>
                 )}
@@ -419,7 +432,7 @@ const EstudioDetalle = () => {
                     accept="image/*"
                     onChange={(e) => {
                       if (userData?.rol === "Paciente") {
-                        toast.warn("No tienes permiso para subir imágenes.");
+                        toast.warn("No tienes permisos para subir la imagen.");
                         return;
                       }
                       if (!estudio?.predictionId) {
@@ -514,7 +527,9 @@ const EstudioDetalle = () => {
               <button
                 onClick={() => {
                   if (!estudio.imagenUrl) {
-                    toast.warn("Debes subir una imagen antes de iniciar el análisis.");
+                    toast.warn(
+                      "Debes subir una imagen antes de iniciar el análisis.",
+                    );
                     return;
                   }
                   setParametersVisible(true);
@@ -607,7 +622,7 @@ const EstudioDetalle = () => {
                         key={model}
                         onClick={() => {
                           setSelectedSegmentationModel(model);
-                          setSelectedSegmentationSubModel(""); 
+                          setSelectedSegmentationSubModel("");
                         }}
                         className={`flex-1 px-4 py-2 rounded-lg border-2 font-medium transition ${
                           selectedSegmentationModel === model
@@ -623,54 +638,55 @@ const EstudioDetalle = () => {
                   {/* Submodelo desplegable solo si selecciona SEGMENTADOHEPATICO-AI */}
                   {selectedSegmentationModel === "SegmentadorHepático-AI" && (
                     <div className="mt-4">
+                      {/* Umbral de Confianza */}
+                      <div className="w-full flex flex-col items-center justify-center gap-6 mt-6">
                         {/* Umbral de Confianza */}
-                        <div className="w-full flex flex-col items-center justify-center gap-6 mt-6">
-
-                          {/* Umbral de Confianza */}
-                          <div className="text-center w-full max-w-sm">
-                            <label
-                              htmlFor="confidenceThreshold"
-                              className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
-                            >
-                              {t("my_studies.minimum_threshold")} (%)
-                            </label>
-                            <input
-                              id="confidenceThreshold"
-                              type="number"
-                              min={0}
-                              max={100}
-                              step={1}
-                              value={confidenceThreshold * 100}
-                              onChange={(e) =>
-                                setConfidenceThreshold(parseFloat(e.target.value) / 100)
-                              }
-                              className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-center"
-                            />
-                            <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
-                              {t("my_studies.threshold_explanation")}
-                            </p>
-                          </div>
-
-                          {/* Checkbox */}
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              id="usarExplicacionIA"
-                              checked={usarExplicacionIA}
-                              onChange={() => setUsarExplicacionIA(!usarExplicacionIA)}
-                              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                            />
-                            <label
-                              htmlFor="usarExplicacionIA"
-                              className="text-sm font-medium text-gray-700 dark:text-white"
-                            >
-                              {t("my_studies.generate_ai_explanation")}
-                            </label>
-                          </div>
+                        <div className="text-center w-full max-w-sm">
+                          <label
+                            htmlFor="confidenceThreshold"
+                            className="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
+                          >
+                            {t("my_studies.minimum_threshold")} (%)
+                          </label>
+                          <input
+                            id="confidenceThreshold"
+                            type="number"
+                            min={0}
+                            max={100}
+                            step={1}
+                            value={confidenceThreshold * 100}
+                            onChange={(e) =>
+                              setConfidenceThreshold(
+                                parseFloat(e.target.value) / 100,
+                              )
+                            }
+                            className="w-full dark:text-black px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-center"
+                          />
+                          <p className="text-xs text-gray-500 mt-1 dark:text-gray-300">
+                            {t("my_studies.threshold_explanation")}
+                          </p>
                         </div>
 
-
+                        {/* Checkbox */}
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="usarExplicacionIA"
+                            checked={usarExplicacionIA}
+                            onChange={() =>
+                              setUsarExplicacionIA(!usarExplicacionIA)
+                            }
+                            className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <label
+                            htmlFor="usarExplicacionIA"
+                            className="text-sm font-medium text-gray-700 dark:text-white"
+                          >
+                            {t("my_studies.generate_ai_explanation")}
+                          </label>
+                        </div>
                       </div>
+                    </div>
                   )}
                 </div>
 
@@ -679,7 +695,9 @@ const EstudioDetalle = () => {
                   <button
                     onClick={() => {
                       if (!estudio.imagenUrl) {
-                        toast.warn("Debes subir una imagen antes de iniciar la predicción.");
+                        toast.warn(
+                          "Debes subir una imagen antes de iniciar la predicción.",
+                        );
                         return;
                       }
                       iniciarPrediccionIA();
@@ -699,7 +717,6 @@ const EstudioDetalle = () => {
                   >
                     {t("my_studies.start_prediction")}
                   </button>
-
                 </div>
               </div>
             </div>
@@ -851,7 +868,7 @@ const EstudioDetalle = () => {
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-2xl w-full max-w-2xl relative space-y-6">
                       <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
-                        Gráfico de Probabilidades
+                        {t("my_studies.probabilities_graph")}
                       </h2>
                       <div ref={chartRef}>
                         <BarChart
@@ -874,13 +891,13 @@ const EstudioDetalle = () => {
                           onClick={handleDownloadChart}
                           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium shadow"
                         >
-                          Descargar gráfico
+                          {t("my_studies.download_graph")}
                         </button>
                         <button
                           onClick={() => setShowExplanationModal(false)}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium shadow"
                         >
-                          Cerrar
+                          {t("my_studies.close_graph")}
                         </button>
                       </div>
                     </div>
@@ -936,17 +953,17 @@ const EstudioDetalle = () => {
                       const explicaciones =
                         selectedClassificationModel === "HCC-AI"
                           ? [
-                              "El hígado tiene una apariencia normal sin signos de daño estructural ni acumulación de grasa. Función hepática conservada. Riesgo bajo.",
-                              "Se observa acumulación de grasa en el hígado (hígado graso), común en personas con obesidad, diabetes o consumo elevado de alcohol. Aunque puede ser reversible, puede evolucionar si no se trata. Riesgo medio.",
-                              "El hígado muestra cicatrices y nódulos regenerativos debido a daño crónico. Esto limita su función y puede conllevar complicaciones como hipertensión portal o insuficiencia hepática. Riesgo alto.",
-                              "Se detecta una masa compatible con un tumor maligno primario del hígado. Puede haber sospecha fuerte de hepatocarcinoma (HCC). Requiere evaluación inmediata por un especialista. Riesgo muy alto.",
+                              t("my_studies.sano"),
+                              t("my_studies.esteatosis"),
+                              t("my_studies.cirrosis"),
+                              t("my_studies.hepatocarcinoma"),
                             ]
                           : [
-                              "No hay signos de fibrosis. El tejido hepático se conserva íntegro. Riesgo bajo.",
-                              "Fibrosis leve en áreas portales, sin afectación de la arquitectura hepática general. Puede ser reversible. Riesgo bajo-medio.",
-                              "Fibrosis moderada con tabiques entre áreas portales. Señal de progresión. Puede evolucionar si no se trata. Riesgo medio.",
-                              "Fibrosis avanzada con puentes fibrosos extensos. El hígado comienza a perder funcionalidad. Riesgo alto.",
-                              "Cirrosis: distorsión severa del tejido hepático y pérdida significativa de la función. Puede conllevar a HCC o insuficiencia hepática. Riesgo muy alto.",
+                              t("my_studies.f0"),
+                              t("my_studies.f1"),
+                              t("my_studies.f2"),
+                              t("my_studies.f3"),
+                              t("my_studies.f4"),
                             ];
 
                       const color = colorPalette[index];
@@ -1051,10 +1068,10 @@ const EstudioDetalle = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md relative">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-              Enviar informe por correo
+              {t("my_studies.send_email_explanation")}
             </h2>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-              Correo del destinatario:
+              {t("my_studies.email_placeholder")}
             </label>
             <input
               type="email"
@@ -1069,7 +1086,7 @@ const EstudioDetalle = () => {
                 onClick={() => setShowEmailModal(false)}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
               >
-                Cancelar
+                {t("my_studies.cancel_email")}
               </button>
               <button
                 onClick={handleSendEmail}
@@ -1098,7 +1115,7 @@ const EstudioDetalle = () => {
                     ></path>
                   </svg>
                 ) : (
-                  "Enviar"
+                  t("my_studies.send_email")
                 )}
               </button>
             </div>
@@ -1110,11 +1127,11 @@ const EstudioDetalle = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md relative">
             <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-              Compartir estudio con otro doctor
+              {t("my_studies.share_study")}
             </h2>
 
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-              Selecciona un doctor:
+              {t("my_studies.select_doctor")}
             </label>
 
             <select
@@ -1122,7 +1139,7 @@ const EstudioDetalle = () => {
               onChange={(e) => setSelectedDoctorId(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 dark:bg-gray-900 dark:text-white"
             >
-              <option value="">-- Seleccionar --</option>
+              <option value="">{t("my_studies.select")}</option>
               {doctorsList.map((doctor) => (
                 <option key={doctor.id} value={doctor.id}>
                   {doctor.firstName} {doctor.lastName} ({doctor.email})
@@ -1135,13 +1152,13 @@ const EstudioDetalle = () => {
                 onClick={() => setShowShareModal(false)}
                 className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
               >
-                Cancelar
+                {t("my_studies.cancel_share")}
               </button>
               <button
                 onClick={handleShareStudy}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
               >
-                Compartir
+                {t("my_studies.share_confirm")}
               </button>
             </div>
           </div>

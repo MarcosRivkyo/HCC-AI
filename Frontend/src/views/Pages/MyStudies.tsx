@@ -5,7 +5,7 @@ import { useMisEstudios } from "../../viewmodels/useMyStudieViewModel.ts";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaDownload, FaTrashAlt } from "react-icons/fa";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -172,6 +172,19 @@ const MisEstudios: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={localStorage.getItem("theme") === "dark" ? "dark" : "light"}
+      />
+
       <NavbarSecond
         userData={userData}
         onProfileClick={() => setIsProfileOpen(true)}
@@ -412,7 +425,6 @@ const MisEstudios: React.FC = () => {
           </div>
         )}
 
-
         <div className="flex justify-between mt-6">
           <button
             onClick={() => setPaginaActual((p) => Math.max(p - 1, 1))}
@@ -520,8 +532,6 @@ const MisEstudios: React.FC = () => {
           </div>
         </div>
       )}
-
-
 
       <Footer />
     </div>

@@ -71,7 +71,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Renderiza el formulario de autenticación con campos para correo y contraseña, control de visibilidad y enlace a recuperación.",
+        story:
+          "Renderiza el formulario de autenticación con campos para correo y contraseña, control de visibilidad y enlace a recuperación.",
       },
     },
   },
