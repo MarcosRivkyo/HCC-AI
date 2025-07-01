@@ -31,7 +31,6 @@ import FilesPage from "./views/Pages/FileView.tsx";
 import CalendarPage from "./views/Pages/CalendarView.tsx";
 import DocumentationPage from "./views/Pages/Docs.tsx";
 
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 i18next.use(initReactI18next).init({
@@ -64,98 +63,21 @@ root.render(
         <Routes>
           {/* públicas */}
           <Route path="/" element={<App />} />
-          <Route
-            path="/login"
-            element={
-              <AuthRoute>
-                <Login />
-              </AuthRoute>
-            }
-          />
+          <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/documentation" element={<DocumentationPage />} />
 
           {/* privadas */}
-          <Route
-            path="/dashboard"
-            element={
-              <AuthRoute>
-                <HomePage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/dashboard-patient"
-            element={
-              <AuthRoute>
-                <HomePagePatient />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/assistant"
-            element={
-              <AuthRoute>
-                <Assistant />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/editar-imagen"
-            element={
-              <AuthRoute>
-                <PredictImage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/estudio/:id"
-            element={
-              <AuthRoute>
-                <EstudioDetalle />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/predict"
-            element={
-              <AuthRoute>
-                <PredictImage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/my-studies"
-            element={
-              <AuthRoute>
-                <MisEstudios />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/models"
-            element={
-              <AuthRoute>
-                <Models />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/files"
-            element={
-              <AuthRoute>
-                <FilesPage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/calendar"
-            element={
-              <AuthRoute>
-                <CalendarPage />
-              </AuthRoute>
-            }
-          />
+          <Route path="/dashboard" element={<AuthRoute><HomePage /></AuthRoute>} />
+          <Route path="/dashboard-patient" element={<AuthRoute><HomePagePatient /></AuthRoute>} />
+          <Route path="/assistant" element={<AuthRoute><Assistant /></AuthRoute>} />
+          <Route path="/editar-imagen" element={<AuthRoute><PredictImage /></AuthRoute>} />
+          <Route path="/estudio/:id" element={<AuthRoute><EstudioDetalle /></AuthRoute>} />
+          <Route path="/predict" element={<AuthRoute><PredictImage /></AuthRoute>} />
+          <Route path="/my-studies" element={<AuthRoute><MisEstudios /></AuthRoute>} />
+          <Route path="/models" element={<AuthRoute><Models /></AuthRoute>} />
+          <Route path="/files" element={<AuthRoute><FilesPage /></AuthRoute>} />
+          <Route path="/calendar" element={<AuthRoute><CalendarPage /></AuthRoute>} />
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/" />} />

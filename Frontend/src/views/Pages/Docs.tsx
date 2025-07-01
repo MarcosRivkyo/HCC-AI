@@ -22,31 +22,31 @@ const pdfUrls = [
   },
   {
     name: "Annex_I",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20I.%20Plan%20de%20Proyecto%20Software.pdf?alt=media&token=48dd08f7-4613-4d5a-8470-59a34f963a28",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20I.%20Plan%20de%20Proyecto%20Software.pdf?alt=media&token=0da60914-30c1-4e18-8d4b-2303056c4e72",
   },
   {
     name: "Annex_II",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20II.%20Especificaci%C3%B3n%20de%20Requisitos%20Software.pdf?alt=media&token=cb7340a6-0fb2-4dc5-a9da-66755764ba6b",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=c5a82e1e-e499-4357-945d-cd094afb1fa4",
   },
   {
     name: "Annex_III",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=42ce5139-30a5-48e9-a6e0-b0f5bab7a608",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=c5a82e1e-e499-4357-945d-cd094afb1fa4",
   },
   {
     name: "Annex_IV",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=025d297f-ae4a-400e-ac81-ef6f7096857e",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=34657b35-0239-4445-9e75-479a76964549",
   },
   {
     name: "Annex_V",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20V.%20Documentaci%C3%B3n%20T%C3%A9cnica%20de%20Programaci%C3%B3n.pdf?alt=media&token=3d27fcef-de18-4df5-8be6-e2e59aca5b27",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20V.%20Documentaci%C3%B3n%20del%20C%C3%B3digo%20Fuente.pdf?alt=media&token=dd5b4874-9806-4246-b3ab-3e700fb4dcae",
   },
   {
     name: "Annex_VI",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20de%20Usuario.pdf?alt=media&token=958c4932-5f6e-492c-ae29-d0e3cf3ce377",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20del%20Usuario.pdf?alt=media&token=83bb3306-e6b6-451e-abaf-0be40ffa73ec",
   },
   {
     name: "Annex_VII",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VII.%20Desarrollo%20de%20la%20Inteligencia%20Artificial.pdf?alt=media&token=57143b72-0aa5-4c7a-835a-aef7f7506064",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VII.%20Desarrollo%20de%20la%20Inteligencia%20Artificial.pdf?alt=media&token=bac7a5b3-9b47-48c5-98a5-547e65376c45",
   },
 ];
 

@@ -26,11 +26,11 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      onClick={onClose} // cerrar si se hace clic fuera
+      onClick={onClose} 
     >
       <div
         className={`bg-gray-800 dark:bg-gray-900 text-white p-8 rounded-lg shadow-lg ${sizeClasses[size]} relative`}
-        onClick={(e) => e.stopPropagation()} // evitar que el clic se propague
+        onClick={(e) => e.stopPropagation()} 
       >
         <button
           onClick={onClose}

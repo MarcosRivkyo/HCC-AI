@@ -26,14 +26,12 @@ import englishFlag from "./assets/images/english_language.png";
 import frenchFlag from "./assets/images/french_language.jpg";
 import germanFlag from "./assets/images/german_language.png";
 import analisis_medico from "./assets/images/analisis_medico.png";
-import logoUSAL from "./assets/images/logo_usal.png";
 import logoUSALsinBG from "./assets/images/logo_usal_removebg.png";
 
-import logoHP from "./assets/images/logoHP.png";
 import logoHPsinBG from "./assets/images/logoHP-removebg.png";
 
 import { FaPython, FaReact, FaCogs, FaPhone } from "react-icons/fa";
-import { SiPytorch, SiTensorflow, SiOpencv, SiSharp } from "react-icons/si";
+import { SiTensorflow, SiOpencv, SiSharp } from "react-icons/si";
 import {
   FaMicroscope,
   FaBrain,
@@ -422,7 +420,7 @@ const Contact: React.FC = () => {
     message: "",
   });
   const [responseMessage, setResponseMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Estado de carga
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

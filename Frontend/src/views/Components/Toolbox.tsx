@@ -645,8 +645,8 @@ const Toolbox: React.FC<ToolboxProps> = ({ canvas }) => {
           break;
       }
 
-      canvas.freeDrawingBrush.color = brushColor; // Actualizamos el color del pincel
-      canvas.freeDrawingBrush.width = brushWidth; // Actualizamos el tamaño del pincel
+      canvas.freeDrawingBrush.color = brushColor; // Actualiza el color del pincel
+      canvas.freeDrawingBrush.width = brushWidth; // Actualiza el tamaño del pincel
     }
   };
 
