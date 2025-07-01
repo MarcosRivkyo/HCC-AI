@@ -26,7 +26,7 @@ const pdfUrls = [
   },
   {
     name: "Annex_II",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20III.%20An%C3%A1lisis%20del%20Sistema%20Software.pdf?alt=media&token=c5a82e1e-e499-4357-945d-cd094afb1fa4",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20II.%20Especificaci%C3%B3n%20de%20Requisitos%20Software.pdf?alt=media&token=a0095b1c-69e4-4be3-82e6-ac94b9b5c4d4",
   },
   {
     name: "Annex_III",
