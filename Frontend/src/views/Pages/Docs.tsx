@@ -34,7 +34,7 @@ const pdfUrls = [
   },
   {
     name: "Annex_IV",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=34657b35-0239-4445-9e75-479a76964549",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20IV.%20Dise%C3%B1o%20del%20Sistema%20Software.pdf?alt=media&token=e7718b41-1df8-45f6-80a2-462f818ba11e",
   },
   {
     name: "Annex_V",
@@ -42,7 +42,7 @@ const pdfUrls = [
   },
   {
     name: "Annex_VI",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20del%20Usuario.pdf?alt=media&token=83bb3306-e6b6-451e-abaf-0be40ffa73ec",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FAnexo%20VI.%20Manual%20del%20Usuario.pdf?alt=media&token=d07fed85-f993-43d4-a382-6827bfb967f8",
   },
   {
     name: "Annex_VII",
