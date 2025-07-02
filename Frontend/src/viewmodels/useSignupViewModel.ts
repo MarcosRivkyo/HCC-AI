@@ -1,8 +1,10 @@
 // src/viewmodels/useSignupViewModel.ts
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AuthDAO } from "../data/dao/AuthDAO";
 import { UserDAO } from "../data/dao/UserDAO";
+
+import ReCAPTCHA from "react-google-recaptcha";
 
 export function useSignupViewModel() {
   const [authing, setAuthing] = useState(false);
@@ -19,6 +21,8 @@ export function useSignupViewModel() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rol, setRol] = useState("Paciente");
+  const [captchaPassed, setCaptchaPassed] = useState(false);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const defaultProfilePictureUrl =
     "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2Fdefault_logo_user.png?alt=media&token=499a8fd4-85dc-49be-8d4a-a469aea1d1f7";
@@ -40,6 +44,15 @@ export function useSignupViewModel() {
       icon: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2Flogo_hp.jpg?alt=media&token=90a2bd62-565e-4661-993c-36c822d10e1a",
     },
   ];
+
+  const handleSignup = () => {
+    if (!captchaPassed) {
+      alert("Por favor, confirma que no eres un robot.");
+      return;
+    }
+    signUpWithEmail();
+  };
+
 
   const signUpWithEmail = async () => {
     const usernameRegex = /^[a-z0-9_]+$/;
@@ -69,7 +82,7 @@ export function useSignupViewModel() {
       return;
     }
 
-    if (forbiddenPatterns.test(userName)) {
+    if (forbiddenPatterns.test(userName) || forbiddenPatterns.test(email) || forbiddenPatterns.test(firstName) || forbiddenPatterns.test(lastName)) {
       setError(
         "El nombre de usuario contiene caracteres o palabras no permitidas.",
       );
@@ -141,6 +154,9 @@ export function useSignupViewModel() {
     verificationMessage,
     showPassword,
     showConfirmPassword,
+    captchaPassed,
+    recaptchaRef,
+    setCaptchaPassed,
     setEmail,
     setPassword,
     setRol,
@@ -153,5 +169,6 @@ export function useSignupViewModel() {
     setShowPassword,
     setShowConfirmPassword,
     signUpWithEmail,
+    handleSignup,
   };
 }

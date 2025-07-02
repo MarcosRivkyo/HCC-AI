@@ -36,7 +36,6 @@ export const UserDAO = {
   async deleteUser(uid: string): Promise<void> {
     try {
       await deleteDoc(doc(db, "hcc_ai_users", uid));
-      console.log(`Usuario con ID ${uid} eliminado correctamente.`);
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
       throw error;

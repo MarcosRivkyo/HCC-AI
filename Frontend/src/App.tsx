@@ -56,7 +56,7 @@ const languages = [
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
-
+  localStorage.setItem("language", currentLang);
   const handleChange = (lang: string) => {
     if (lang !== currentLang) i18next.changeLanguage(lang);
   };
@@ -433,9 +433,19 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setResponseMessage("");
 
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setResponseMessage("Correo inválido");
+      return;
+    }
+    if (formData.name.length > 100 || formData.message.length > 1000) {
+      setResponseMessage("Texto demasiado largo");
+      return;
+    }
+
+    setIsLoading(true);
+ 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
 

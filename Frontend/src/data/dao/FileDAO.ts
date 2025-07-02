@@ -134,7 +134,6 @@ export const FileDAO = {
         doctorId,
       });
 
-      console.log("Documento guardado en hcc_ai_documents");
     } catch (error) {
       console.error("Error al guardar documento:", error);
       throw error;
@@ -216,7 +215,6 @@ export const FileDAO = {
       );
 
       const storageRef = ref(storage, `${folderPath}/ecografias/${fileName}`);
-      console.log("Eliminando imagen de Firebase Storage:", imageUrl);
       await deleteObject(storageRef);
 
       await updateDoc(doc(db, "hcc_ai_studies", studyId), {
@@ -271,10 +269,6 @@ export const FileDAO = {
         idPrediccion: predictionId,
       });
 
-      console.log(
-        "Imagen actualizada con clase y ID de predicción:",
-        claseTexto,
-      );
     } else {
       console.warn(
         "No se encontró documento en hcc_ai_images para esa imagen.",

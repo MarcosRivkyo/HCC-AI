@@ -364,7 +364,6 @@ export const useEstudioDetalleViewModel = () => {
         doctorId: estudio?.doctorId || "Doctor desconocido",
       });
 
-      console.log("Documento guardado en hcc_ai_documents");
     } catch (error) {
       console.error("Error al guardar documento:", error);
     }
@@ -606,7 +605,6 @@ export const useEstudioDetalleViewModel = () => {
       setEstudio((prev) => ({ ...prev!, pdfReportUrl: downloadURL }));
       await guardarDocumento(downloadURL);
 
-      console.log("PDF subido y URL guardada correctamente:", downloadURL);
     } catch (err) {
       console.error("Error al subir el PDF:", err);
     }
@@ -783,7 +781,6 @@ export const useEstudioDetalleViewModel = () => {
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log("Drop event triggered");
     e.preventDefault();
     const file = e.dataTransfer.files[0];
 
@@ -807,7 +804,6 @@ export const useEstudioDetalleViewModel = () => {
       );
 
       if (response.status === 200 && response.data?.explicacion) {
-        console.log("Explicación generada:", response.data.explicacion);
         return response.data.explicacion;
       } else {
         console.warn(

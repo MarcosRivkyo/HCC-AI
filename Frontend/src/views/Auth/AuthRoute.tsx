@@ -12,13 +12,12 @@ const AuthRoute: React.FC<IAuthRouteProps> = ({ children }) => {
   const { loading, user } = useAuthRouteViewModel();
   const location = useLocation();
 
-  const isPublicRoute = ["/", "/login", "/signup", "/docs"].includes(
+  const isPublicRoute = ["/", "/login", "/signup", "/documentation"].includes(
     location.pathname,
   );
 
   if (loading) return null;
   if (!user && !isPublicRoute) {
-    console.log("Acceso denegado");
     return null;
   }
 

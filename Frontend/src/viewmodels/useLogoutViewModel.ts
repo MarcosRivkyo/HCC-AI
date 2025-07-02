@@ -9,7 +9,6 @@ export function useLogoutViewModel() {
   const logout = async () => {
     try {
       await AuthDAO.logout();
-      console.log("Sesión cerrada");
       navigate("/login");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);

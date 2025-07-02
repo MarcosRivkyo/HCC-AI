@@ -5,11 +5,14 @@ import { useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSignupViewModel } from "../../viewmodels/useSignupViewModel";
 
+import ReCAPTCHA from "react-google-recaptcha";
 import logoHCC_AI from "../../assets/images/logo_hcc_ai.jpg";
 import ImageSlider from "../Components/ImageSlider";
 import usePreventZoom from "../Components/usePreventZoom";
 
 export default function Signup() {
+
+  
   const {
     authing,
     email,
@@ -25,6 +28,7 @@ export default function Signup() {
     verificationMessage,
     showPassword,
     showConfirmPassword,
+    recaptchaRef,
     setEmail,
     setPassword,
     setRol,
@@ -37,18 +41,21 @@ export default function Signup() {
     setShowPassword,
     setShowConfirmPassword,
     signUpWithEmail,
+    setCaptchaPassed,
+    handleSignup,
   } = useSignupViewModel();
 
   usePreventZoom(true, true);
   const { t } = useTranslation("global");
 
   return (
-    <div className="w-full h-screen flex flex-col md:flex-row">
-      <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
+    <div className="w-full min-h-screen overflow-y-auto flex flex-col md:flex-row">
+
+      <div className="hidden md:flex w-full md:w-1/2 min-h-full flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
-
-      <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
+      
+      <div className="w-full md:w-1/2 flex-1 bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
           <div className="w-full flex flex-col mb-10 text-white">
             <img
@@ -173,9 +180,18 @@ export default function Signup() {
             </div>
           )}
 
+          <div className="w-full flex justify-center mb-4">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              size="normal"
+              onChange={() => setCaptchaPassed(true)}
+            />
+          </div>
+
           <div className="w-full flex flex-col mb-4">
             <button
-              onClick={signUpWithEmail}
+              onClick={handleSignup}
               disabled={authing}
               className="w-full bg-transparent border border-white text-white my-2 font-semibold rounded-md p-4 text-center flex items-center justify-center cursor-pointer"
             >

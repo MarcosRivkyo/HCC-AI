@@ -91,7 +91,6 @@ export const useHomePageViewModel = () => {
 
   const handleImageSelect = (url: string) => {
     setSelectedImageUrl(url);
-    console.log("Imagen seleccionada:", url);
   };
 
   return {

@@ -185,14 +185,14 @@ export const StudyDAO = {
         return null;
       }
     } catch (error) {
-      console.error("Error al obtener predicción:", error);
-      return null;
+        console.error("Error al obtener predicción:", error);
+        return null;
     }
   },
 
   async updateStudy(id: string, data: Partial<Estudio>): Promise<void> {
     const ref = doc(db, "hcc_ai_studies", id);
-    console.log();
+
     let parsedDate: Timestamp | undefined = undefined;
 
     if (data.studieDate) {

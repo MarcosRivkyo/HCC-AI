@@ -33,12 +33,13 @@ const Login = () => {
   const { t } = useTranslation("global");
 
   return (
-    <div className="w-full h-screen flex flex-col md:flex-row">
-      <div className="hidden md:flex w-full md:w-1/2 h-64 md:h-full flex-col bg-[#282c34]">
+    <div className="w-full min-h-screen overflow-y-auto flex flex-col md:flex-row">
+
+      <div className="hidden md:flex w-full md:w-1/2 min-h-full flex-col bg-[#282c34]">
         <ImageSlider />
       </div>
 
-      <div className="w-full md:w-1/2 h-full bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
+      <div className="w-full md:w-1/2 flex-1 bg-black flex flex-col px-6 py-10 md:p-20 justify-center">
         <div className="w-full flex flex-col max-w-[450px] mx-auto">
           <div className="w-full flex flex-col mb-10 text-white">
             <img

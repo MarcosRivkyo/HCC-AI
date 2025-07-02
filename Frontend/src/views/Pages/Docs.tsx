@@ -18,7 +18,7 @@ import germanFlag from "../../assets/images/german_language.png";
 const pdfUrls = [
   {
     name: "TFG_Report",
-    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FMarcosRivasKyoguro.pdf?alt=media&token=ecd1cfa8-36bc-4c16-a5f3-856709534758",
+    url: "https://firebasestorage.googleapis.com/v0/b/hcc-ai.firebasestorage.app/o/HCC-AI%2Fpublic%2FMarcosRivasKyoguro.pdf?alt=media&token=98b57737-c302-4209-b55b-0469c62e260e",
   },
   {
     name: "Annex_I",
@@ -78,6 +78,7 @@ const languages = [
 const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
+  localStorage.setItem("language", currentLang);
 
   const handleChange = (lang: string) => {
     if (lang !== currentLang) i18next.changeLanguage(lang);
